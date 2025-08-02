@@ -4,16 +4,18 @@ const SplashScreen = ({ onFinish }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onFinish();
-    }, 3000); // Splash screen lasts 3 seconds
+    }, 3000); 
     return () => clearTimeout(timer);
   }, [onFinish]);
 
   return (
     <div className="splash-screen">
       <div className="splash-content">
-        <h1>Food Allergy Awareness</h1>
-        <p>Empowering Safe Food Choices</p>
-        <div className="loader"></div>
+        <div className="logo-container">
+          <img src="/images/whilogo.png" className="logo" alt="Logo" />
+          <div className="loader"></div>
+        </div>
+        <h1>we care what’s on your plate.</h1>
       </div>
     </div>
   );
