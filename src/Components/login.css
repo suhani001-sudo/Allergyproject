@@ -634,11 +634,11 @@ body {
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .login-form-container {
-    background: rgba(0, 0, 0, 0.95);
+    background: #6BA661;
   }
   
   .login-card {
-    background: #1a1a1a;
+    background: #060606;
     color: white;
   }
   
