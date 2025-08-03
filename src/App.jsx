@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import SplashScreen from "./Components/Splashscreen";
+import Login from "./Components/login";
 import './App.css';
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleSplashFinish = () => {
+    setShowSplash(false);
+    setShowLogin(true);
+  };
+
+  const handleLoginSuccess = () => {
+    setShowLogin(false);
+    // Navigate to main app content
+  };
 
   return (
     <>
       {showSplash ? (
-        <SplashScreen onFinish={() => setShowSplash(false)} />
+        <SplashScreen onFinish={handleSplashFinish} />
+      ) : showLogin ? (
+        <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <div className="main-content">
           {/* Your actual app content starts here */}
