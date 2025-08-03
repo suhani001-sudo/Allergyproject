@@ -7,6 +7,9 @@ const Login = ({ onLoginSuccess }) => {
     password: '',
     rememberMe: false
   });
+  
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -14,22 +17,59 @@ const Login = ({ onLoginSuccess }) => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
+  const validateForm = () => {
+    const newErrors = {};
     
-    // Simulate successful login
-    if (formData.email && formData.password) {
-      onLoginSuccess();
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
     }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      console.log('Login attempt:', formData);
+      setIsLoading(false);
+      
+      // Simulate successful login
+      if (formData.email && formData.password) {
+        onLoginSuccess();
+      }
+    }, 1500);
   };
 
   return (
     <div className="login-container">
-      {/* Left Side - Informative Content */}
+      {/* Left Side - Hero Section */}
       <div className="login-hero">
         <div className="hero-content">
           <div className="logo-section">
@@ -103,9 +143,11 @@ const Login = ({ onLoginSuccess }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter your email"
+                  className={errors.email ? 'error' : ''}
                   required
                 />
               </div>
+              {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
 
             <div className="form-group">
@@ -123,9 +165,11 @@ const Login = ({ onLoginSuccess }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Enter your password"
+                  className={errors.password ? 'error' : ''}
                   required
                 />
               </div>
+              {errors.password && <span className="error-message">{errors.password}</span>}
             </div>
 
             <div className="form-options">
@@ -142,11 +186,20 @@ const Login = ({ onLoginSuccess }) => {
               <a href="#" className="forgot-password">Forgot Password?</a>
             </div>
 
-            <button type="submit" className="login-button">
-              <span>Sign In</span>
-              <svg className="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
+            <button type="submit" className={`login-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <div className="spinner"></div>
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <svg className="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </>
+              )}
             </button>
           </form>
 
