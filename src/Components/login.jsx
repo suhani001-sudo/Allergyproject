@@ -79,8 +79,8 @@ const Login = ({ onLoginSuccess }) => {
                 <circle cx="12" cy="12" r="3"/>
               </svg>
             </div>
-            <h1 className="app-title">Food Allergy Awareness</h1>
-            <p className="app-subtitle">Menu Tagging System</p>
+            <h1 className="app-title">SafE BytEs</h1>
+           
           </div>
           
           <div className="mission-statement">
