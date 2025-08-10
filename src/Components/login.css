@@ -10,7 +10,7 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   color: #333;
-  background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+  background: rgb(244, 241, 241);
   height: 100vh;
   overflow: hidden;
 }
@@ -19,7 +19,7 @@ body {
 .login-container {
   display: flex;
   height: 100vh;
-  background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+  background: linear-gradient(135deg, #7BB369 0%, #7BB369 100%);
   position: relative;
   overflow: hidden;
   flex-direction: row;
@@ -27,7 +27,7 @@ body {
 
 .login-hero {
   flex: 1;
-  background: linear-gradient(135deg, #7CB342 0%, #8BC34A 100%);
+  background: linear-gradient(135deg, #7BB369 0%, #7BB369 100%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -219,7 +219,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(254, 251, 251, 0.95);
   backdrop-filter: blur(20px);
 }
 
