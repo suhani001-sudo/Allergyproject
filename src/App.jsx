@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SplashScreen from "./Components/Splashscreen";
-import Login from "./Components/login";
+import Loginn from "./Components/Loginn";  
 import './App.css';
 
 const App = () => {
@@ -14,7 +14,7 @@ const App = () => {
 
   const handleLoginSuccess = () => {
     setShowLogin(false);
-    // Navigate to main app content
+  
   };
 
   return (
@@ -22,10 +22,9 @@ const App = () => {
       {showSplash ? (
         <SplashScreen onFinish={handleSplashFinish} />
       ) : showLogin ? (
-        <Login onLoginSuccess={handleLoginSuccess} />
+        <Loginn onLoginSuccess={handleLoginSuccess} />  
       ) : (
         <div className="main-content">
-          {/* Your actual app content starts here */}
           <h2>Welcome to the Menu Tagging System!</h2>
         </div>
       )}
