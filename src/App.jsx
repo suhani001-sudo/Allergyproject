@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SplashScreen from "./Components/Splashscreen";
-import Loginn from "./Components/Loginn";  
+import Login from "./Components/login";  
 import './App.css';
 
 const App = () => {
@@ -22,7 +22,7 @@ const App = () => {
       {showSplash ? (
         <SplashScreen onFinish={handleSplashFinish} />
       ) : showLogin ? (
-        <Loginn onLoginSuccess={handleLoginSuccess} />  
+        <Login onLoginSuccess={handleLoginSuccess} />  
       ) : (
         <div className="main-content">
           <h2>Welcome to the Menu Tagging System!</h2>
