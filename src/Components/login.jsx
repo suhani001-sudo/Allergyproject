@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './login.css';
 
 const Login = ({ onLoginSuccess }) => {
@@ -10,6 +10,13 @@ const Login = ({ onLoginSuccess }) => {
   
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Trigger fade-in animation on mount
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -68,60 +75,18 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="login-container">
-      {/* Left Side - Hero Section */}
-      <div className="login-hero">
-        <div className="hero-content">
-          <div className="logo-section">
+    <div className={`login-container ${isVisible ? 'visible' : ''}`}>
+      {/* Left Section - Logo & Branding */}
+
+          <div className="logo-main">
             <div className="logo-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </div>
-            <h1 className="app-title">SafE BytEs</h1>
-           
-          </div>
-          
-          <div className="mission-statement">
-            <h2>Helping users avoid food allergens through intelligent menu tagging</h2>
-            <p>Scan, analyze, and stay safe with our comprehensive allergy detection system.</p>
-          </div>
-
-          <div className="features-timeline">
-            <div className="timeline-item">
-              <div className="timeline-icon">📱</div>
-              <div className="timeline-content">
-                <h3>Scan</h3>
-                <p>Quickly scan menus and food labels</p>
-              </div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-icon">🔍</div>
-              <div className="timeline-content">
-                <h3>Analyze</h3>
-                <p>AI-powered ingredient analysis</p>
-              </div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-icon">⚠️</div>
-              <div className="timeline-content">
-                <h3>Get Warnings</h3>
-                <p>Instant allergen alerts and recommendations</p>
-              </div>
+              <img src="/images/whilogo.png" alt="SafeBytes Logo" />
             </div>
           </div>
 
-          <div className="safety-quote">
-            <blockquote>
-              "Food safety is not an option, it's a necessity. Every meal should be a safe meal."
-            </blockquote>
-          </div>
-        </div>
-      </div>
 
-      {/* Right Side - Login Form */}
-      <div className="login-form-container">
+      {/* Right Section - Login Form */}
+      <div className="form-section">
         <div className="login-card">
           <div className="login-header">
             <h2>Welcome Back</h2>
@@ -132,10 +97,7 @@ const Login = ({ onLoginSuccess }) => {
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <div className="input-wrapper">
-                <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
+
                 <input
                   type="email"
                   id="email"
