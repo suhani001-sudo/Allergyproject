@@ -14,7 +14,6 @@ const App = () => {
 
   const handleLoginSuccess = () => {
     setShowLogin(false);
-  
   };
 
   return (
