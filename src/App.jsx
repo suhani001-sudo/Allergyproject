@@ -1,44 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SplashScreen from "./Components/Splashscreen";
 import Login from "./Components/login";
 import Home from "./Components/Home";
 import './App.css';
 
-const App = () => {
+function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showHome, setShowHome] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleSplashFinish = () => {
-    setShowSplash(false);
-    setShowLogin(true);
-  };
+  useEffect(() => {
+    // check localStorage for login state
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
 
-  const handleLoginSuccess = () => {
-    setShowLogin(false);
-    setShowHome(true);
+    // show splash only for 2 seconds
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleLogin = () => {
+    localStorage.setItem("isLoggedIn", "true");
+    setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
-    setShowHome(false);
-    setShowLogin(true);
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
   };
 
-  return (
-    <>
-      {showSplash ? (
-        <SplashScreen onFinish={handleSplashFinish} />
-      ) : showLogin ? (
-        <Login onLoginSuccess={handleLoginSuccess} />
-      ) : showHome ? (
-        <Home onLogout={handleLogout} />
-      ) : (
-        <div className="main-content">
-          <h2>Welcome to the Menu Tagging System!</h2>
-        </div>
-      )}
-    </>
-  );
-};
+  // Decide what to show
+  if (showSplash) {
+    return <SplashScreen />;
+  }
+
+  if (!isLoggedIn) {
+    return <Login onLoginSuccess={handleLogin} />;
+  }
+
+  return <Home onLogout={handleLogout} />;
+}
 
 export default App;

@@ -194,7 +194,7 @@ const Home = ({ onLogout }) => {
           >
             <div className="hero-image-container">
               <img 
-                src="/images/Matcha Tea.jpg" 
+                src="/images/homepic2.jpg" 
                 alt="Healthy Food" 
                 className="hero-food-image"
               />
