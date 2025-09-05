@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
 import SplashScreen from "./Components/Splashscreen";
 import Login from "./Components/login";
-import Home from "./Components/Home";
-import './App.css';
+import UserDashboard from "./Components/UserDashboard";
+import ResturantDashboard from "./Components/ResturantDashboard";
+import "./App.css";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     // check localStorage for login state
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
+    const storedRole = localStorage.getItem("role");
 
-    // show splash only for 2 seconds
+    if (loggedIn && storedRole) {
+      setIsLoggedIn(true);
+      setRole(storedRole);
+    } else {
+      setIsLoggedIn(false);
+      setRole(null);
+    }
+
     const timer = setTimeout(() => {
       setShowSplash(false);
     }, 2000);
@@ -21,26 +30,36 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLogin = () => {
+  const handleLoginSuccess = (userRole) => {
     localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("role", userRole);
     setIsLoggedIn(true);
+    setRole(userRole);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("role");
     setIsLoggedIn(false);
+    setRole(null);
   };
 
-  // Decide what to show
+  // Splashscreen
   if (showSplash) {
     return <SplashScreen />;
   }
 
+  // If not logged in → show Login
   if (!isLoggedIn) {
-    return <Login onLoginSuccess={handleLogin} />;
+    return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
-  return <Home onLogout={handleLogout} />;
+  // If logged in → show dashboard by role
+  return role === "user" ? (
+    <UserDashboard onLogout={handleLogout} />
+  ) : (
+    <ResturantDashboard onLogout={handleLogout} />
+  );
 }
 
 export default App;

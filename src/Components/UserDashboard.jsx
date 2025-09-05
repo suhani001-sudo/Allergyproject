@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import './Home.css';
+import './UserDashboard.css';
 
-const Home = ({ onLogout }) => {
+const UserDashboard = ({ onLogout }) => {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [activeNavItem, setActiveNavItem] = useState('Dashboard');
 
@@ -15,9 +15,8 @@ const Home = ({ onLogout }) => {
   ];
 
   const navItems = [
-    { id: 'Dashboard', icon: '📊', label: 'Dashboard' },
-    { id: 'Restaurants', icon: '🍽️', label: 'Restaurants' },
-    { id: 'My Allergies', icon: '⚠️', label: 'My Allergies' },
+    { id: 'Restaurants', icon: '', label: 'Restaurants' },
+    { id: 'My Allergies', icon: '', label: 'My Allergies' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
   ];
 
@@ -110,7 +109,7 @@ const Home = ({ onLogout }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="logout-icon">🚪</span>
+           
             <span className="logout-text">Logout</span>
           </motion.button>
         </div>
@@ -199,7 +198,7 @@ const Home = ({ onLogout }) => {
                 className="hero-food-image"
               />
               <div className="image-overlay">
-                <span className="overlay-icon">🥗</span>
+                <span className="overlay-icon"></span>
                 <p>Fresh & Healthy</p>
               </div>
             </div>
@@ -246,4 +245,4 @@ const Home = ({ onLogout }) => {
   );
 };
 
-export default Home;
+export default UserDashboard;

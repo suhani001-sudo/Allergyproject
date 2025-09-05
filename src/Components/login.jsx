@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './login.css';
 
 const Login = ({ onLoginSuccess }) => {
@@ -20,7 +20,6 @@ const Login = ({ onLoginSuccess }) => {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -71,9 +70,9 @@ const Login = ({ onLoginSuccess }) => {
       console.log('Login attempt:', formData);
       setIsLoading(false);
       
-      // Simulate successful login
+      // ✅ Pass role to App.jsx
       if (formData.email && formData.password) {
-        onLoginSuccess();
+        onLoginSuccess(formData.role);
       }
     }, 1500);
   };
@@ -115,10 +114,6 @@ const Login = ({ onLoginSuccess }) => {
                 <div className="form-group">
                   <label htmlFor="email-user">Email Address</label>
                   <div className="input-wrapper">
-                    <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                      <polyline points="22,6 12,13 2,6"/>
-                    </svg>
                     <input
                       type="email"
                       id="email-user"
@@ -135,11 +130,6 @@ const Login = ({ onLoginSuccess }) => {
                 <div className="form-group">
                   <label htmlFor="password-user">Password</label>
                   <div className="input-wrapper">
-                    <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                      <circle cx="12" cy="16" r="1"/>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
                     <input
                       type="password"
                       id="password-user"
@@ -155,21 +145,10 @@ const Login = ({ onLoginSuccess }) => {
 
                 <div className="form-options">
                   <button type="submit" className="login-button" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <div className="spinner"></div>
-                        <span>Signing In...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Sign In</span>
-                        <svg className="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                      </>
-                    )}
+                    {isLoading ? "Signing In..." : "Sign In"}
                   </button>
-                  
+
+                  {/* ✅ Signup section kept */}
                   <div className="signup-section">
                     <div className="signup-prompt">
                       Don't have an account?
@@ -193,10 +172,6 @@ const Login = ({ onLoginSuccess }) => {
                 <div className="form-group">
                   <label htmlFor="email-restaurant">Business Email</label>
                   <div className="input-wrapper">
-                    <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                      <polyline points="22,6 12,13 2,6"/>
-                    </svg>
                     <input
                       type="email"
                       id="email-restaurant"
@@ -213,11 +188,6 @@ const Login = ({ onLoginSuccess }) => {
                 <div className="form-group">
                   <label htmlFor="password-restaurant">Password</label>
                   <div className="input-wrapper">
-                    <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                      <circle cx="12" cy="16" r="1"/>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
                     <input
                       type="password"
                       id="password-restaurant"
@@ -233,21 +203,10 @@ const Login = ({ onLoginSuccess }) => {
 
                 <div className="form-options">
                   <button type="submit" className="login-button" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <div className="spinner"></div>
-                        <span>Signing In...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Sign In</span>
-                        <svg className="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                      </>
-                    )}
+                    {isLoading ? "Signing In..." : "Sign In"}
                   </button>
-                  
+
+                  {/* ✅ Signup section kept */}
                   <div className="signup-section">
                     <div className="signup-prompt">
                       Don't have an account?
@@ -255,7 +214,7 @@ const Login = ({ onLoginSuccess }) => {
                     <button 
                       type="button" 
                       className="signup-button"
-                      onClick={() => console.log('Sign up clicked')}
+                      onClick={() => console.log('Restaurant signup clicked')}
                     >
                       Sign up instead
                     </button>
