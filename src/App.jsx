@@ -1,65 +1,50 @@
 import React, { useState, useEffect } from "react";
 import SplashScreen from "./Components/Splashscreen";
-import Login from "./Components/login";
+import Login from "./Components/Login";
 import UserDashboard from "./Components/UserDashboard";
 import ResturantDashboard from "./Components/ResturantDashboard";
 import "./App.css";
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
+  const [currentPage, setCurrentPage] = useState("splash");
 
+  // Splash → Login after 2s
   useEffect(() => {
-    // check localStorage for login state
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    const storedRole = localStorage.getItem("role");
-
-    if (loggedIn && storedRole) {
-      setIsLoggedIn(true);
-      setRole(storedRole);
-    } else {
-      setIsLoggedIn(false);
-      setRole(null);
-    }
-
     const timer = setTimeout(() => {
-      setShowSplash(false);
+      setCurrentPage("login");
     }, 2000);
-
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLoginSuccess = (userRole) => {
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("role", userRole);
-    setIsLoggedIn(true);
-    setRole(userRole);
+  const handleLogin = (role) => {
+    if (role === "user") {
+      setCurrentPage("user");
+    } else if (role === "restaurant") {
+      setCurrentPage("restaurant");
+    }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("role");
-    setIsLoggedIn(false);
-    setRole(null);
+    setCurrentPage("login");
   };
 
-  // Splashscreen
-  if (showSplash) {
-    return <SplashScreen />;
-  }
+  // Page switcher
+  const renderPage = () => {
+    switch (currentPage) {
+      case "splash":
+        return <SplashScreen />;
+      case "login":
+        return <Login onLogin={handleLogin} />;
+      case "user":
+        return <UserDashboard onLogout={handleLogout} />;
+      case "restaurant":
+        return <ResturantDashboard onLogout={handleLogout} />;
+      default:
+        return <Login onLogin={handleLogin} />;
+    }
+  };
 
-  // If not logged in → show Login
-  if (!isLoggedIn) {
-    return <Login onLoginSuccess={handleLoginSuccess} />;
-  }
-
-  // If logged in → show dashboard by role
-  return role === "user" ? (
-    <UserDashboard onLogout={handleLogout} />
-  ) : (
-    <ResturantDashboard onLogout={handleLogout} />
-  );
+  return <div>{renderPage()}</div>;
 }
 
 export default App;
