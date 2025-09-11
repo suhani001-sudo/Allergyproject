@@ -16,7 +16,9 @@ const UserDashboard = ({ onLogout }) => {
 
   const navItems = [
     { id: 'Restaurants', icon: '', label: 'Restaurants' },
-    { id: 'My Allergies', icon: '', label: 'My Allergies' },
+    { id: 'My Allergies', icon: '', label: 'Allergies' },
+    { id: 'Profile', icon: '', label: 'Contact' },
+    { id: 'Profile', label: 'About us' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
   ];
 
