@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import './login.css';
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -72,7 +72,7 @@ const Login = ({ onLoginSuccess }) => {
       
       // ✅ Pass role to App.jsx
       if (formData.email && formData.password) {
-        onLoginSuccess(formData.role);
+        onLogin(formData.role);
       }
     }, 1500);
   };
