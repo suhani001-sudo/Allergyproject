@@ -1,0 +1,358 @@
+/* STEP 1: Base container and layout */
+.rd-container {
+  height: 100vh; /* make container own the viewport height */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f5f5f5 100%);
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* enable vertical scroll */
+  scroll-behavior: smooth; /* smooth internal scrolling */
+}
+
+/* STEP 2: Header with glass-look navigation bar */
+.rd-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(107, 142, 35, 0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  animation: rd-slide-down 500ms ease both;
+}
+
+.rd-brand {
+  font-weight: 800;
+  font-size: 1.25rem;
+  padding: 0.85rem 1rem 0.5rem 1rem;
+  color: #6B8E23; /* olive accent to match dashboard */
+  letter-spacing: 0.3px;
+}
+
+.rd-nav {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.rd-nav-btn {
+  background: rgba(248, 249, 250, 0.8);
+  color: #556B2F;
+  border: 1px solid rgba(107, 142, 35, 0.18);
+  border-radius: 10px;
+  padding: 0.55rem 0.95rem;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.12s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.rd-nav-btn:hover {
+  background: rgba(107, 142, 35, 0.10);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(107, 142, 35, 0.18);
+  border-color: rgba(107, 142, 35, 0.35);
+}
+
+/* Active nav button */
+.rd-nav-active {
+  background: rgba(107, 142, 35, 0.15);
+  box-shadow: 0 8px 24px rgba(107, 142, 35, 0.22);
+  border-color: rgba(107, 142, 35, 0.45);
+}
+
+/* STEP 3: Main structure */
+.rd-main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 1rem auto 2rem auto;
+  padding: 0 1rem 2rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.rd-section {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(107, 142, 35, 0.12);
+  border-radius: 16px;
+  padding: 1.15rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: rd-fade-up 600ms ease both;
+  scroll-margin-top: 84px; /* account for sticky header when scrolling into view */
+}
+
+.rd-section-title {
+  margin: 0 0 0.85rem 0;
+  font-size: 1.15rem;
+  color: #333;
+  font-weight: 700;
+}
+
+/* STEP 4: Menu list styling */
+.rd-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.rd-card {
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(107, 142, 35, 0.12);
+  border-radius: 14px;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: rd-card-in 600ms ease forwards;
+  box-shadow: 0 10px 28px rgba(107, 142, 35, 0.10);
+}
+
+/* Stagger the card entrance a bit for a premium feel */
+.rd-card:nth-child(1) { animation-delay: 60ms; }
+.rd-card:nth-child(2) { animation-delay: 120ms; }
+.rd-card:nth-child(3) { animation-delay: 180ms; }
+.rd-card:nth-child(4) { animation-delay: 240ms; }
+.rd-card:nth-child(5) { animation-delay: 300ms; }
+.rd-card:nth-child(6) { animation-delay: 360ms; }
+
+.rd-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rd-card-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.rd-price {
+  color: #6B8E23;
+  font-weight: 700;
+}
+
+.rd-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(107, 142, 35, 0.18);
+}
+
+.rd-badge-on {
+  background: rgba(107, 142, 35, 0.10);
+  color: #2f4f1a;
+}
+
+.rd-badge-off {
+  background: #f9ecec;
+  color: #b33a3a;
+}
+
+.rd-desc {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  margin: 0.25rem 0;
+}
+
+/* STEP 5: Allergen badges */
+.rd-allergens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.rd-allergen-badge {
+  background: rgba(248, 249, 250, 0.9);
+  color: #2f3b1a;
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.75rem;
+  border: 1px solid rgba(107, 142, 35, 0.15);
+}
+
+.rd-allergen-none {
+  background: #eef7ff;
+  color: #235b8c;
+}
+
+/* STEP 6: Card actions and buttons */
+.rd-card-actions {
+  margin-top: 0.25rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.rd-btn {
+  background: linear-gradient(135deg, #ffffff, #f7f9f5);
+  color: #2f4f1a;
+  border: 1px solid rgba(107, 142, 35, 0.18);
+  border-radius: 10px;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.rd-btn:hover {
+  background: linear-gradient(135deg, #fdfdfd, #eef5ea);
+  box-shadow: 0 10px 24px rgba(107, 142, 35, 0.18);
+  transform: translateY(-2px);
+  border-color: rgba(107, 142, 35, 0.35);
+}
+
+.rd-btn-secondary {
+  background: #f5f7f3;
+}
+
+.rd-btn-danger {
+  background: #fbecec;
+  color: #a22;
+  border-color: rgba(162, 34, 34, 0.25);
+}
+
+/* STEP 7: Form styling */
+.rd-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+.rd-form-row {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.rd-label {
+  font-size: 0.9rem;
+  color: #2f4f1a;
+  font-weight: 600;
+}
+
+.rd-input,
+.rd-textarea {
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(107, 142, 35, 0.18);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  color: #2f3b1a;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.04) inset;
+}
+
+.rd-input:focus,
+.rd-textarea:focus {
+  outline: 2px solid rgba(107, 142, 35, 0.30);
+  outline-offset: 2px;
+}
+
+.rd-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.rd-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+}
+
+.rd-check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+}
+
+.rd-form-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+/* STEP 8: Analytics section */
+.rd-analytics .rd-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.6rem;
+}
+
+.rd-analytics-card {
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(107, 142, 35, 0.12);
+  border-radius: 14px;
+  padding: 0.85rem;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.rd-analytics-number {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #2f4f1a;
+}
+
+.rd-analytics-label {
+  font-size: 0.9rem;
+  color: #6b6b6b;
+}
+
+/* STEP 9: Responsive tweaks */
+@media (max-width: 720px) {
+  .rd-analytics .rd-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rd-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Subtle hover raise for cards and analytics */
+.rd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(107, 142, 35, 0.18);
+}
+
+.rd-analytics-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(107, 142, 35, 0.18);
+}
+
+/* Keyframes for premium, simple animations */
+@keyframes rd-slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rd-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rd-card-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .rd-header,
+  .rd-section,
+  .rd-card,
+  .rd-analytics-card,
+  .rd-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+

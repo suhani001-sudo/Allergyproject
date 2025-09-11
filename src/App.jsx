@@ -28,6 +28,11 @@ function App() {
     setCurrentPage("login");
   };
 
+  const handleNavigate = (target) => {
+    // expected targets: 'user', 'restaurant', 'login'
+    setCurrentPage(target);
+  };
+
   // Page switcher
   const renderPage = () => {
     switch (currentPage) {
@@ -36,9 +41,9 @@ function App() {
       case "login":
         return <Login onLogin={handleLogin} />;
       case "user":
-        return <UserDashboard onLogout={handleLogout} />;
+        return <UserDashboard onLogout={handleLogout} onNavigate={handleNavigate} />;
       case "restaurant":
-        return <ResturantDashboard onLogout={handleLogout} />;
+        return <ResturantDashboard onLogout={handleLogout} onNavigate={handleNavigate} />;
       default:
         return <Login onLogin={handleLogin} />;
     }

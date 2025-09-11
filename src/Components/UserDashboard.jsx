@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './UserDashboard.css';
 
-const UserDashboard = ({ onLogout }) => {
+const UserDashboard = ({ onLogout, onNavigate }) => {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-  const [activeNavItem, setActiveNavItem] = useState('Dashboard');
+  const [activeNavItem, setActiveNavItem] = useState('Restaurants');
 
   const quotes = [
     "Good food is the foundation of genuine happiness",
@@ -15,9 +15,9 @@ const UserDashboard = ({ onLogout }) => {
 
   const navItems = [
     { id: 'Restaurants', icon: '', label: 'Restaurants' },
-    { id: 'My Allergies', icon: '', label: 'Allergies' },
-    { id: 'Profile', icon: '', label: 'Contact' },
-    { id: 'Profile', label: 'About us' },
+    { id: 'Allergies', icon: '', label: 'Allergies' },
+    { id: 'Contact', icon: '', label: 'Contact' },
+    { id: 'About', label: 'About us' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
   ];
 
@@ -30,6 +30,10 @@ const UserDashboard = ({ onLogout }) => {
 
   const handleNavClick = (itemId) => {
     setActiveNavItem(itemId);
+    if (itemId === 'Restaurants') {
+      // navigate to restaurant dashboard
+      onNavigate && onNavigate('restaurant');
+    }
   };
 
   return (
@@ -95,7 +99,7 @@ const UserDashboard = ({ onLogout }) => {
             </div>
 
             <div className="cta-buttons">
-              <button className="cta-button primary">
+              <button className="cta-button primary" onClick={() => onNavigate && onNavigate('restaurant')}>
                 <span className="cta-icon">🍽️</span>
                 Explore Restaurants
               </button>
