@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import './UserDashboard.css';
 
-const UserDashboard = ({ onLogout }) => {
+const UserDashboard = ({ onLogout, onNavigate }) => {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-  const [activeNavItem, setActiveNavItem] = useState('Dashboard');
+  const [activeNavItem, setActiveNavItem] = useState('Restaurants');
 
   const quotes = [
     "Good food is the foundation of genuine happiness",
@@ -18,7 +17,7 @@ const UserDashboard = ({ onLogout }) => {
     { id: 'Restaurants', icon: '', label: 'Restaurants' },
     { id: 'My Allergies', icon: '', label: 'Allergies' },
     { id: 'Profile', icon: '', label: 'Contact' },
-    { id: 'Profile',  label: 'About us' },
+    { id: 'Profile', label: 'About us' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
   ];
 
@@ -31,168 +30,88 @@ const UserDashboard = ({ onLogout }) => {
 
   const handleNavClick = (itemId) => {
     setActiveNavItem(itemId);
+    if (itemId === 'Restaurants') {
+      // navigate to restaurant dashboard
+      onNavigate && onNavigate('restaurant');
+    }
   };
 
   return (
-    <motion.div 
-      className="home-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-    >
+    <div className="home-container">
       <div className="floating-elements">
-        <motion.div 
-          className="floating-icon"
-          animate={{ y: [0, -20, 0], rotate: [0, 360] }}
-          transition={{ duration: 6, repeat: Infinity }}
-        >
-          🥗
-        </motion.div>
-        <motion.div 
-          className="floating-icon"
-          animate={{ y: [0, 15, 0], rotate: [0, -360] }}
-          transition={{ duration: 8, repeat: Infinity, delay: 1 }}
-        >
-          🍎
-        </motion.div>
-        <motion.div 
-          className="floating-icon"
-          animate={{ y: [0, -25, 0], rotate: [0, 180] }}
-          transition={{ duration: 7, repeat: Infinity, delay: 2 }}
-        >
-          🥑
-        </motion.div>
+        <div className="floating-icon">🥗</div>
+        <div className="floating-icon">🍎</div>
+        <div className="floating-icon">🥑</div>
       </div>
 
-      <motion.nav 
-        className="navbar"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
+      <nav className="navbar">
         <div className="nav-container">
-          <motion.div 
-            className="nav-logo"
-            whileHover={{ scale: 1.05 }}
-          >
+          <div className="nav-logo">
             <img 
               src="/images/green_logo.jpg" 
               alt="SafeBytes Logo" 
               className="logo-image"
             />
             <span className="logo-text">SafeBytes</span>
-          </motion.div>
+          </div>
 
           <div className="nav-links">
             {navItems.map((item) => (
-              <motion.button
+              <button
                 key={item.id}
                 className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
                 onClick={() => handleNavClick(item.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 <span className="nav-icon">{item.icon}</span>
                 <span className="nav-label">{item.label}</span>
                 {activeNavItem === item.id && (
-                  <motion.div 
-                    className="active-indicator"
-                    layoutId="activeIndicator"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
+                  <div className="active-indicator" />
                 )}
-              </motion.button>
+              </button>
             ))}
           </div>
 
-          <motion.button
+          <button
             className="logout-button"
             onClick={onLogout}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
-           
             <span className="logout-text">Logout</span>
-          </motion.button>
+          </button>
         </div>
-      </motion.nav>
+      </nav>
 
-      <motion.section 
-        className="hero-section"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
+      <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
-            <motion.h1 
-              className="hero-title"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
+            <h1 className="hero-title">
               Safe Dining, 
               <span className="highlight"> Everywhere</span>
-            </motion.h1>
-            
-            <motion.p 
-              className="hero-subtitle"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-            >
+            </h1>
+
+            <p className="hero-subtitle">
               Your trusted companion for allergy-safe dining experiences
-            </motion.p>
+            </p>
 
-            <motion.div 
-              className="quote-container"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
-            >
-              <motion.div
-                key={currentQuoteIndex}
-                className="quote-text"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
+            <div className="quote-container">
+              <div className="quote-text">
                 "{quotes[currentQuoteIndex]}"
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
-            <motion.div 
-              className="cta-buttons"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-            >
-              <motion.button
-                className="cta-button primary"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+            <div className="cta-buttons">
+              <button className="cta-button primary" onClick={() => onNavigate && onNavigate('restaurant')}>
                 <span className="cta-icon">🍽️</span>
                 Explore Restaurants
-              </motion.button>
+              </button>
               
-              <motion.button
-                className="cta-button secondary"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <button className="cta-button secondary">
                 <span className="cta-icon">⚠️</span>
                 Check My Allergies
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           </div>
 
-          <motion.div 
-            className="hero-image"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
+          <div className="hero-image">
             <div className="hero-image-container">
               <img 
                 src="/images/homepic2.jpg" 
@@ -204,46 +123,32 @@ const UserDashboard = ({ onLogout }) => {
                 <p>Fresh & Healthy</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section 
-        className="stats-section"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.4 }}
-      >
+      <section className="stats-section">
         <div className="stats-container">
-          <motion.div 
-            className="stat-card"
-            whileHover={{ scale: 1.05, y: -5 }}
-          >
+          <div className="stat-card">
             <div className="stat-icon">🏪</div>
             <div className="stat-number">500+</div>
             <div className="stat-label">Allergy-Safe Restaurants</div>
-          </motion.div>
+          </div>
           
-          <motion.div 
-            className="stat-card"
-            whileHover={{ scale: 1.05, y: -5 }}
-          >
+          <div className="stat-card">
             <div className="stat-icon">👥</div>
             <div className="stat-number">10K+</div>
             <div className="stat-label">Happy Users</div>
-          </motion.div>
+          </div>
           
-          <motion.div 
-            className="stat-card"
-            whileHover={{ scale: 1.05, y: -5 }}
-          >
+          <div className="stat-card">
             <div className="stat-icon">🛡️</div>
             <div className="stat-number">99.9%</div>
             <div className="stat-label">Safety Rate</div>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
-    </motion.div>
+      </section>
+    </div>
   );
 };
 
