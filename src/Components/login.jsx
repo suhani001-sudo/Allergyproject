@@ -1,29 +1,29 @@
-import React, { useRef, useState } from 'react';
-import './login.css';
+import React, { useRef, useState } from "react";
+import "./login.css";
 
 const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    role: 'user' // 'user' or 'restaurant'
+    email: "",
+    password: "",
+    role: "user", // 'user' or 'restaurant'
   });
-  
+
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const previousRoleRef = useRef('user');
-  const [slideDirection, setSlideDirection] = useState('to-left');
+  const previousRoleRef = useRef("user");
+  const [slideDirection, setSlideDirection] = useState("to-left");
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
-    
+
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -31,45 +31,49 @@ const Login = ({ onLogin }) => {
   const handleRoleChange = (role) => {
     const previousRole = previousRoleRef.current;
     if (previousRole !== role) {
-      setSlideDirection(previousRole === 'user' && role === 'restaurant' ? 'to-right' : 'to-left');
+      setSlideDirection(
+        previousRole === "user" && role === "restaurant"
+          ? "to-right"
+          : "to-left"
+      );
       previousRoleRef.current = role;
     }
-    setFormData(prev => ({ ...prev, role }));
+    setFormData((prev) => ({ ...prev, role }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = "Please enter a valid email";
     }
-    
+
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
-      console.log('Login attempt:', formData);
+      console.log("Login attempt:", formData);
       setIsLoading(false);
-      
+
       // ✅ Pass role to App.jsx
       if (formData.email && formData.password) {
         onLogin(formData.role);
@@ -88,15 +92,19 @@ const Login = ({ onLogin }) => {
 
         {/* Role Selector */}
         <div className="role-selector">
-          <div 
-            className={`role-option ${formData.role === 'user' ? 'active' : ''}`}
-            onClick={() => handleRoleChange('user')}
+          <div
+            className={`role-option ${
+              formData.role === "user" ? "active" : ""
+            }`}
+            onClick={() => handleRoleChange("user")}
           >
             👤 User
           </div>
-          <div 
-            className={`role-option ${formData.role === 'restaurant' ? 'active' : ''}`}
-            onClick={() => handleRoleChange('restaurant')}
+          <div
+            className={`role-option ${
+              formData.role === "restaurant" ? "active" : ""
+            }`}
+            onClick={() => handleRoleChange("restaurant")}
           >
             🏪 Restaurant Owner
           </div>
@@ -105,7 +113,9 @@ const Login = ({ onLogin }) => {
         {/* Sliding Forms */}
         <div className={`form-slider`}>
           <div
-            className={`form-track ${formData.role === 'user' ? 'user-active' : 'restaurant-active'} ${slideDirection}`}
+            className={`form-track ${
+              formData.role === "user" ? "user-active" : "restaurant-active"
+            } ${slideDirection}`}
           >
             {/* User Slide */}
             <div className="slide">
@@ -121,10 +131,12 @@ const Login = ({ onLogin }) => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="Enter your email"
-                      required={formData.role === 'user'}
+                      required={formData.role === "user"}
                     />
                   </div>
-                  {errors.email && formData.role === 'user' && <span className="error-message">{errors.email}</span>}
+                  {errors.email && formData.role === "user" && (
+                    <span className="error-message">{errors.email}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -137,26 +149,30 @@ const Login = ({ onLogin }) => {
                       value={formData.password}
                       onChange={handleInputChange}
                       placeholder="Enter your password"
-                      required={formData.role === 'user'}
+                      required={formData.role === "user"}
                     />
                   </div>
-                  {errors.password && formData.role === 'user' && <span className="error-message">{errors.password}</span>}
+                  {errors.password && formData.role === "user" && (
+                    <span className="error-message">{errors.password}</span>
+                  )}
                 </div>
 
                 <div className="form-options">
-                  <button type="submit" className="login-button" disabled={isLoading}>
+                  <button
+                    type="submit"
+                    className="login-button"
+                    disabled={isLoading}
+                  >
                     {isLoading ? "Signing In..." : "Sign In"}
                   </button>
 
                   {/* ✅ Signup section kept */}
                   <div className="signup-section">
-                    <div className="signup-prompt">
-                      Don't have an account?
-                    </div>
-                    <button 
-                      type="button" 
+                    <div className="signup-prompt">Don't have an account?</div>
+                    <button
+                      type="button"
                       className="signup-button"
-                      onClick={() => console.log('Sign up clicked')}
+                      onClick={() => console.log("Sign up clicked")}
                     >
                       Sign up instead
                     </button>
@@ -179,10 +195,12 @@ const Login = ({ onLogin }) => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="Enter your business email"
-                      required={formData.role === 'restaurant'}
+                      required={formData.role === "restaurant"}
                     />
                   </div>
-                  {errors.email && formData.role === 'restaurant' && <span className="error-message">{errors.email}</span>}
+                  {errors.email && formData.role === "restaurant" && (
+                    <span className="error-message">{errors.email}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -195,28 +213,31 @@ const Login = ({ onLogin }) => {
                       value={formData.password}
                       onChange={handleInputChange}
                       placeholder="Enter your password"
-                      required={formData.role === 'restaurant'}
+                      required={formData.role === "restaurant"}
                     />
                   </div>
-                  {errors.password && formData.role === 'restaurant' && <span className="error-message">{errors.password}</span>}
+                  {errors.password && formData.role === "restaurant" && (
+                    <span className="error-message">{errors.password}</span>
+                  )}
                 </div>
 
                 <div className="form-options">
-                  <button type="submit" className="login-button" disabled={isLoading}>
+                  <button
+                    type="submit"
+                    className="login-button"
+                    disabled={isLoading}
+                  >
                     {isLoading ? "Signing In..." : "Sign In"}
                   </button>
 
                   {/* ✅ Signup section kept */}
                   <div className="signup-section">
-                    <div className="signup-prompt">
-                      Don't have an account?
-                    </div>
-                    <button 
-                      type="button" 
+                    <div className="signup-prompt">Don't have an account?</div>
+                    <button
+                      type="button"
                       className="signup-button"
-                      onClick={() => console.log('Restaurant signup clicked')}
-                    >
-                      Sign up instead
+                      onClick={() => onSwitchToSignup()}
+                    >Sign up instead
                     </button>
                   </div>
                 </div>
