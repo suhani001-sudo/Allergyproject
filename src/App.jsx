@@ -1,73 +1,148 @@
 import React, { useState, useEffect } from "react";
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import SplashScreen from "./Components/Splashscreen";
 import Login from "./Components/login";
 import Signup from "./Components/Signup";
 import UserDashboard from "./Components/UserDashboard";
 import ResturantDashboard from "./Components/ResturantDashboard";
+import UserRestaurantPage from "./Components/UserRestaurantPage";
+import { CartProvider } from "./Components/CartContext";
 import "./App.css";
 
 function App() {
+  // STEP 1: Set up state variables for the app
   const [showSplash, setShowSplash] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null); 
   const [isSignup, setIsSignup] = useState(false); 
 
-  useEffect(() => {
-    // Check localStorage for login state
+  // STEP 2: Check if user is already logged in when app starts
+  useEffect(function() {
+    // Check if user was logged in before
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     const savedRole = localStorage.getItem("role");
     setIsLoggedIn(loggedIn);
     setRole(savedRole);
 
-    const timer = setTimeout(() => {
+    // Hide splash screen after 2 seconds
+    const timer = setTimeout(function() {
       setShowSplash(false);
     }, 2000);
 
-    return () => clearTimeout(timer);
+    // Clean up timer when component unmounts
+    return function() {
+      clearTimeout(timer);
+    };
   }, []);
 
-  // ✅ Handle login
-  const handleLogin = (userRole) => {
+  // STEP 3: Function to handle user login
+  function handleLogin(userRole) {
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("role", userRole);
     setIsLoggedIn(true);
     setRole(userRole);
-    setIsSignup(false); // after signup/login, reset
-  };
+    setIsSignup(false); // Reset signup state after login
+  }
 
-  // ✅ Handle signup (same as login after registration)
-  const handleSignup = (formData) => {
-    console.log("Signed up:", formData);
+  // STEP 4: Function to handle user signup
+  function handleSignup(formData) {
+    console.log("User signed up:", formData);
     handleLogin(formData.role);
-  };
+  }
 
-  // ✅ Handle logout
-  const handleLogout = () => {
+  // STEP 5: Function to handle user logout
+  function handleLogout() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("role");
     setIsLoggedIn(false);
     setRole(null);
-  };
+  }
 
+  // STEP 6: Show splash screen if needed
   if (showSplash) {
     return <SplashScreen />;
   }
 
-  if (!isLoggedIn) {
-    return isSignup ? (
-      <Signup onSignup={handleSignup} />
-    ) : (
-      <Login onLogin={handleLogin} onSwitchToSignup={() => setIsSignup(true)} />
-    );
-  }
+  // STEP 7: Return the main app with routing
+  return (
+    <CartProvider>
+      <Router>
+        <Routes>
+          {/* STEP 8: Login page route */}
+          <Route 
+            path="/login" 
+            element={
+              !isLoggedIn ? (
+                <Login onLogin={handleLogin} onSwitchToSignup={function() { setIsSignup(true); }} />
+              ) : (
+                <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+              )
+            } 
+          />
+          
+          {/* STEP 9: Signup page route */}
+          <Route 
+            path="/signup" 
+            element={
+              !isLoggedIn ? (
+                <Signup onSignup={handleSignup} />
+              ) : (
+                <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+              )
+            } 
+          />
 
-  if (role === "user") {
-    return <UserDashboard onLogout={handleLogout} />;
-  } else if (role === "restaurant") {
-    return <ResturantDashboard onLogout={handleLogout} />;
-  }
+          {/* STEP 10: User dashboard route */}
+          <Route 
+            path="/dashboard" 
+            element={
+              isLoggedIn && role === "user" ? (
+                <UserDashboard onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+          
+          {/* STEP 11: Restaurant page route for users */}
+          <Route 
+            path="/restaurants" 
+            element={
+              isLoggedIn && role === "user" ? (
+                <UserRestaurantPage onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
 
-  return null;
+          {/* STEP 12: Restaurant dashboard route for restaurant owners */}
+          <Route 
+            path="/restaurant-dashboard" 
+            element={
+              isLoggedIn && role === "restaurant" ? (
+                <ResturantDashboard onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+
+          {/* STEP 13: Default route - redirect to appropriate page */}
+          <Route 
+            path="/" 
+            element={
+              <Navigate to={isLoggedIn ? (role === "user" ? "/dashboard" : "/restaurant-dashboard") : "/login"} replace />
+            } 
+          />
+          
+          {/* STEP 14: Catch all other routes and redirect to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </CartProvider>
+  );
 }
 
 export default App;

@@ -1,0 +1,228 @@
+/* STEP 1: Cart container styles */
+.cart {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  height: fit-content;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 100px;
+  min-width: 350px;
+}
+
+/* STEP 2: Cart header styles */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.cart-header h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.item-count {
+  background: #3498db;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* STEP 3: Cart items container */
+.cart-items {
+  margin-bottom: 1.5rem;
+}
+
+/* STEP 4: Individual cart item styles */
+.cart-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.item-info {
+  min-width: 0;
+}
+
+.item-info .item-name {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-info .item-price {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* STEP 5: Quantity controls */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+  background: #2980b9;
+  transform: scale(1.1);
+}
+
+.quantity {
+  font-weight: bold;
+  color: #2c3e50;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* STEP 6: Item total and remove button */
+.item-total {
+  font-weight: bold;
+  color: #27ae60;
+  font-size: 1.1rem;
+}
+
+.remove-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+/* STEP 7: Empty cart styles */
+.empty-cart {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+}
+
+.empty-cart p {
+  margin-bottom: 0.5rem;
+}
+
+.empty-cart p:first-child {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* STEP 8: Cart footer styles */
+.cart-footer {
+  border-top: 2px solid #ecf0f1;
+  padding-top: 1.5rem;
+}
+
+.total-section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.total-label {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* STEP 9: Cart buttons */
+.cart-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.clear-btn, .checkout-btn {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-btn {
+  background: #95a5a6;
+  color: white;
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: #7f8c8d;
+  transform: scale(1.02);
+}
+
+.checkout-btn {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+}
+
+.checkout-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  transform: scale(1.02);
+}
+
+.clear-btn:disabled, .checkout-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* STEP 10: Responsive design */
+@media (max-width: 768px) {
+  .cart {
+    position: static;
+    max-height: none;
+    min-width: auto;
+    margin-top: 2rem;
+  }
+  
+  .cart-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .quantity-controls {
+    justify-content: center;
+  }
+  
+  .cart-buttons {
+    flex-direction: column;
+  }
+}

@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext';
 import './UserDashboard.css';
 
-const UserDashboard = ({ onLogout, onNavigate }) => {
+function UserDashboard(props) {
+  // STEP 1: Get the onLogout function from props
+  const onLogout = props.onLogout;
+  
+  // STEP 2: Initialize navigation and cart hooks
+  const navigate = useNavigate();
+  const cartContext = useCart();
+  const getTotalItems = cartContext.getTotalItems;
+  const toggleCart = cartContext.toggleCart;
+  
+  // STEP 3: Set up state variables
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [activeNavItem, setActiveNavItem] = useState('Restaurants');
 
+  // STEP 4: Create array of inspirational quotes
   const quotes = [
     "Good food is the foundation of genuine happiness",
     "Let food be thy medicine and medicine be thy food",
@@ -13,28 +26,38 @@ const UserDashboard = ({ onLogout, onNavigate }) => {
     "Food brings people together on many different levels"
   ];
 
+  // STEP 5: Create array of navigation items
   const navItems = [
-    { id: 'Restaurants', icon: '', label: 'Restaurants' },
-    { id: 'My Allergies', icon: '', label: 'Allergies' },
-    { id: 'Profile', icon: '', label: 'Contact' },
-    { id: 'Profile', label: 'About us' },
+    { id: 'Restaurants', icon: '🍽️', label: 'Restaurants' },
+    { id: 'My Allergies', icon: '⚠️', label: 'Allergies' },
+    { id: 'Contact', icon: '📞', label: 'Contact' },
+    { id: 'About', icon: 'ℹ️', label: 'About us' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentQuoteIndex((prev) => (prev + 1) % quotes.length);
+  // STEP 6: Set up timer to change quotes every 4 seconds
+  useEffect(function() {
+    const interval = setInterval(function() {
+      setCurrentQuoteIndex(function(prev) {
+        return (prev + 1) % quotes.length;
+      });
     }, 4000);
-    return () => clearInterval(interval);
+    
+    // Clean up interval when component unmounts
+    return function() {
+      clearInterval(interval);
+    };
   }, [quotes.length]);
 
-  const handleNavClick = (itemId) => {
+  // STEP 7: Function to handle navigation clicks
+  function handleNavClick(itemId) {
     setActiveNavItem(itemId);
     if (itemId === 'Restaurants') {
-      // navigate to restaurant dashboard
-      onNavigate && onNavigate('restaurant');
+      // Navigate to restaurant page
+      navigate('/restaurants');
     }
-  };
+    // Add other navigation logic as needed
+  }
 
   return (
     <div className="home-container">
@@ -56,20 +79,34 @@ const UserDashboard = ({ onLogout, onNavigate }) => {
           </div>
 
           <div className="nav-links">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                onClick={() => handleNavClick(item.id)}
-              >
-                <span className="nav-icon">{item.icon}</span>
-                <span className="nav-label">{item.label}</span>
-                {activeNavItem === item.id && (
-                  <div className="active-indicator" />
-                )}
-              </button>
-            ))}
+            {navItems.map(function(item) {
+              return (
+                <button
+                  key={item.id}
+                  className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
+                  onClick={function() { handleNavClick(item.id); }}
+                >
+                  <span className="nav-icon">{item.icon}</span>
+                  <span className="nav-label">{item.label}</span>
+                  {activeNavItem === item.id && (
+                    <div className="active-indicator" />
+                  )}
+                </button>
+              );
+            })}
           </div>
+
+          {/* STEP 8: Cart button with item count */}
+          <button
+            className="cart-button"
+            onClick={toggleCart}
+          >
+            <span className="cart-icon">🛒</span>
+            <span className="cart-text">Cart</span>
+            {getTotalItems() > 0 && (
+              <span className="cart-badge">{getTotalItems()}</span>
+            )}
+          </button>
 
           <button
             className="logout-button"
@@ -99,7 +136,7 @@ const UserDashboard = ({ onLogout, onNavigate }) => {
             </div>
 
             <div className="cta-buttons">
-              <button className="cta-button primary" onClick={() => onNavigate && onNavigate('restaurant')}>
+              <button className="cta-button primary" onClick={function() { navigate('/restaurants'); }}>
                 <span className="cta-icon">🍽️</span>
                 Explore Restaurants
               </button>
