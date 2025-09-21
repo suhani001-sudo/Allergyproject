@@ -4,6 +4,7 @@ body {
   padding: 0;
   height: 100%;
   overflow: hidden;
+  overflow-y: scroll;
   font-family: sans-serif;
 }
 .loader {

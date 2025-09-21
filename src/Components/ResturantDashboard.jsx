@@ -4,13 +4,14 @@ import './RestaurantDashboard.css';
 // STEP 1: Define the allergen options we will use in the form and display
 const ALLERGENS = ['Nuts', 'Dairy', 'Gluten', 'Soy', 'Eggs', 'Shellfish'];
 
-function RestaurantDashboard() {
+
+function RestaurantDashboard({ onLogout}) {
   // STEP 2: Set up initial dummy menu items in local state
   const [items, setItems] = useState([
     {
       id: 1,
       name: 'Grilled Chicken Salad',
-      price: 9.99,
+      price: 2,
       description: 'Fresh greens with grilled chicken and light dressing.',
       allergens: ['Eggs'],
       available: true,
@@ -18,7 +19,7 @@ function RestaurantDashboard() {
     {
       id: 2,
       name: 'Pasta Alfredo',
-      price: 12.5,
+      price: 1205,
       description: 'Creamy alfredo sauce with fettuccine pasta.',
       allergens: ['Dairy', 'Gluten'],
       available: true,
@@ -26,7 +27,7 @@ function RestaurantDashboard() {
     {
       id: 3,
       name: 'Tofu Stir-Fry',
-      price: 10.0,
+      price: 1000,
       description: 'Mixed vegetables with tofu in a light soy sauce.',
       allergens: ['Soy'],
       available: false,
@@ -187,8 +188,8 @@ function RestaurantDashboard() {
             ))}
           </div>
 
-          <button className="logout-button" onClick={() => window.history.back()}>
-            <span className="logout-text">Back</span>
+          <button className="logout-button" onClick={() => onLogout()}>
+            <span className="logout-text">Logout</span>
           </button>
         </div>
       </nav>
@@ -205,7 +206,7 @@ function RestaurantDashboard() {
                 <div className="rd-card-top">
                   <div className="rd-card-title">
                     <strong>{item.name}</strong>
-                    <span className="rd-price">${item.price.toFixed(2)}</span>
+                    <span className="rd-price" >₹{item.price.toFixed(2)}</span>
                   </div>
                   <div className={`rd-badge ${item.available ? 'rd-badge-on' : 'rd-badge-off'}`}>
                     {item.available ? 'Available' : 'Unavailable'}

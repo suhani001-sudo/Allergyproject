@@ -183,6 +183,7 @@
   padding: 120px 2rem 80px;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top:75;
   position: relative;
   z-index: 2;
   animation: fade-in-up 0.8s ease 0.4s both;
