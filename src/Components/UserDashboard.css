@@ -183,7 +183,7 @@
   padding: 120px 2rem 80px;
   max-width: 1200px;
   margin: 0 auto;
-  margin-top:75;
+  padding-top: calc(70px + 2rem);
   position: relative;
   z-index: 2;
   animation: fade-in-up 0.8s ease 0.4s both;
@@ -360,7 +360,7 @@
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 2;
+  /* z-index: 2; */
   animation: fade-in-up 0.8s ease 1.4s both;
 }
 
@@ -376,7 +376,7 @@
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(107, 142, 35, 0.1);
   border-radius: 16px;
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
@@ -444,7 +444,7 @@
   }
   
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   
   .hero-subtitle {
