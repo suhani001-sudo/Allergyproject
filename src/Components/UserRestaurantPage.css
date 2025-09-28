@@ -5,6 +5,13 @@
   box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f5f5f5;
@@ -14,11 +21,13 @@ body {
 /* STEP 2: Main container styles */
 .restaurant-page {
   min-height: 100vh;
-  width: 100%;
+  width: 100vw;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   overflow-x: hidden;
   overflow-y: auto;
   padding-top: 80px; /* Account for fixed navbar */
+  margin: 0;
+  position: relative;
 }
 
 /* STEP 3: Navigation bar with original styling */
