@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import "./login.css";
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -172,7 +172,7 @@ const Login = ({ onLogin }) => {
                     <button
                       type="button"
                       className="signup-button"
-                      onClick={() => console.log("Sign up clicked")}
+                      onClick={() => onSwitchToSignup && onSwitchToSignup()}
                     >
                       Sign up instead
                     </button>

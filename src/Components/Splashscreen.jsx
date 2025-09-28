@@ -1,13 +1,6 @@
 import React, { useEffect } from "react";
 
-const SplashScreen = ({ onFinish }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onFinish();
-    }, 3000); 
-    return () => clearTimeout(timer);
-  }, [onFinish]);
-
+const SplashScreen = () => {
   return (
     <div className="loader"></div>
   )

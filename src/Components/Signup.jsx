@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 
 
-const Signup = ({ onSignup }) => {
+const Signup = ({ onSignup, onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -271,6 +271,18 @@ const Signup = ({ onSignup }) => {
               </form>
             </div>
           </div>
+        </div>
+
+        {/* Back to Login Section */}
+        <div className="switch-section">
+          <div className="switch-prompt">Already have an account?</div>
+          <button
+            type="button"
+            className="switch-button"
+            onClick={() => onSwitchToLogin && onSwitchToLogin()}
+          >
+            Sign in instead
+          </button>
         </div>
       </div>
     </div>

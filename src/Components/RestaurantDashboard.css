@@ -3,18 +3,17 @@ body, html {
   overflow-y: scroll;
 }
 .rd-container {
-  height: 100vh; /* make container own the viewport height */
+  min-height: 100vh; /* make container at least viewport height */
+  width: 100%;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f5f5f5 100%);
   color: #333;
   display: flex;
-  
-  flex-direction: row;
+  flex-direction: column;
+  overflow-x: hidden;
   overflow-y: auto; /* enable vertical scroll */
   scroll-behavior: smooth; /* smooth internal scrolling */
-  margin-top: 75px;
-  justify-content: center;
- 
-  
+  padding-top: 75px;
+  justify-content: flex-start;
 }
 
 /* STEP 2: Header with glass-look navigation bar */
@@ -364,6 +363,59 @@ body, html {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Category Badge */
+.rd-card-category {
+  margin-bottom: 0.5rem;
+}
+
+.rd-category-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Ingredients Section */
+.rd-ingredients {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #6c757d;
+}
+
+.rd-ingredients-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.rd-ingredients-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.rd-ingredient-tag {
+  background: #e9ecef;
+  color: #495057;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.rd-ingredient-tag.rd-ingredient-more {
+  background: #dee2e6;
+  color: #6c757d;
+  font-style: italic;
 }
 
 

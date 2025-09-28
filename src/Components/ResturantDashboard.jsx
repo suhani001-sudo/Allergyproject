@@ -12,32 +12,58 @@ function RestaurantDashboard(props) {
   
   // STEP 1.2: Initialize navigation hook
   const navigate = useNavigate();
-  // STEP 2: Set up initial dummy menu items in local state
+  // STEP 2: Set up initial menu items with ingredients
   const [items, setItems] = useState([
     {
       id: 1,
       name: 'Grilled Chicken Salad',
-      price: 2,
-      description: 'Fresh greens with grilled chicken and light dressing.',
-      allergens: ['Eggs'],
+      price: 15.99,
+      description: 'Fresh mixed greens with grilled chicken breast, cherry tomatoes, and balsamic vinaigrette.',
+      allergens: ['eggs'],
+      ingredients: ['Chicken breast', 'Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Balsamic vinegar', 'Olive oil', 'Salt', 'Pepper'],
       available: true,
+      category: 'Salad'
     },
     {
       id: 2,
       name: 'Pasta Alfredo',
-      price: 1205,
-      description: 'Creamy alfredo sauce with fettuccine pasta.',
-      allergens: ['Dairy', 'Gluten'],
+      price: 18.50,
+      description: 'Creamy alfredo sauce with fettuccine pasta, topped with parmesan cheese.',
+      allergens: ['dairy', 'gluten', 'eggs'],
+      ingredients: ['Fettuccine pasta', 'Heavy cream', 'Parmesan cheese', 'Butter', 'Garlic', 'Salt', 'Black pepper', 'Parsley'],
       available: true,
+      category: 'Pasta'
     },
     {
       id: 3,
       name: 'Tofu Stir-Fry',
-      price: 1000,
-      description: 'Mixed vegetables with tofu in a light soy sauce.',
-      allergens: ['Soy'],
+      price: 16.75,
+      description: 'Mixed vegetables with tofu in a light soy sauce, served with jasmine rice.',
+      allergens: ['soy'],
+      ingredients: ['Firm tofu', 'Broccoli', 'Carrots', 'Bell peppers', 'Snap peas', 'Soy sauce', 'Ginger', 'Garlic', 'Sesame oil', 'Jasmine rice'],
       available: false,
+      category: 'Vegetarian'
     },
+    {
+      id: 4,
+      name: 'Beef Burger',
+      price: 19.99,
+      description: 'Juicy beef patty with lettuce, tomato, onion, and special sauce on a brioche bun.',
+      allergens: ['gluten', 'eggs', 'dairy'],
+      ingredients: ['Beef patty', 'Brioche bun', 'Lettuce', 'Tomato', 'Red onion', 'Pickles', 'Cheese', 'Special sauce', 'Salt', 'Pepper'],
+      available: true,
+      category: 'Main Course'
+    },
+    {
+      id: 5,
+      name: 'Mediterranean Quinoa Bowl',
+      price: 14.25,
+      description: 'Quinoa bowl with roasted vegetables, feta cheese, olives, and tahini dressing.',
+      allergens: ['dairy'],
+      ingredients: ['Quinoa', 'Roasted vegetables', 'Feta cheese', 'Kalamata olives', 'Cucumber', 'Red onion', 'Tahini', 'Lemon juice', 'Olive oil', 'Fresh herbs'],
+      available: true,
+      category: 'Healthy'
+    }
   ]);
 
   // STEP 3: Form state for adding/editing items
@@ -46,6 +72,8 @@ function RestaurantDashboard(props) {
     price: '',
     description: '',
     allergens: [],
+    ingredients: [],
+    category: 'Main Course'
   });
 
   // STEP 4: Track if we are editing an existing item
@@ -98,9 +126,18 @@ function RestaurantDashboard(props) {
     });
   }
 
+  // STEP 6.1: Handle ingredients input changes
+  function handleIngredientsChange(e) {
+    const value = e.target.value;
+    const ingredients = value.split(',').map(ingredient => ingredient.trim()).filter(ingredient => ingredient);
+    setFormData(function(prev) {
+      return { ...prev, ingredients: ingredients };
+    });
+  }
+
   // STEP 7: Reset the form to its default values
   function resetForm() {
-    setFormData({ name: '', price: '', description: '', allergens: [] });
+    setFormData({ name: '', price: '', description: '', allergens: [], ingredients: [], category: 'Main Course' });
     setEditingId(null);
   }
 
@@ -124,6 +161,8 @@ function RestaurantDashboard(props) {
       price: parseFloat(priceNumber.toFixed(2)),
       description: formData.description.trim(),
       allergens: formData.allergens,
+      ingredients: formData.ingredients,
+      category: formData.category,
       available: true,
     };
 
@@ -154,6 +193,8 @@ function RestaurantDashboard(props) {
       price: String(item.price),
       description: item.description,
       allergens: item.allergens || [],
+      ingredients: item.ingredients || [],
+      category: item.category || 'Main Course'
     });
   }
 
@@ -249,7 +290,32 @@ function RestaurantDashboard(props) {
                     </div>
                   </div>
 
+                  <div className="rd-card-category">
+                    <span className="rd-category-badge">{item.category || 'Main Course'}</span>
+                  </div>
+
                   <p className="rd-desc">{item.description}</p>
+
+                  {/* Ingredients Section */}
+                  {item.ingredients && item.ingredients.length > 0 && (
+                    <div className="rd-ingredients">
+                      <h4 className="rd-ingredients-title">Ingredients:</h4>
+                      <div className="rd-ingredients-list">
+                        {item.ingredients.slice(0, 4).map(function(ingredient, idx) {
+                          return (
+                            <span key={idx} className="rd-ingredient-tag">
+                              {ingredient}
+                            </span>
+                          );
+                        })}
+                        {item.ingredients.length > 4 && (
+                          <span className="rd-ingredient-tag rd-ingredient-more">
+                            +{item.ingredients.length - 4} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="rd-allergens">
                     {(item.allergens || []).length === 0 ? (
@@ -323,6 +389,40 @@ function RestaurantDashboard(props) {
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Short description of the dish"
+              />
+            </div>
+
+            {/* Category */}
+            <div className="rd-form-row">
+              <label className="rd-label" htmlFor="category">Category</label>
+              <select
+                className="rd-input"
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+              >
+                <option value="Main Course">Main Course</option>
+                <option value="Appetizer">Appetizer</option>
+                <option value="Salad">Salad</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Healthy">Healthy</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Beverage">Beverage</option>
+              </select>
+            </div>
+
+            {/* Ingredients */}
+            <div className="rd-form-row">
+              <label className="rd-label" htmlFor="ingredients">Ingredients</label>
+              <input
+                className="rd-input"
+                id="ingredients"
+                name="ingredients"
+                value={formData.ingredients.join(', ')}
+                onChange={handleIngredientsChange}
+                placeholder="Enter ingredients separated by commas (e.g., Chicken, Rice, Vegetables)"
               />
             </div>
 

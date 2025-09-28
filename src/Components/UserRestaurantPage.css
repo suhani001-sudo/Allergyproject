@@ -14,7 +14,11 @@ body {
 /* STEP 2: Main container styles */
 .restaurant-page {
   min-height: 100vh;
+  width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 80px; /* Account for fixed navbar */
 }
 
 /* STEP 3: Navigation bar with original styling */
@@ -236,9 +240,16 @@ body {
   padding: 0 2rem;
 }
 
+.search-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .search-input {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   padding: 1rem;
   border: 2px solid #e0e0e0;
   border-radius: 25px;
@@ -250,6 +261,58 @@ body {
 .search-input:focus {
   border-color: #3498db;
   box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+}
+
+.filter-dropdowns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+.filter-select:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+}
+
+.filter-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.results-count {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.clear-filters-btn {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #ff5252;
+  transform: translateY(-1px);
 }
 
 /* STEP 5: Main content layout */
@@ -385,5 +448,126 @@ body {
   
   .project-name {
     font-size: 1.5rem;
+  }
+}
+
+/* Enhanced Menu Card Styles */
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.item-category {
+  background: #e8f5e9;
+  color: #6B904A;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+/* Ingredients Section */
+.ingredients-section {
+  margin-bottom: 1rem;
+}
+
+.ingredients-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.ingredients-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.ingredient-tag {
+  background: #f0f8ff;
+  color: #4a90e2;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.ingredient-tag.more {
+  background: #f5f5f5;
+  color: #888;
+  font-style: italic;
+}
+
+/* Allergens Section */
+.allergens-section {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #fff3cd;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+}
+
+.allergens-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #856404;
+  margin-bottom: 0.5rem;
+}
+
+.allergens-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.allergen-tag {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Tags Section */
+.tags-section {
+  margin-bottom: 1rem;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.food-tag {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.2rem 0.4rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Mobile responsive for filters */
+@media (max-width: 768px) {
+  .filter-dropdowns {
+    flex-direction: column;
+  }
+  
+  .filter-select {
+    min-width: 100%;
+  }
+  
+  .filter-results {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
   }
 }

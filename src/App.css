@@ -3,9 +3,16 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
-  overflow-y: scroll;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: sans-serif;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
 }
 .loader {
   height: 100vh;
@@ -201,5 +208,28 @@ input:focus {
 
 .switch-section button:hover {
   text-decoration: underline;
+}
+
+/* Switch button styling */
+.switch-button {
+  background: none;
+  border: none;
+  color: #2e7d32;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 5px;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.switch-button:hover {
+  color: #1b5e20;
+  text-decoration: none;
+}
+
+.switch-prompt {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 0.5rem;
 }
 
