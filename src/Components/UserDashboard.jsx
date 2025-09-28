@@ -168,7 +168,7 @@ function UserDashboard(props) {
         <div className="stats-container">
           <div className="stat-card">
             <div className="stat-icon">🏪</div>
-            <div className="stat-number">500+</div>
+            <div className="stat-number">50+</div>
             <div className="stat-label">Allergy-Safe Restaurants</div>
           </div>
           
