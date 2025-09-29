@@ -19,11 +19,11 @@ function App() {
 
   // STEP 2: Check if user is already logged in when app starts
   useEffect(function() {
-    // Check if user was logged in before
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    const savedRole = localStorage.getItem("role");
-    setIsLoggedIn(loggedIn);
-    setRole(savedRole);
+    // Always start with login form (ignore localStorage)
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("role");
+    setIsLoggedIn(false);
+    setRole(null);
 
     // Hide splash screen after 2 seconds
     const timer = setTimeout(function() {

@@ -14,6 +14,40 @@ function UserDashboard(props) {
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [activeNavItem, setActiveNavItem] = useState('Restaurants');
 
+  // STEP 3.1: Set up local state for user feedbacks/comments/questions
+  // We start with a few example feedbacks so the list is not empty at first
+  const [feedbacks, setFeedbacks] = useState([
+    { id: 1, name: 'Aisha', message: 'Great experience finding allergy-safe meals!' },
+    { id: 2, name: 'Rahul', message: 'Could you add more details on ingredients?' },
+    { id: 3, name: 'Meera', message: 'Love the clean UI. Thanks!' }
+  ]);
+
+  // STEP 3.2: Local state for the simple feedback form (controlled inputs)
+  const [newFeedbackName, setNewFeedbackName] = useState('');
+  const [newFeedbackMessage, setNewFeedbackMessage] = useState('');
+
+  // STEP 3.3: Local state for FAQs (hardcoded questions & answers with toggle)
+  const [faqs, setFaqs] = useState([
+    {
+      id: 1,
+      question: 'How does SafeBytes determine allergens in dishes?',
+      answer: 'Restaurants provide ingredients. We cross-check common allergen keywords to highlight potential allergens.',
+      open: false
+    },
+    {
+      id: 2,
+      question: 'Can I trust the allergen information completely?',
+      answer: 'We aim for accuracy, but always confirm with the restaurant if you have severe allergies.',
+      open: false
+    },
+    {
+      id: 3,
+      question: 'How can I request a new feature or report an issue?',
+      answer: 'Use the feedback form below. Your message is saved locally and shown instantly in the list.',
+      open: false
+    }
+  ]);
+
   // STEP 4: Create array of inspirational quotes
   const quotes = [
     "Good food is the foundation of genuine happiness",
@@ -54,6 +88,38 @@ function UserDashboard(props) {
       navigate('/restaurants');
     }
     // Add other navigation logic as needed
+  }
+
+  // STEP 7.1: Handle feedback form submission (save to local state only)
+  function handleFeedbackSubmit(e) {
+    e.preventDefault();
+    // Basic validation to keep things simple and student-friendly
+    if (!newFeedbackName.trim() || !newFeedbackMessage.trim()) {
+      return;
+    }
+    // Create a new feedback object
+    const newFeedback = {
+      id: Date.now(),
+      name: newFeedbackName.trim(),
+      message: newFeedbackMessage.trim()
+    };
+    // Add the new feedback at the top so it appears instantly
+    setFeedbacks(function(prev) { return [newFeedback, ...prev]; });
+    // Clear the inputs
+    setNewFeedbackName('');
+    setNewFeedbackMessage('');
+  }
+
+  // STEP 7.2: Toggle an FAQ item open/closed by id (simple local update)
+  function toggleFaq(faqId) {
+    setFaqs(function(prev) {
+      return prev.map(function(item) {
+        if (item.id === faqId) {
+          return { ...item, open: !item.open };
+        }
+        return item;
+      });
+    });
   }
 
   return (
@@ -160,6 +226,86 @@ function UserDashboard(props) {
             <div className="stat-number">99.9%</div>
             <div className="stat-label">Safety Rate</div>
           </div>
+        </div>
+      </section>
+
+      {/* STEP 8: User Feedbacks & Questions Section (local state only) */}
+      <section className="feedback-section">
+        {/* Section Title */}
+        <h2 className="section-title">User Feedbacks & Questions</h2>
+
+        {/* Feedback List - shows existing and newly added feedbacks */}
+        <div className="feedback-list">
+          {feedbacks.map(function(item) {
+            return (
+              <div key={item.id} className="feedback-card">
+                <div className="feedback-name">{item.name}</div>
+                <div className="feedback-message">{item.message}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Simple Feedback Form - student-simple and fully commented */}
+        <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
+          {/* Name Input */}
+          <div className="form-row">
+            <label className="form-label" htmlFor="fb-name">Your Name</label>
+            <input
+              id="fb-name"
+              className="form-input"
+              type="text"
+              placeholder="Enter your name"
+              value={newFeedbackName}
+              onChange={function(e) { setNewFeedbackName(e.target.value); }}
+            />
+          </div>
+
+          {/* Message Input */}
+          <div className="form-row">
+            <label className="form-label" htmlFor="fb-message">Your Feedback / Question</label>
+            <textarea
+              id="fb-message"
+              className="form-textarea"
+              placeholder="Type your feedback or question here"
+              value={newFeedbackMessage}
+              onChange={function(e) { setNewFeedbackMessage(e.target.value); }}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="form-actions">
+            <button type="submit" className="form-button">Submit</button>
+          </div>
+        </form>
+      </section>
+
+      {/* STEP 9: Mostly Asked Questions (FAQ) Section with simple toggles */}
+      <section className="faq-section">
+        {/* Section Title */}
+        <h2 className="section-title">Mostly Asked Questions</h2>
+
+        {/* FAQ List - hardcoded items with simple expand/collapse */}
+        <div className="faq-list">
+          {faqs.map(function(item) {
+            return (
+              <div key={item.id} className="faq-item">
+                <div className="faq-question-row">
+                  <div className="faq-question">{item.question}</div>
+                  <button
+                    type="button"
+                    className="faq-toggle"
+                    onClick={function() { toggleFaq(item.id); }}
+                  >
+                    {item.open ? 'Hide Answer' : 'Show Answer'}
+                  </button>
+                </div>
+                {item.open && (
+                  <div className="faq-answer">{item.answer}</div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>
