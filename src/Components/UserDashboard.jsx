@@ -59,11 +59,12 @@ function UserDashboard(props) {
 
   // STEP 5: Create array of navigation items
   const navItems = [
-  	{ id: 'Restaurants', label: 'Restaurants' },
-  	{ id: 'My Allergies', label: 'Allergies' },
-  	{ id: 'Contact', label: 'Contact' },
-  	{ id: 'About', label: 'About us' },
-  	{ id: 'Profile', label: 'Profile' }
+    { id: 'Restaurants',  label: 'Restaurants' },
+    { id: 'My Allergies', label: 'Allergies' },
+    { id: 'Contact', label: 'Contact' },
+    { id: 'About',  label: 'About us' },
+    { id: 'Profile', icon: '👤', label: 'Profile' }
+
   ];
 
   // STEP 6: Set up timer to change quotes every 4 seconds
