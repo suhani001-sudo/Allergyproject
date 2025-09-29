@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from './CartContext';
 import './UserRestaurantPage.css';
-import Cart from './Cart';
 
 function UserRestaurantPage(props) {
   // STEP 1: Get the onLogout function from props
@@ -10,15 +8,7 @@ function UserRestaurantPage(props) {
   
   // STEP 2: Initialize navigation and cart hooks
   const navigate = useNavigate();
-  const cartContext = useCart();
-  const cart = cartContext.cart;
-  const addToCart = cartContext.addToCart;
-  const updateQuantity = cartContext.updateQuantity;
-  const removeFromCart = cartContext.removeFromCart;
-  const clearCart = cartContext.clearCart;
-  const handleCheckout = cartContext.handleCheckout;
-  const getTotalItems = cartContext.getTotalItems;
-  const toggleCart = cartContext.toggleCart;
+  
   
   // STEP 3: Define state variables for managing data
   const [items, setItems] = useState([]);
@@ -293,19 +283,11 @@ function UserRestaurantPage(props) {
               <span className="nav-label">About us</span>
             </button>
             <button className="nav-link">
-              <span className="nav-icon">👤</span>
               <span className="nav-label">Profile</span>
             </button>
           </div>
 
           <div className="nav-actions">
-            <button className="cart-button" onClick={toggleCart}>
-              <span className="cart-icon">🛒</span>
-              <span className="cart-text">Cart</span>
-              {getTotalItems() > 0 && (
-                <span className="cart-badge">{getTotalItems()}</span>
-              )}
-            </button>
             <button className="logout-button" onClick={onLogout}>
               <span className="logout-text">Logout</span>
             </button>
@@ -425,7 +407,7 @@ function UserRestaurantPage(props) {
                       {/* Allergens Section */}
                       {item.allergens && item.allergens.length > 0 && (
                         <div className="allergens-section">
-                          <h4 className="allergens-title">⚠️ Contains:</h4>
+                          <h4 className="allergens-title">Contains:</h4>
                           <div className="allergens-list">
                             {item.allergens.map(function(allergen, idx) {
                               return (
@@ -455,12 +437,7 @@ function UserRestaurantPage(props) {
                       
                       <div className="item-footer">
                         <span className="item-price">${item.price}</span>
-                        <button 
-                          className="order-button"
-                          onClick={function() { addToCart(item); }}
-                        >
-                          Order
-                        </button>
+                        
                       </div>
                     </div>
                   </div>
@@ -470,14 +447,7 @@ function UserRestaurantPage(props) {
           )}
         </div>
 
-        {/* STEP 12: Render cart component */}
-        <Cart
-          cart={cart}
-          updateQuantity={updateQuantity}
-          removeFromCart={removeFromCart}
-          clearCart={clearCart}
-          handleCheckout={handleCheckout}
-        />
+        
       </main>
     </div>
   );

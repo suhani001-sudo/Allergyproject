@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from './CartContext';
 import './UserDashboard.css';
 
 function UserDashboard(props) {
@@ -9,9 +8,7 @@ function UserDashboard(props) {
   
   // STEP 2: Initialize navigation and cart hooks
   const navigate = useNavigate();
-  const cartContext = useCart();
-  const getTotalItems = cartContext.getTotalItems;
-  const toggleCart = cartContext.toggleCart;
+  
   
   // STEP 3: Set up state variables
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
@@ -28,11 +25,11 @@ function UserDashboard(props) {
 
   // STEP 5: Create array of navigation items
   const navItems = [
-    { id: 'Restaurants', icon: '🍽️', label: 'Restaurants' },
-    { id: 'My Allergies', icon: '⚠️', label: 'Allergies' },
-    { id: 'Contact', icon: '📞', label: 'Contact' },
-    { id: 'About', icon: 'ℹ️', label: 'About us' },
-    { id: 'Profile', icon: '👤', label: 'Profile' }
+  	{ id: 'Restaurants', label: 'Restaurants' },
+  	{ id: 'My Allergies', label: 'Allergies' },
+  	{ id: 'Contact', label: 'Contact' },
+  	{ id: 'About', label: 'About us' },
+  	{ id: 'Profile', label: 'Profile' }
   ];
 
   // STEP 6: Set up timer to change quotes every 4 seconds
@@ -61,11 +58,7 @@ function UserDashboard(props) {
 
   return (
     <div className="home-container">
-      <div className="floating-elements">
-        <div className="floating-icon">🥗</div>
-        <div className="floating-icon">🍎</div>
-        <div className="floating-icon">🥑</div>
-      </div>
+      
 
       <nav className="navbar">
         <div className="nav-container">
@@ -86,7 +79,6 @@ function UserDashboard(props) {
                   className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
                   onClick={function() { handleNavClick(item.id); }}
                 >
-                  <span className="nav-icon">{item.icon}</span>
                   <span className="nav-label">{item.label}</span>
                   {activeNavItem === item.id && (
                     <div className="active-indicator" />
@@ -96,17 +88,7 @@ function UserDashboard(props) {
             })}
           </div>
 
-          {/* STEP 8: Cart button with item count */}
-          <button
-            className="cart-button"
-            onClick={toggleCart}
-          >
-            <span className="cart-icon">🛒</span>
-            <span className="cart-text">Cart</span>
-            {getTotalItems() > 0 && (
-              <span className="cart-badge">{getTotalItems()}</span>
-            )}
-          </button>
+          
 
           <button
             className="logout-button"
@@ -137,12 +119,10 @@ function UserDashboard(props) {
 
             <div className="cta-buttons">
               <button className="cta-button primary" onClick={function() { navigate('/restaurants'); }}>
-                <span className="cta-icon">🍽️</span>
                 Explore Restaurants
               </button>
               
               <button className="cta-button secondary">
-                <span className="cta-icon">⚠️</span>
                 Check My Allergies
               </button>
             </div>
@@ -167,19 +147,16 @@ function UserDashboard(props) {
       <section className="stats-section">
         <div className="stats-container">
           <div className="stat-card">
-            <div className="stat-icon">🏪</div>
             <div className="stat-number">50+</div>
             <div className="stat-label">Allergy-Safe Restaurants</div>
           </div>
           
           <div className="stat-card">
-            <div className="stat-icon">👥</div>
             <div className="stat-number">10K+</div>
             <div className="stat-label">Happy Users</div>
           </div>
           
           <div className="stat-card">
-            <div className="stat-icon">🛡️</div>
             <div className="stat-number">99.9%</div>
             <div className="stat-label">Safety Rate</div>
           </div>
