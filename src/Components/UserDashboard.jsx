@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserDashboard.css';
+import Footer from './Footer';
 
 function UserDashboard(props) {
   // STEP 1: Get the onLogout function from props
@@ -78,6 +79,7 @@ function UserDashboard(props) {
     return function() {
       clearInterval(interval);
     };
+    
   }, [quotes.length]);
 
   // STEP 7: Function to handle navigation clicks
@@ -86,6 +88,9 @@ function UserDashboard(props) {
     if (itemId === 'Restaurants') {
       // Navigate to restaurant page
       navigate('/restaurants');
+    } else if (itemId === 'About') {
+      // Navigate to About Us page
+      navigate('/about-us');
     }
     // Add other navigation logic as needed
   }
@@ -308,6 +313,9 @@ function UserDashboard(props) {
           })}
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

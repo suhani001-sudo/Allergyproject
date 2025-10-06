@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RestaurantDashboard.css';
+import Footer from './Footer';
 
 // STEP 1: Define the allergen options we will use in the form and display
 const ALLERGENS = ['Nuts', 'Dairy', 'Gluten', 'Soy', 'Eggs', 'Shellfish'];
@@ -254,7 +255,7 @@ function RestaurantDashboard(props) {
                     } else if (item.id === 'Restaurants') goTo('menu');
                     else if (item.id === 'Allergies') goTo('form');
                     else if (item.id === 'Contact') goTo('analytics');
-                    else if (item.id === 'About') goTo('analytics');
+                    else if (item.id === 'About') navigate('/about-us');
                   }}
                 >
                   <span className="nav-label">{item.label}</span>
@@ -479,6 +480,9 @@ function RestaurantDashboard(props) {
           </div>
         </section>
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
