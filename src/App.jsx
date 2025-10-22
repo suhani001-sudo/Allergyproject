@@ -8,23 +8,22 @@ import UserDashboard from "./Components/UserDashboard";
 import ResturantDashboard from "./Components/ResturantDashboard";
 import UserRestaurantPage from "./Components/UserRestaurantPage";
 import { CartProvider } from "./Components/CartContext";
+import AboutUs from "./Components/AboutUs";
 import "./App.css";
 
 function App() {
   // STEP 1: Set up state variables for the app
   const [showSplash, setShowSplash] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null); 
+  const [isLoggedIn, setIsLoggedIn] = useState(function() {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
+  const [role, setRole] = useState(function() {
+    return localStorage.getItem("role") || null;
+  }); 
   const [isSignup, setIsSignup] = useState(false); 
 
   // STEP 2: Check if user is already logged in when app starts
   useEffect(function() {
-    // Always start with login form (ignore localStorage)
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("role");
-    setIsLoggedIn(false);
-    setRole(null);
-
     // Hide splash screen after 2 seconds
     const timer = setTimeout(function() {
       setShowSplash(false);
@@ -77,6 +76,11 @@ function App() {
       <CartProvider>
         <Router>
           <Routes>
+            {/* Public About page */}
+            <Route 
+              path="/about-us" 
+              element={<AboutUs />} 
+            />
             <Route 
               path="/signup" 
               element={
@@ -102,6 +106,11 @@ function App() {
       <CartProvider>
         <Router>
           <Routes>
+            {/* Public About page */}
+            <Route 
+              path="/about-us" 
+              element={<AboutUs />} 
+            />
             <Route 
               path="/login" 
               element={
@@ -126,6 +135,11 @@ function App() {
     <CartProvider>
       <Router>
         <Routes>
+          {/* Public About page */}
+          <Route 
+            path="/about-us" 
+            element={<AboutUs />} 
+          />
           {/* STEP 8: Login page route */}
           <Route 
             path="/login" 

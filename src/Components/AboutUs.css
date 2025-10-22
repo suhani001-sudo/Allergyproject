@@ -1,0 +1,453 @@
+/* STEP 1: Basic page layout and neutral colors (beige, white, grey) */
+.aboutus-page {
+  background: linear-gradient(135deg, #f8f9fa 0%, #f7f4ef 50%, #f5f5f5 100%);
+  color: #333333;      /* dark grey for text */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  padding-top: 100px; /* account for fixed navbar */
+  box-sizing: border-box;
+  gap: 24px;
+}
+
+/* Glassmorphism navbar (matching UserDashboard exactly) */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(107, 142, 35, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: fade-in-down 0.8s ease 0.2s both;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.logo-image {
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 0.5rem;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #6B8E23;
+  letter-spacing: 0.5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(248, 249, 250, 0.8);
+  border: 1px solid rgba(107, 142, 35, 0.1);
+  border-radius: 12px;
+  color: #6B8E23;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.nav-link:hover {
+  background: rgba(107, 142, 35, 0.1);
+  border-color: rgba(107, 142, 35, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(107, 142, 35, 0.15);
+}
+
+.nav-link.active {
+  background: rgba(107, 142, 35, 0.15);
+  border-color: rgba(107, 142, 35, 0.3);
+  box-shadow: 0 8px 25px rgba(107, 142, 35, 0.2);
+}
+
+.nav-icon {
+  font-size: 1.1rem;
+}
+
+.nav-label {
+  font-weight: 600;
+}
+
+.active-indicator {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background: linear-gradient(90deg, #6B8E23, #556B2F);
+  border-radius: 2px;
+}
+
+/* STEP 2: Header - center aligned text */
+.aboutus-header {
+  background: #ffffff;
+  border: 1px solid #e6e2da;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.aboutus-title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #3f3f3f;
+}
+
+.aboutus-tagline {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6b6b6b;
+}
+
+.aboutus-desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4a4a4a;
+}
+
+/* STEP 3: Sections (Mission, Vision) */
+.aboutus-section {
+  background: #ffffff;
+  border: 1px solid #e6e2da;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.section-title {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #3f3f3f;
+}
+
+.section-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #4a4a4a;
+}
+
+/* Small UI components - Pills and Mini Stats */
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  justify-content: center;
+}
+
+.pill {
+  background: rgba(107, 142, 35, 0.08);
+  border: 1px solid rgba(107, 142, 35, 0.15);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #3f3f3f;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.pill:hover {
+  background: rgba(107, 142, 35, 0.12);
+  transform: translateY(-1px);
+}
+
+.mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.mini-card {
+  background: #fff;
+  border: 1px solid #e6e2da;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+.mini-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(107, 142, 35, 0.12);
+}
+
+.mini-card .num {
+  font-weight: 800;
+  color: #6B8E23;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.mini-card .lbl {
+  color: #6b6b6b;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* STEP 4: Team grid - simple, responsive */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+@media (max-width: 1000px) {
+  .team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* STEP 5: Team cards with soft shadows and hover effect */
+.team-card {
+  background: #ffffff;
+  border: 1px solid #e6e2da;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(107, 142, 35, 0.15);
+  border-color: rgba(107, 142, 35, 0.2);
+}
+
+/* STEP 5.1: Team photo and text */
+.team-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 10px auto;
+  border: 1px solid #e6e2da;
+  background: #faf9f7;
+}
+
+.team-name {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #3f3f3f;
+}
+
+.team-role {
+  margin: 0;
+  font-size: 14px;
+  color: #6b6b6b;
+  font-weight: 600;
+}
+
+/* STEP 6: Footer note */
+.aboutus-footer {
+  text-align: center;
+  color: #6b6b6b;
+  font-size: 14px;
+  padding: 8px 0 0 0;
+}
+
+/* Premium Animation Classes */
+.fade-in {
+  animation: fade-in 0.8s ease both;
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.8s ease both;
+}
+
+.fade-in-down {
+  animation: fade-in-down 0.6s ease both;
+}
+
+/* Animation Keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered animation delays for sections */
+.aboutus-header.fade-in-up {
+  animation-delay: 0.1s;
+}
+
+.aboutus-section.fade-in-up:nth-of-type(2) {
+  animation-delay: 0.2s;
+}
+
+.aboutus-section.fade-in-up:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+.aboutus-section.fade-in-up:nth-of-type(4) {
+  animation-delay: 0.4s;
+}
+
+/* Responsive navbar adjustments */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .aboutus-page {
+    padding-top: 140px;
+  }
+
+  .logo-image {
+    height: 50px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .mini-stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutus-page {
+    padding: 16px 12px;
+    padding-top: 160px;
+  }
+
+  .aboutus-title {
+    font-size: 24px;
+  }
+
+  .pill-row {
+    justify-content: flex-start;
+  }
+
+  .pill {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
