@@ -9,6 +9,8 @@ import ResturantDashboard from "./Components/ResturantDashboard";
 import UserRestaurantPage from "./Components/UserRestaurantPage";
 import { CartProvider } from "./Components/CartContext";
 import AboutUs from "./Components/AboutUs";
+import ContactUs from "./Components/ContactUs";
+import Profile from "./Components/Profile";
 import "./App.css";
 
 function App() {
@@ -82,6 +84,10 @@ function App() {
               element={<AboutUs />} 
             />
             <Route 
+              path="/contact" 
+              element={<ContactUs />} 
+            />
+            <Route 
               path="/signup" 
               element={
                 <Signup 
@@ -112,6 +118,10 @@ function App() {
               element={<AboutUs />} 
             />
             <Route 
+              path="/contact" 
+              element={<ContactUs />} 
+            />
+            <Route 
               path="/login" 
               element={
                 <Login 
@@ -139,6 +149,10 @@ function App() {
           <Route 
             path="/about-us" 
             element={<AboutUs />} 
+          />
+          <Route 
+            path="/contact" 
+            element={<ContactUs />} 
           />
           {/* STEP 8: Login page route */}
           <Route 
@@ -192,6 +206,18 @@ function App() {
                 <Navigate to="/login" replace />
               )
             } 
+          />
+
+          {/* Profile page route for users */}
+          <Route
+            path="/profile"
+            element={
+              isLoggedIn && role === "user" ? (
+                <Profile />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
 
           {/* STEP 12: Restaurant dashboard route for restaurant owners */}

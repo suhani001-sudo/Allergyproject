@@ -1,163 +1,342 @@
-import React from 'react';
-import './AboutUs.css';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AboutUs.css';
+import Footer from './Footer';
 
-// STEP 1: Page structure - simple functional component for About Us
 function AboutUs() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [activeNavItem, setActiveNavItem] = useState('About');
 
-  const navItems = [
-    { id: 'Restaurants', label: 'Restaurants', path: '/restaurants' },
-    { id: 'My Allergies', label: 'Allergies', path: '/allergies' },
-    { id: 'Contact', label: 'Contact', path: '/contact' },
-    { id: 'About', label: 'About us', path: '/about-us' },
-    { id: 'Profile', label: 'Profile', path: '/profile' }
-  ];
+    // Navigation items
+    const navItems = [
+        { id: 'Dashboard', label: 'Dashboard' },
+        { id: 'Restaurants', label: 'Restaurants' },
+        { id: 'Allergies', label: 'Allergies' },
+        { id: 'Contact', label: 'Contact' },
+        { id: 'About', label: 'About us' },
+        { id: 'Profile', label: 'Profile' }
+    ];
 
-  function handleNavClick(item) {
-    if (item && item.path) {
-      navigate(item.path);
+    // Handle navigation clicks
+    function handleNavClick(itemId) {
+        setActiveNavItem(itemId);
+        if (itemId === 'Dashboard') {
+            navigate('/dashboard');
+        } else if (itemId === 'Restaurants') {
+            navigate('/restaurants');
+        } else if (itemId === 'Allergies') {
+            navigate('/allergies');
+        } else if (itemId === 'Contact') {
+            navigate('/contact');
+        } else if (itemId === 'About') {
+            navigate('/about-us');
+        } else if (itemId === 'Profile') {
+            navigate('/profile');
+        }
     }
-  }
 
-  return (
-    <div className="aboutus-page">
-      {/* Dashboard-style Navbar (lightweight copy) */}
-      <nav className="navbar">
-        <div className="nav-container">
-          <div className="nav-logo" onClick={() => navigate('/') }>
-            <img 
-              src="/images/green_logo.jpg" 
-              alt="SafeBytes Logo" 
-              className="logo-image"
-            />
-            <span className="logo-text">SafeBytes</span>
-          </div>
+    // Handle logout
+    function handleLogout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+    }
 
-          <div className="nav-links">
-            {navItems.map(function(item) {
-              const isActive = item.id === 'About';
-              return (
-                <button
-                  key={item.id}
-                  className={`nav-link ${isActive ? 'active' : ''}`}
-                  onClick={() => handleNavClick(item)}
-                >
-                  <span className="nav-label">{item.label}</span>
-                  {isActive && <div className="active-indicator" />}
-                </button>
-              );
-            })}
-          </div>
+    // Scroll animation effect
+    useEffect(() => {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        animatedElements.forEach(el => observer.observe(el));
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div className="about-page">
+            {/* Navbar */}
+            <nav className="navbar">
+                <div className="nav-container">
+                    <div className="nav-logo" onClick={() => navigate('/dashboard')}>
+                        <img
+                            src="/images/green_logo.jpg"
+                            alt="SafeBytes Logo"
+                            className="logo-image"
+                        />
+                        <span className="logo-text">SafeBytes</span>
+                    </div>
+
+                    <div className="nav-links">
+                        {navItems.map(function (item) {
+                            return (
+                                <button
+                                    key={item.id}
+                                    className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
+                                    onClick={function () { handleNavClick(item.id); }}
+                                >
+                                    <span className="nav-label">{item.label}</span>
+                                    {activeNavItem === item.id && (
+                                        <div className="active-indicator" />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <button className="logout-button" onClick={handleLogout}>
+                        <span className="logout-text">Logout</span>
+                    </button>
+                </div>
+            </nav>
+
+            {/* Hero Section - Premium Design */}
+            <section className="premium-hero">
+                <div className="hero-background">
+                    <div className="floating-icon float-1">🥗</div>
+                    <div className="floating-icon float-2">🍎</div>
+                    <div className="floating-icon float-3">🥑</div>
+                    <div className="floating-icon float-4">🌿</div>
+                </div>
+                <div className="hero-content-wrapper">
+                    <div className="hero-text-content">
+                        <h1 className="hero-main-title">About SafeBytes</h1>
+                        <h2 className="hero-subtitle">Eat Smart, Stay Safe</h2>
+                        <p className="hero-tagline">
+                            Empowering safe dining for everyone with food allergies
+                        </p>
+                        <div className="hero-decorative-line"></div>
+                    </div>
+                    <div className="hero-illustration">
+                        <div className="illustration-circle">
+                            <div className="inner-circle">
+                                <span className="illustration-icon">🛡️</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Wave Divider */}
+            <div className="wave-divider">
+                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#ffffff"></path>
+                </svg>
+            </div>
+
+            {/* Mission & Vision - Split Layout */}
+            <section className="mission-vision-split">
+                <div className="split-container animate-on-scroll">
+                    {/* Mission Side */}
+                    <div className="split-side mission-side">
+                        <div className="side-content">
+                            <div className="side-icon-badge">🎯</div>
+                            <h2 className="side-title">Our Mission</h2>
+                            <p className="side-text">
+                                Our mission is to promote food safety and awareness by empowering users with clear
+                                allergen information and healthy eating choices. We strive to make dining worry-free
+                                for individuals with food allergies by providing accurate, accessible, and actionable
+                                information at their fingertips.
+                            </p>
+                            <div className="side-decorative-element"></div>
+                        </div>
+                        <div className="side-graphic">
+                            <div className="graphic-circle mission-circle">
+                                <span className="graphic-emoji">🍽️</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Vision Side */}
+                    <div className="split-side vision-side">
+                        <div className="side-graphic">
+                            <div className="graphic-circle vision-circle">
+                                <span className="graphic-emoji">🌱</span>
+                            </div>
+                        </div>
+                        <div className="side-content">
+                            <div className="side-icon-badge">🌟</div>
+                            <h2 className="side-title">Our Vision</h2>
+                            <p className="side-text">
+                                We aim to create a world where no one has to worry about hidden allergens — where
+                                technology ensures safe and confident dining experiences for everyone. Through innovation
+                                and awareness, we envision a future where food allergies are no longer a barrier to
+                                enjoying meals with peace of mind.
+                            </p>
+                            <div className="side-decorative-element"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Project Highlights - Interactive Cards */}
+            <section className="highlights-section">
+                <div className="highlights-header animate-on-scroll">
+                    <h2 className="highlights-title">Why Choose SafeBytes?</h2>
+                    <p className="highlights-subtitle">Premium features designed for your safety</p>
+                </div>
+
+                <div className="highlights-grid animate-on-scroll">
+                    <div className="highlight-card card-1">
+                        <div className="card-icon-wrapper">
+                            <div className="card-icon">👤</div>
+                        </div>
+                        <h3 className="card-title">Personalized Allergy Profiles</h3>
+                        <p className="card-description">Customize your profile with detailed allergy information and severity levels</p>
+                        <div className="card-glow"></div>
+                    </div>
+
+                    <div className="highlight-card card-2">
+                        <div className="card-icon-wrapper">
+                            <div className="card-icon">🥗</div>
+                        </div>
+                        <h3 className="card-title">Safe Food Recommendations</h3>
+                        <p className="card-description">Discover allergy-friendly meals and alternatives tailored to you</p>
+                        <div className="card-glow"></div>
+                    </div>
+
+                    <div className="highlight-card card-3">
+                        <div className="card-icon-wrapper">
+                            <div className="card-icon">🧠</div>
+                        </div>
+                        <h3 className="card-title">Awareness & Education</h3>
+                        <p className="card-description">Stay informed with comprehensive allergen data and safety tips</p>
+                        <div className="card-glow"></div>
+                    </div>
+
+                    <div className="highlight-card card-4">
+                        <div className="card-icon-wrapper">
+                            <div className="card-icon">🏥</div>
+                        </div>
+                        <h3 className="card-title">Health-Focused Approach</h3>
+                        <p className="card-description">Medical-grade accuracy in allergen detection and reporting</p>
+                        <div className="card-glow"></div>
+                    </div>
+
+                    <div className="highlight-card card-5">
+                        <div className="card-icon-wrapper">
+                            <div className="card-icon">📱</div>
+                        </div>
+                        <h3 className="card-title">Responsive Design</h3>
+                        <p className="card-description">Seamless experience across all devices and screen sizes</p>
+                        <div className="card-glow"></div>
+                    </div>
+
+                    <div className="highlight-card card-6">
+                        <div className="card-icon-wrapper">
+                            <div className="card-icon">🔍</div>
+                        </div>
+                        <h3 className="card-title">Smart Search</h3>
+                        <p className="card-description">Quickly find safe restaurants and dishes in your area</p>
+                        <div className="card-glow"></div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Diagonal Divider */}
+            <div className="diagonal-divider"></div>
+
+            {/* Team Section - Premium Cards */}
+            <section className="team-section">
+                <div className="team-header animate-on-scroll">
+                    <h2 className="team-title">Meet Our Team</h2>
+                    <p className="team-subtitle">Dedicated to building a safer dining future</p>
+                    <div className="title-underline"></div>
+                </div>
+
+                <div className="team-cards-container animate-on-scroll">
+                    <div className="team-card">
+                        <div className="team-card-inner">
+                            <div className="team-avatar">
+                                <div className="avatar-circle">
+                                    <span className="avatar-initial">S</span>
+                                </div>
+                                <div className="avatar-glow"></div>
+                            </div>
+                            <h3 className="team-member-name">Suhani Sharma</h3>
+                            <div className="team-decorative-dots">
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="team-card">
+                        <div className="team-card-inner">
+                            <div className="team-avatar">
+                                <div className="avatar-circle">
+                                    <span className="avatar-initial">P</span>
+                                </div>
+                                <div className="avatar-glow"></div>
+                            </div>
+                            <h3 className="team-member-name">Prince Khatri</h3>
+                            <div className="team-decorative-dots">
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Technologies Section - Modern Badges */}
+            <section className="tech-section animate-on-scroll">
+                <div className="tech-header">
+                    <h2 className="tech-title">Built With Modern Technologies</h2>
+                    <p className="tech-subtitle">Powered by industry-leading tools</p>
+                </div>
+
+                <div className="tech-badges-container">
+                    <div className="tech-badge" style={{ animationDelay: '0.1s' }}>
+                        <span className="badge-text">HTML</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.2s' }}>
+                        <span className="badge-text">CSS</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.3s' }}>
+                        <span className="badge-text">JavaScript</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.4s' }}>
+                        <span className="badge-text">React</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.5s' }}>
+                        <span className="badge-text">Node.js</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.6s' }}>
+                        <span className="badge-text">MongoDB</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Call to Action - Keep As-Is */}
+            <section className="about-section fade-in">
+                <div className="cta-container">
+                    <h2 className="cta-title">Ready to Dine Safely?</h2>
+                    <p className="cta-text">
+                        Join thousands of users who trust SafeBytes for their food safety needs
+                    </p>
+                    <button className="cta-button" onClick={() => navigate('/restaurants')}>
+                        Explore Restaurants
+                    </button>
+                </div>
+            </section>
+
+            {/* Footer - Keep As-Is */}
+            <Footer />
         </div>
-      </nav>
-
-      {/* STEP 2: Header section */}
-      <header className="aboutus-header fade-in-up">
-        <h1 className="aboutus-title">About SafeBytes</h1>
-        <p className="aboutus-tagline">Your Health, Our Priority</p>
-        <p className="aboutus-desc">
-          SafeBytes is a student-built Food Allergy Management System that helps users manage food allergies,
-          discover safe restaurant menus, and promote allergy awareness. Our goal is to make choosing what to eat
-          safer, simpler, and more confident for everyone.
-        </p>
-      </header>
-
-      {/* STEP 3: Mission section */}
-      <section className="aboutus-section fade-in-up">
-        <h2 className="section-title">Our Mission</h2>
-        <p className="section-text">
-          To make dining safer for everyone with food allergies by providing clear information, user-friendly tools,
-          and a supportive platform that connects people with restaurants offering safe options.
-        </p>
-        <div className="pill-row">
-          <div className="pill">🔍 Clear Allergen Info</div>
-          <div className="pill">🛡️ Safety First</div>
-          <div className="pill">🤝 Community</div>
-        </div>
-      </section>
-
-      {/* STEP 4: Vision section */}
-      <section className="aboutus-section fade-in-up">
-        <h2 className="section-title">Our Vision</h2>
-        <p className="section-text">
-          We aim to build AI-powered allergen detection, partner with restaurants to maintain accurate menus,
-          and expand SafeBytes into a trusted global community resource.
-        </p>
-        <div className="mini-stats">
-          <div className="mini-card"><div className="num">50+</div><div className="lbl">Safe Spots</div></div>
-          <div className="mini-card"><div className="num">10K+</div><div className="lbl">Users</div></div>
-          <div className="mini-card"><div className="num">99.9%</div><div className="lbl">Reliability</div></div>
-        </div>
-      </section>
-
-      {/* STEP 5: Team section */}
-      <section className="aboutus-section fade-in-up">
-        <h2 className="section-title">Meet Our Team</h2>
-
-        {/* STEP 5.1: Simple responsive grid of team members */}
-        <div className="team-grid">
-          {/* Each card uses very simple HTML with an optional placeholder image */}
-          <div className="team-card">
-            <img
-              className="team-photo"
-              src="https://via.placeholder.com/100"
-              alt="Kumari Suhani"
-            />
-            <h3 className="team-name">Kumari Suhani</h3>
-            <p className="team-role">Lead • UX & QA</p>
-          </div>
-
-          <div className="team-card">
-            <img
-              className="team-photo"
-              src="https://via.placeholder.com/100"
-              alt="Prince Khatri"
-            />
-            <h3 className="team-name">Prince Khatri</h3>
-            <p className="team-role">Frontend • React</p>
-          </div>
-
-          <div className="team-card">
-            <img
-              className="team-photo"
-              src="https://via.placeholder.com/100"
-              alt="Radhika"
-            />
-            <h3 className="team-name">Radhika</h3>
-            <p className="team-role">Content • Outreach</p>
-          </div>
-
-          <div className="team-card">
-            <img
-              className="team-photo"
-              src="https://via.placeholder.com/100"
-              alt="Sabiya Gupta"
-            />
-            <h3 className="team-name">Sabiya Gupta</h3>
-            <p className="team-role">Research • Data</p>
-          </div>
-
-          <div className="team-card">
-            <img
-              className="team-photo"
-              src="https://via.placeholder.com/100"
-              alt="Ayush Sharma"
-            />
-            <h3 className="team-name">Ayush Sharma</h3>
-            <p className="team-role">Backend • APIs</p>
-          </div>
-        </div>
-      </section>
-
-      {/* STEP 6: Footer note */}
-      <footer className="aboutus-footer fade-in">
-        <p>© 2025 SafeBytes Project | Developed by Team SafeBytes</p>
-      </footer>
-    </div>
-  );
+    );
 }
 
 export default AboutUs;
-
-
