@@ -1,12 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./login.css"; // reuse the same login CSS for consistency
 
-
-const Signup = ({ onSignup, onSwitchToLogin }) => {
+const Signup = ({ onSignup }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
     role: "user", // 'user' or 'restaurant'
   });
 
@@ -17,16 +18,10 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -34,7 +29,9 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
     const previousRole = previousRoleRef.current;
     if (previousRole !== role) {
       setSlideDirection(
-        previousRole === "user" && role === "restaurant" ? "to-right" : "to-left"
+        previousRole === "user" && role === "restaurant"
+          ? "to-right"
+          : "to-left"
       );
       previousRoleRef.current = role;
     }
@@ -60,17 +57,11 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
       newErrors.password = "Password must be at least 6 characters";
     }
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -82,27 +73,28 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
       console.log("Signup attempt:", formData);
       setIsLoading(false);
 
-      if (onSignup) {
-        onSignup(formData);
+      // Navigate to dashboards based on role
+      if (formData.role === "user") {
+        navigate("/user-dashboard");
+      } else {
+        navigate("/restaurant-dashboard");
       }
     }, 1500);
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-form-container">
+    <div className="login-container">
+      <div className="login-form-container">
         {/* Logo Section */}
         <div className="logo-section">
           <h1 className="app-title">SafeBytes</h1>
-          <p className="app-tagline">Join our allergy-safe dining community</p>
+          <p className="app-tagline">Your allergy-safe dining companion</p>
         </div>
 
         {/* Role Selector */}
         <div className="role-selector">
           <div
-            className={`role-option ${
-              formData.role === "user" ? "active" : ""
-            }`}
+            className={`role-option ${formData.role === "user" ? "active" : ""}`}
             onClick={() => handleRoleChange("user")}
           >
             👤 User
@@ -121,15 +113,13 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
         <div className={`form-slider`}>
           <div
             className={`form-track ${
-              formData.role === "user"
-                ? "user-active"
-                : "restaurant-active"
+              formData.role === "user" ? "user-active" : "restaurant-active"
             } ${slideDirection}`}
           >
             {/* User Signup */}
             <div className="slide">
               <h2 className="form-title">User Sign Up</h2>
-              <form onSubmit={handleSubmit} className="signup-form">
+              <form onSubmit={handleSubmit} className="login-form">
                 <div className="form-group">
                   <label htmlFor="name-user">Full Name</label>
                   <input
@@ -138,7 +128,8 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Enter your full name"
+                    placeholder="Enter your name"
+                    required={formData.role === "user"}
                   />
                   {errors.name && formData.role === "user" && (
                     <span className="error-message">{errors.name}</span>
@@ -154,6 +145,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Enter your email"
+                    required={formData.role === "user"}
                   />
                   {errors.email && formData.role === "user" && (
                     <span className="error-message">{errors.email}</span>
@@ -168,49 +160,51 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    placeholder="Enter password"
+                    placeholder="Enter your password"
+                    required={formData.role === "user"}
                   />
                   {errors.password && formData.role === "user" && (
                     <span className="error-message">{errors.password}</span>
                   )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="confirmPassword-user">Confirm Password</label>
-                  <input
-                    type="password"
-                    id="confirmPassword-user"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm password"
-                  />
-                  {errors.confirmPassword && formData.role === "user" && (
-                    <span className="error-message">
-                      {errors.confirmPassword}
-                    </span>
-                  )}
-                </div>
+                <div className="form-options">
+                  <button
+                    type="submit"
+                    className="signup-button"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Signing Up..." : "Sign Up"}
+                  </button>
 
-                <button type="submit" className="signup-button" disabled={isLoading}>
-                  {isLoading ? "Signing Up..." : "Sign Up"}
-                </button>
+                  <div className="signup-section">
+                    <div className="signup-prompt">Already have an account?</div>
+                    <button
+                      type="button"
+                      className="login-switch"
+                      onClick={() => navigate("/login")}
+                    >
+                      Log In
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
 
             {/* Restaurant Signup */}
             <div className="slide">
               <h2 className="form-title">Restaurant Owner Sign Up</h2>
-              <form onSubmit={handleSubmit} className="signup-form">
+              <form onSubmit={handleSubmit} className="login-form">
                 <div className="form-group">
-                  <label htmlFor="name-restaurant">Restaurant Name</label>
+                  <label htmlFor="name-restaurant">Owner Name</label>
                   <input
                     type="text"
                     id="name-restaurant"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Enter your restaurant name"
+                    placeholder="Enter your name"
+                    required={formData.role === "restaurant"}
                   />
                   {errors.name && formData.role === "restaurant" && (
                     <span className="error-message">{errors.name}</span>
@@ -226,6 +220,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Enter your business email"
+                    required={formData.role === "restaurant"}
                   />
                   {errors.email && formData.role === "restaurant" && (
                     <span className="error-message">{errors.email}</span>
@@ -240,34 +235,34 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    placeholder="Enter password"
+                    placeholder="Enter your password"
+                    required={formData.role === "restaurant"}
                   />
                   {errors.password && formData.role === "restaurant" && (
                     <span className="error-message">{errors.password}</span>
                   )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="confirmPassword-restaurant">Confirm Password</label>
-                  <input
-                    type="password"
-                    id="confirmPassword-restaurant"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm password"
-                  />
-                  {errors.confirmPassword &&
-                    formData.role === "restaurant" && (
-                      <span className="error-message">
-                        {errors.confirmPassword}
-                      </span>
-                    )}
-                </div>
+                <div className="form-options">
+                  <button
+                    type="submit"
+                    className="signup-button"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Signing Up..." : "Sign Up"}
+                  </button>
 
-                <button type="submit" className="signup-button" disabled={isLoading}>
-                  {isLoading ? "Signing Up..." : "Sign Up"}
-                </button>
+                  <div className="signup-section">
+                    <div className="signup-prompt">Already have an account?</div>
+                    <button
+                      type="button"
+                      className="login-switch"
+                      onClick={() => navigate("/login")}
+                    >
+                      Log In
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
           </div>

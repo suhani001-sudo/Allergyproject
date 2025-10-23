@@ -1,7 +1,9 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
 
-const Login = ({ onLogin, onSwitchToSignup }) => {
+const Login = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -172,7 +174,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                     <button
                       type="button"
                       className="signup-button"
-                      onClick={() => onSwitchToSignup && onSwitchToSignup()}
+                      onClick={() => navigate("/signup")} 
                     >
                       Sign up instead
                     </button>
@@ -237,7 +239,8 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                       type="button"
                       className="signup-button"
                       onClick={() => onSwitchToSignup()}
-                    >Sign up instead
+                    >
+                      Sign up instead
                     </button>
                   </div>
                 </div>
