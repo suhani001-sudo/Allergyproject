@@ -22,21 +22,11 @@ function UserDashboard(props) {
         { id: 3, name: 'Meera', message: 'Love the clean UI. Thanks!' }
     ]);
 
-<<<<<<< HEAD
+
     // STEP 3.2: Feedback form state
     const [newFeedbackName, setNewFeedbackName] = useState('');
     const [newFeedbackMessage, setNewFeedbackMessage] = useState('');
-=======
-  // STEP 5: Create array of navigation items
-  const navItems = [
-    { id: 'Restaurants',  label: 'Restaurants' },
-    { id: 'My Allergies', label: 'Allergies' },
-    { id: 'Contact', label: 'Contact' },
-    { id: 'About',  label: 'About us' },
-    { id: 'Profile', icon: '👤', label: 'Profile' }
 
-  ];
->>>>>>> 4b5364f79e8738aee11df30ef8dc6705a20a5a9a
 
     // STEP 3.3: FAQs state
     const [faqs, setFaqs] = useState([
