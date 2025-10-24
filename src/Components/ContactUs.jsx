@@ -37,7 +37,7 @@ function ContactUs() {
         } else if (itemId === 'Restaurants') {
             navigate('/restaurants');
         } else if (itemId === 'Allergies') {
-            navigate('/allergies');
+            navigate('/allergy-info');
         } else if (itemId === 'Contact') {
             navigate('/contact');
         } else if (itemId === 'About') {

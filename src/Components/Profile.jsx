@@ -271,7 +271,7 @@ function Profile() {
     const navItems = [
         { id: 'Dashboard', label: 'Dashboard', path: '/dashboard' },
         { id: 'Restaurants', label: 'Restaurants', path: '/restaurants' },
-        { id: 'Allergies', label: 'Allergies', path: '/allergies' },
+        { id: 'Allergies', label: 'Allergies', path: '/allergy-info' },
         { id: 'Contact', label: 'Contact', path: '/contact' },
         { id: 'About', label: 'About us', path: '/about-us' },
         { id: 'Profile', label: 'Profile', path: '/profile' }

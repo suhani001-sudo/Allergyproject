@@ -8,7 +8,7 @@ function AllergyInfo() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAllergen, setSelectedAllergen] = useState(null);
   const [currentTip, setCurrentTip] = useState(0);
-  const [activeNavItem, setActiveNavItem] = useState('Allergy Info');
+  const [activeNavItem, setActiveNavItem] = useState('My Allergies');
 
   const safetyTips = [
     "Always read labels before eating!",
@@ -132,7 +132,6 @@ function AllergyInfo() {
   // Navigation items
   const navItems = [
     { id: 'Restaurants', label: 'Restaurants' },
-    { id: 'Allergy Info', label: 'Allergy Info' },
     { id: 'My Allergies', label: 'My Allergies' },
     { id: 'Contact', label: 'Contact' },
     { id: 'About', label: 'About us' },
@@ -143,21 +142,18 @@ function AllergyInfo() {
     setActiveNavItem(itemId);
     if (itemId === 'Restaurants') {
       navigate('/restaurants');
-    } else if (itemId === 'Allergy Info') {
-      // If already on allergy info page, scroll to top
+    } else if (itemId === 'My Allergies') {
       if (window.location.pathname === '/allergy-info') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         navigate('/allergy-info');
       }
-    } else if (itemId === 'My Allergies') {
-      navigate('/allergy-info');
     } else if (itemId === 'Contact') {
-      navigate('/dashboard');
+      navigate('/contact');
     } else if (itemId === 'About') {
       navigate('/about-us');
     } else if (itemId === 'Profile') {
-      navigate('/dashboard');
+      navigate('/profile');
     }
   };
 

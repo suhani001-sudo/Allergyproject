@@ -85,11 +85,11 @@ function UserDashboard(props) {
     } else if (itemId === 'My Allergies') {
       navigate('/allergy-info');
     } else if (itemId === 'Contact') {
-      navigate('/dashboard');
+      navigate('/contact');
     } else if (itemId === 'About') {
       navigate('/about-us');
     } else if (itemId === 'Profile') {
-      navigate('/dashboard');
+      navigate('/profile');
     }
   }
 
@@ -178,7 +178,7 @@ function UserDashboard(props) {
                 Explore Restaurants
               </button>
               
-              <button className="cta-button secondary">
+              <button className="cta-button secondary" onClick={function() { navigate('/allergy-info'); }}>
                 Check My Allergies
               </button>
             </div>

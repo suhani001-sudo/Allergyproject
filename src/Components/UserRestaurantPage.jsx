@@ -275,13 +275,13 @@ function UserRestaurantPage(props) {
             <button className="nav-link" onClick={function() { navigate('/allergy-info'); }}>
               <span className="nav-label">Allergies</span>
             </button>
-            <button className="nav-link" onClick={function() { navigate('/dashboard'); }}>
+            <button className="nav-link" onClick={function() { navigate('/contact'); }}>
               <span className="nav-label">Contact</span>
             </button>
             <button className="nav-link" onClick={function() { navigate('/about-us'); }}>
               <span className="nav-label">About us</span>
             </button>
-            <button className="nav-link" onClick={function() { navigate('/dashboard'); }}>
+            <button className="nav-link" onClick={function() { navigate('/profile'); }}>
               <span className="nav-label">Profile</span>
             </button>
           </div>
