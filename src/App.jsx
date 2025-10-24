@@ -7,6 +7,7 @@ import Signup from "./Components/Signup";
 import UserDashboard from "./Components/UserDashboard";
 import ResturantDashboard from "./Components/ResturantDashboard";
 import UserRestaurantPage from "./Components/UserRestaurantPage";
+import AllergyInfo from "./Components/AllergyInfo";
 import { CartProvider } from "./Components/CartContext";
 import AboutUs from "./Components/AboutUs";
 import "./App.css";
@@ -188,6 +189,18 @@ function App() {
             element={
               isLoggedIn && role === "user" ? (
                 <UserRestaurantPage onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+
+          {/* Allergy Information page route */}
+          <Route 
+            path="/allergy-info" 
+            element={
+              isLoggedIn && role === "user" ? (
+                <AllergyInfo />
               ) : (
                 <Navigate to="/login" replace />
               )

@@ -90,7 +90,7 @@ function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-container">
           <p className="footer-copyright">
-            © 2024 SafeBytes. All rights reserved.
+            © 2025 SafeBytes. All rights reserved.
           </p>
           <div className="footer-bottom-links">
             <button onClick={() => handleLinkClick('/dashboard')} className="footer-bottom-link">Privacy Policy</button>

@@ -61,7 +61,8 @@ function UserDashboard(props) {
   // STEP 5: Create array of navigation items
   const navItems = [
     { id: 'Restaurants',  label: 'Restaurants' },
-    { id: 'My Allergies', label: 'Allergies' },
+    { id: 'Allergy Info', label: 'Allergy Info' },
+    { id: 'My Allergies', label: 'My Allergies' },
     { id: 'Contact', label: 'Contact' },
     { id: 'About',  label: 'About us' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
@@ -89,6 +90,9 @@ function UserDashboard(props) {
     if (itemId === 'Restaurants') {
       // Navigate to restaurant page
       navigate('/restaurants');
+    } else if (itemId === 'Allergy Info') {
+      // Navigate to Allergy Information page
+      navigate('/allergy-info');
     } else if (itemId === 'About') {
       // Navigate to About Us page
       navigate('/about-us');
@@ -194,8 +198,8 @@ function UserDashboard(props) {
                 Explore Restaurants
               </button>
               
-              <button className="cta-button secondary">
-                Check My Allergies
+              <button className="cta-button secondary" onClick={function() { navigate('/allergy-info'); }}>
+                Allergy Information
               </button>
             </div>
           </div>
