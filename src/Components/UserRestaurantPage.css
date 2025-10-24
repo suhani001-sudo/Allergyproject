@@ -30,117 +30,121 @@ body {
   position: relative;
 }
 
-/* STEP 3: Navigation bar with original styling */
+/* STEP 3: Navigation bar matching Dashboard styling */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(248, 248, 248, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(107, 142, 35, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .nav-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
 }
 
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .logo-image {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  object-fit: cover;
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 0.5rem;
 }
 
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #6B904A;
-  letter-spacing: -0.5px;
+  color: #5b8a3c;
+  letter-spacing: 0.5px;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
 }
 
 .nav-link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  color: #555;
+  padding: 0.75rem 1.25rem;
+  background: rgba(248, 249, 250, 0.8);
+  border: 1px solid rgba(107, 142, 35, 0.1);
+  border-radius: 12px;
+  color: #5b8a3c;
+  text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5b8a3c, #4e6f2a);
+  border-radius: 2px 2px 0 0;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-link:hover {
-  background: rgba(107, 144, 74, 0.1);
-  color: #6B904A;
+  background: rgba(107, 142, 35, 0.1);
+  border-color: rgba(107, 142, 35, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(107, 142, 35, 0.15);
+  color: #4e6f2a;
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .nav-link.active {
-  background: rgba(217, 234, 211, 0.8);
-  color: #6B904A;
-  font-weight: 600;
+  background: rgba(107, 142, 35, 0.15);
+  border-color: rgba(107, 142, 35, 0.3);
+  box-shadow: 0 8px 25px rgba(107, 142, 35, 0.2);
+  color: #4e6f2a;
 }
 
 .nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 3px;
-  background: linear-gradient(90deg, #6B904A, #556B2F);
-  border-radius: 2px;
+  width: 100%;
 }
 
 .nav-label {
-  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .nav-icon {
   font-size: 1.1rem;
-}
-
-.active-indicator {
-  position: absolute;
-  bottom: -1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 3px;
-  background: linear-gradient(90deg, #6B904A, #556B2F);
-  border-radius: 2px;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 /* Cart Button Styles */

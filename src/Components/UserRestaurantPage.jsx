@@ -271,27 +271,24 @@ function UserRestaurantPage(props) {
               onClick={function() { navigate('/restaurants'); }}
             >
               <span className="nav-label">Restaurants</span>
-              <div className="active-indicator" />
             </button>
-            <button className="nav-link">
+            <button className="nav-link" onClick={function() { navigate('/allergies'); }}>
               <span className="nav-label">Allergies</span>
             </button>
-            <button className="nav-link">
+            <button className="nav-link" onClick={function() { navigate('/contact'); }}>
               <span className="nav-label">Contact</span>
             </button>
-            <button className="nav-link">
+            <button className="nav-link" onClick={function() { navigate('/about-us'); }}>
               <span className="nav-label">About us</span>
             </button>
-            <button className="nav-link">
+            <button className="nav-link" onClick={function() { navigate('/profile'); }}>
               <span className="nav-label">Profile</span>
             </button>
           </div>
 
-          <div className="nav-actions">
-            <button className="logout-button" onClick={onLogout}>
-              <span className="logout-text">Logout</span>
-            </button>
-          </div>
+          <button className="logout-button" onClick={onLogout}>
+            <span className="logout-text">Logout</span>
+          </button>
         </div>
       </nav>
 

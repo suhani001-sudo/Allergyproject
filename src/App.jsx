@@ -10,6 +10,8 @@ import UserRestaurantPage from "./Components/UserRestaurantPage";
 import AllergyInfo from "./Components/AllergyInfo";
 import { CartProvider } from "./Components/CartContext";
 import AboutUs from "./Components/AboutUs";
+import ContactUs from "./Components/ContactUs";
+import Profile from "./Components/Profile";
 import "./App.css";
 
 function App() {
@@ -83,6 +85,10 @@ function App() {
               element={<AboutUs />} 
             />
             <Route 
+              path="/contact" 
+              element={<ContactUs />} 
+            />
+            <Route 
               path="/signup" 
               element={
                 <Signup 
@@ -113,6 +119,10 @@ function App() {
               element={<AboutUs />} 
             />
             <Route 
+              path="/contact" 
+              element={<ContactUs />} 
+            />
+            <Route 
               path="/login" 
               element={
                 <Login 
@@ -140,6 +150,10 @@ function App() {
           <Route 
             path="/about-us" 
             element={<AboutUs />} 
+          />
+          <Route 
+            path="/contact" 
+            element={<ContactUs />} 
           />
           {/* STEP 8: Login page route */}
           <Route 
@@ -195,6 +209,7 @@ function App() {
             } 
           />
 
+<<<<<<< HEAD
           {/* Allergy Information page route */}
           <Route 
             path="/allergy-info" 
@@ -205,6 +220,18 @@ function App() {
                 <Navigate to="/login" replace />
               )
             } 
+=======
+          {/* Profile page route for users */}
+          <Route
+            path="/profile"
+            element={
+              isLoggedIn && role === "user" ? (
+                <Profile />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+>>>>>>> b0fb312278daf7dd4f5ea556756d74563f204b35
           />
 
           {/* STEP 12: Restaurant dashboard route for restaurant owners */}

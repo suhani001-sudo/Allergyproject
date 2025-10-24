@@ -4,85 +4,78 @@ import './UserDashboard.css';
 import Footer from './Footer';
 
 function UserDashboard(props) {
-  // STEP 1: Get the onLogout function from props
-  const onLogout = props.onLogout;
-  
-  // STEP 2: Initialize navigation and cart hooks
-  const navigate = useNavigate();
-  
-  
-  // STEP 3: Set up state variables
-  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
-  const [activeNavItem, setActiveNavItem] = useState('Restaurants');
+    // STEP 1: Get the onLogout function from props
+    const onLogout = props.onLogout;
 
-  // STEP 3.1: Set up local state for user feedbacks/comments/questions
-  // We start with a few example feedbacks so the list is not empty at first
-  const [feedbacks, setFeedbacks] = useState([
-    { id: 1, name: 'Aisha', message: 'Great experience finding allergy-safe meals!' },
-    { id: 2, name: 'Rahul', message: 'Could you add more details on ingredients?' },
-    { id: 3, name: 'Meera', message: 'Love the clean UI. Thanks!' }
-  ]);
+    // STEP 2: Initialize navigation and cart hooks
+    const navigate = useNavigate();
 
-  // STEP 3.2: Local state for the simple feedback form (controlled inputs)
-  const [newFeedbackName, setNewFeedbackName] = useState('');
-  const [newFeedbackMessage, setNewFeedbackMessage] = useState('');
 
-  // STEP 3.3: Local state for FAQs (hardcoded questions & answers with toggle)
-  const [faqs, setFaqs] = useState([
-    {
-      id: 1,
-      question: 'How does SafeBytes determine allergens in dishes?',
-      answer: 'Restaurants provide ingredients. We cross-check common allergen keywords to highlight potential allergens.',
-      open: false
-    },
-    {
-      id: 2,
-      question: 'Can I trust the allergen information completely?',
-      answer: 'We aim for accuracy, but always confirm with the restaurant if you have severe allergies.',
-      open: false
-    },
-    {
-      id: 3,
-      question: 'How can I request a new feature or report an issue?',
-      answer: 'Use the feedback form below. Your message is saved locally and shown instantly in the list.',
-      open: false
-    }
-  ]);
+    // STEP 3: Set up state variables
+    const [activeNavItem, setActiveNavItem] = useState('Restaurants');
+    const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 
-  // STEP 4: Create array of inspirational quotes
-  const quotes = [
-    "Good food is the foundation of genuine happiness",
-    "Let food be thy medicine and medicine be thy food",
-    "The only time to eat diet food is while you're waiting for the steak to cook",
-    "Life is uncertain. Eat dessert first",
-    "Food brings people together on many different levels"
-  ];
+    // STEP 3.1: Feedbacks state
+    const [feedbacks, setFeedbacks] = useState([
+        { id: 1, name: 'Aisha', message: 'Great experience finding allergy-safe meals!' },
+        { id: 2, name: 'Rahul', message: 'Could you add more details on ingredients?' },
+        { id: 3, name: 'Meera', message: 'Love the clean UI. Thanks!' }
+    ]);
+
+
+    // STEP 3.2: Feedback form state
+    const [newFeedbackName, setNewFeedbackName] = useState('');
+    const [newFeedbackMessage, setNewFeedbackMessage] = useState('');
+
+
+    // STEP 3.3: FAQs state
+    const [faqs, setFaqs] = useState([
+        {
+            id: 1,
+            question: 'How does SafeBytes determine allergens in dishes?',
+            answer: 'Restaurants provide ingredients. We cross-check common allergen keywords to highlight potential allergens.',
+            open: false
+        },
+        {
+            id: 2,
+            question: 'Can I trust the allergen information completely?',
+            answer: 'We aim for accuracy, but always confirm with the restaurant if you have severe allergies.',
+            open: false
+        },
+        {
+            id: 3,
+            question: 'How can I request a new feature or report an issue?',
+            answer: 'Use the feedback form below. Your message is saved locally and shown instantly in the list.',
+            open: false
+        }
+    ]);
+
+    // STEP 4: Quotes list
+    const quotes = [
+        'Let food be thy medicine and medicine be thy food',
+        'Eat safe, live strong',
+        'Good food, good health, good life',
+        'Your health is your wealth - choose wisely',
+        'Safe dining starts with awareness'
+    ];
 
   // STEP 5: Create array of navigation items
   const navItems = [
     { id: 'Restaurants',  label: 'Restaurants' },
-    { id: 'Allergy Info', label: 'Allergy Info' },
-    { id: 'My Allergies', label: 'My Allergies' },
+    { id: 'My Allergies', label: 'Allergies' },
     { id: 'Contact', label: 'Contact' },
     { id: 'About',  label: 'About us' },
     { id: 'Profile', icon: '👤', label: 'Profile' }
 
   ];
 
-  // STEP 6: Set up timer to change quotes every 4 seconds
-  useEffect(function() {
-    const interval = setInterval(function() {
-      setCurrentQuoteIndex(function(prev) {
-        return (prev + 1) % quotes.length;
-      });
-    }, 4000);
-    
-    // Clean up interval when component unmounts
-    return function() {
-      clearInterval(interval);
-    };
-    
-  }, [quotes.length]);
+    // Rotate quotes every 5s
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentQuoteIndex(prev => (prev + 1) % quotes.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [quotes.length]);
 
   // STEP 7: Function to handle navigation clicks
   function handleNavClick(itemId) {
@@ -90,9 +83,6 @@ function UserDashboard(props) {
     if (itemId === 'Restaurants') {
       // Navigate to restaurant page
       navigate('/restaurants');
-    } else if (itemId === 'Allergy Info') {
-      // Navigate to Allergy Information page
-      navigate('/allergy-info');
     } else if (itemId === 'About') {
       // Navigate to About Us page
       navigate('/about-us');
@@ -100,229 +90,203 @@ function UserDashboard(props) {
     // Add other navigation logic as needed
   }
 
-  // STEP 7.1: Handle feedback form submission (save to local state only)
-  function handleFeedbackSubmit(e) {
-    e.preventDefault();
-    // Basic validation to keep things simple and student-friendly
-    if (!newFeedbackName.trim() || !newFeedbackMessage.trim()) {
-      return;
-    }
-    // Create a new feedback object
-    const newFeedback = {
-      id: Date.now(),
-      name: newFeedbackName.trim(),
-      message: newFeedbackMessage.trim()
-    };
-    // Add the new feedback at the top so it appears instantly
-    setFeedbacks(function(prev) { return [newFeedback, ...prev]; });
-    // Clear the inputs
-    setNewFeedbackName('');
-    setNewFeedbackMessage('');
-  }
-
-  // STEP 7.2: Toggle an FAQ item open/closed by id (simple local update)
-  function toggleFaq(faqId) {
-    setFaqs(function(prev) {
-      return prev.map(function(item) {
-        if (item.id === faqId) {
-          return { ...item, open: !item.open };
+    // STEP 7.1: Handle feedback form submission
+    function handleFeedbackSubmit(e) {
+        e.preventDefault();
+        if (!newFeedbackName.trim() || !newFeedbackMessage.trim()) {
+            return;
         }
-        return item;
-      });
-    });
-  }
+        const newFeedback = {
+            id: Date.now(),
+            name: newFeedbackName.trim(),
+            message: newFeedbackMessage.trim()
+        };
+        setFeedbacks(prev => [newFeedback, ...prev]);
+        setNewFeedbackName('');
+        setNewFeedbackMessage('');
+    }
 
-  return (
-    <div className="home-container">
-      
+    // STEP 7.2: Toggle FAQ open/closed
+    function toggleFaq(faqId) {
+        setFaqs(prev => prev.map(item => item.id === faqId ? { ...item, open: !item.open } : item));
+    }
 
-      <nav className="navbar">
-        <div className="nav-container">
-          <div className="nav-logo">
-            <img 
-              src="/images/green_logo.jpg" 
-              alt="SafeBytes Logo" 
-              className="logo-image"
-            />
-            <span className="logo-text">SafeBytes</span>
-          </div>
+    return (
+        <div className="home-container">
 
-          <div className="nav-links">
-            {navItems.map(function(item) {
-              return (
-                <button
-                  key={item.id}
-                  className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                  onClick={function() { handleNavClick(item.id); }}
-                >
-                  <span className="nav-label">{item.label}</span>
-                  {activeNavItem === item.id && (
-                    <div className="active-indicator" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
 
-          
+            <nav className="navbar">
+                <div className="nav-container">
+                    <div className="nav-logo">
+                        <img
+                            src="/images/green_logo.jpg"
+                            alt="SafeBytes Logo"
+                            className="logo-image"
+                        />
+                        <span className="logo-text">SafeBytes</span>
+                    </div>
 
-          <button
-            className="logout-button"
-            onClick={onLogout}
-          >
-            <span className="logout-text">Logout</span>
-          </button>
-        </div>
-      </nav>
+                    <div className="nav-links">
+                        {navItems.map(function (item) {
+                            return (
+                                <button
+                                    key={item.id}
+                                    className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
+                                    onClick={function () { handleNavClick(item.id); }}
+                                >
+                                    <span className="nav-label">{item.label}</span>
+                                    {activeNavItem === item.id && (
+                                        <div className="active-indicator" />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
 
-      <section className="hero-section">
-        <div className="hero-content">
-          <div className="hero-text">
-            <h1 className="hero-title">
-              Safe Dining, 
-              <span className="highlight"> Everywhere</span>
-            </h1>
 
-            <p className="hero-subtitle">
-              Your trusted companion for allergy-safe dining experiences
-            </p>
 
-            <div className="quote-container">
-              <div className="quote-text">
-                "{quotes[currentQuoteIndex]}"
-              </div>
-            </div>
+                    <button
+                        className="logout-button"
+                        onClick={onLogout}
+                    >
+                        <span className="logout-text">Logout</span>
+                    </button>
+                </div>
+            </nav>
+
+            <section className="hero-section">
+                <div className="hero-content">
+                    <div className="hero-text">
+                        <h1 className="hero-title">
+                            Safe Dining,
+                            <span className="highlight"> Everywhere</span>
+                        </h1>
+
+                        <p className="home-hero-subtitle">
+                            Your trusted companion for allergy-safe dining experiences.
+                        </p>
+
+                        <div className="quote-container">
+                            <div className="quote-text">"{quotes[currentQuoteIndex]}"</div>
+                        </div>
 
             <div className="cta-buttons">
               <button className="cta-button primary" onClick={function() { navigate('/restaurants'); }}>
                 Explore Restaurants
               </button>
               
-              <button className="cta-button secondary" onClick={function() { navigate('/allergy-info'); }}>
-                Allergy Information
+              <button className="cta-button secondary">
+                Check My Allergies
               </button>
             </div>
           </div>
 
-          <div className="hero-image">
-            <div className="hero-image-container">
-              <img 
-                src="/images/homepic2.jpg" 
-                alt="Healthy Food" 
-                className="hero-food-image"
-              />
-              <div className="image-overlay">
-                <span className="overlay-icon"></span>
-                <p>Fresh & Healthy</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="stats-section">
-        <div className="stats-container">
-          <div className="stat-card">
-            <div className="stat-number">50+</div>
-            <div className="stat-label">Allergy-Safe Restaurants</div>
-          </div>
-          
-          <div className="stat-card">
-            <div className="stat-number">10K+</div>
-            <div className="stat-label">Happy Users</div>
-          </div>
-          
-          <div className="stat-card">
-            <div className="stat-number">99.9%</div>
-            <div className="stat-label">Safety Rate</div>
-          </div>
-        </div>
-      </section>
-
-      {/* STEP 8: User Feedbacks & Questions Section (local state only) */}
-      <section className="feedback-section">
-        {/* Section Title */}
-        <h2 className="section-title">User Feedbacks & Questions</h2>
-
-        {/* Feedback List - shows existing and newly added feedbacks */}
-        <div className="feedback-list">
-          {feedbacks.map(function(item) {
-            return (
-              <div key={item.id} className="feedback-card">
-                <div className="feedback-name">{item.name}</div>
-                <div className="feedback-message">{item.message}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Simple Feedback Form - student-simple and fully commented */}
-        <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
-          {/* Name Input */}
-          <div className="form-row">
-            <label className="form-label" htmlFor="fb-name">Your Name</label>
-            <input
-              id="fb-name"
-              className="form-input"
-              type="text"
-              placeholder="Enter your name"
-              value={newFeedbackName}
-              onChange={function(e) { setNewFeedbackName(e.target.value); }}
-            />
-          </div>
-
-          {/* Message Input */}
-          <div className="form-row">
-            <label className="form-label" htmlFor="fb-message">Your Feedback / Question</label>
-            <textarea
-              id="fb-message"
-              className="form-textarea"
-              placeholder="Type your feedback or question here"
-              value={newFeedbackMessage}
-              onChange={function(e) { setNewFeedbackMessage(e.target.value); }}
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="form-actions">
-            <button type="submit" className="form-button">Submit</button>
-          </div>
-        </form>
-      </section>
-
-      {/* STEP 9: Mostly Asked Questions (FAQ) Section with simple toggles */}
-      <section className="faq-section">
-        {/* Section Title */}
-        <h2 className="section-title">Mostly Asked Questions</h2>
-
-        {/* FAQ List - hardcoded items with simple expand/collapse */}
-        <div className="faq-list">
-          {faqs.map(function(item) {
-            return (
-              <div key={item.id} className="faq-item">
-                <div className="faq-question-row">
-                  <div className="faq-question">{item.question}</div>
-                  <button
-                    type="button"
-                    className="faq-toggle"
-                    onClick={function() { toggleFaq(item.id); }}
-                  >
-                    {item.open ? 'Hide Answer' : 'Show Answer'}
-                  </button>
+                    <div className="hero-image">
+                        <div className="hero-image-container">
+                            <img
+                                src="/images/homepic2.jpg"
+                                alt="Healthy Food"
+                                className="hero-food-image"
+                            />
+                            <div className="image-overlay">
+                                <span className="overlay-icon"></span>
+                                <p>Fresh & Healthy</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {item.open && (
-                  <div className="faq-answer">{item.answer}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
+            </section>
 
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
+            <section className="stats-section">
+                <div className="stats-container">
+                    <div className="stat-card">
+                        <div className="stat-number">50+</div>
+                        <div className="stat-label">Allergy-Safe Restaurants</div>
+                    </div>
+
+                    <div className="stat-card">
+                        <div className="stat-number">10K+</div>
+                        <div className="stat-label">Happy Users</div>
+                    </div>
+
+                    <div className="stat-card">
+                        <div className="stat-number">99.9%</div>
+                        <div className="stat-label">Safety Rate</div>
+                    </div>
+                </div>
+            </section>
+
+            {/* User Feedbacks & Questions Section */}
+            <section className="feedback-section">
+                <h2 className="section-title">User Feedbacks & Questions</h2>
+                <div className="feedback-list">
+                    {feedbacks.map(function (item) {
+                        return (
+                            <div key={item.id} className="feedback-card">
+                                <div className="feedback-name">{item.name}</div>
+                                <div className="feedback-message">{item.message}</div>
+                            </div>
+                        );
+                    })}
+                </div>
+                <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
+                    <div className="form-row">
+                        <label className="form-label" htmlFor="fb-name">Your Name</label>
+                        <input
+                            id="fb-name"
+                            className="form-input"
+                            type="text"
+                            placeholder="Enter your name"
+                            value={newFeedbackName}
+                            onChange={function (e) { setNewFeedbackName(e.target.value); }}
+                        />
+                    </div>
+                    <div className="form-row">
+                        <label className="form-label" htmlFor="fb-message">Your Feedback / Question</label>
+                        <textarea
+                            id="fb-message"
+                            className="form-textarea"
+                            placeholder="Type your feedback or question here"
+                            value={newFeedbackMessage}
+                            onChange={function (e) { setNewFeedbackMessage(e.target.value); }}
+                        />
+                    </div>
+                    <div className="form-actions">
+                        <button type="submit" className="form-button">Submit</button>
+                    </div>
+                </form>
+            </section>
+
+            {/* Mostly Asked Questions (FAQ) Section */}
+            <section className="faq-section">
+                <h2 className="section-title">Mostly Asked Questions</h2>
+                <div className="faq-list">
+                    {faqs.map(function (item) {
+                        return (
+                            <div key={item.id} className="faq-item">
+                                <div className="faq-question-row">
+                                    <div className="faq-question">{item.question}</div>
+                                    <button
+                                        type="button"
+                                        className="faq-toggle"
+                                        onClick={function () { toggleFaq(item.id); }}
+                                    >
+                                        {item.open ? 'Hide Answer' : 'Show Answer'}
+                                    </button>
+                                </div>
+                                {item.open && (
+                                    <div className="faq-answer">{item.answer}</div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+
+            {/* Footer */}
+            <Footer />
+        </div>
+    );
 };
 
 export default UserDashboard;
