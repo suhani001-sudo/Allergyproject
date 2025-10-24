@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css"; // reuse the same login CSS for consistency
 
-const Signup = ({ onSignup }) => {
+const Signup = ({ onSignup, onSwitchToLogin }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -182,7 +182,7 @@ const Signup = ({ onSignup }) => {
                     <button
                       type="button"
                       className="login-switch"
-                      onClick={() => navigate("/login")}
+                      onClick={() => onSwitchToLogin && onSwitchToLogin()}
                     >
                       Log In
                     </button>
@@ -251,17 +251,6 @@ const Signup = ({ onSignup }) => {
                   >
                     {isLoading ? "Signing Up..." : "Sign Up"}
                   </button>
-
-                  <div className="signup-section">
-                    <div className="signup-prompt">Already have an account?</div>
-                    <button
-                      type="button"
-                      className="login-switch"
-                      onClick={() => navigate("/login")}
-                    >
-                      Log In
-                    </button>
-                  </div>
                 </div>
               </form>
             </div>

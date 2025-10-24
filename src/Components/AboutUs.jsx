@@ -263,7 +263,7 @@ function AboutUs() {
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Suhani Sharma</h3>
+                            <h3 className="team-member-name">Suhani </h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -280,7 +280,58 @@ function AboutUs() {
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Prince Khatri</h3>
+                            <h3 className="team-member-name">Prince</h3>
+                            <div className="team-decorative-dots">
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="team-card">
+                        <div className="team-card-inner">
+                            <div className="team-avatar">
+                                <div className="avatar-circle">
+                                    <span className="avatar-initial">R</span>
+                                </div>
+                                <div className="avatar-glow"></div>
+                            </div>
+                            <h3 className="team-member-name">Radhika</h3>
+                            <div className="team-decorative-dots">
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="team-card">
+                        <div className="team-card-inner">
+                            <div className="team-avatar">
+                                <div className="avatar-circle">
+                                    <span className="avatar-initial">A</span>
+                                </div>
+                                <div className="avatar-glow"></div>
+                            </div>
+                            <h3 className="team-member-name">Ayush</h3>
+                            <div className="team-decorative-dots">
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                                <span className="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="team-card">
+                        <div className="team-card-inner">
+                            <div className="team-avatar">
+                                <div className="avatar-circle">
+                                    <span className="avatar-initial">S</span>
+                                </div>
+                                <div className="avatar-glow"></div>
+                            </div>
+                            <h3 className="team-member-name">Sabia</h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>

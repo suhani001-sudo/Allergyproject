@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onSwitchToSignup }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -174,7 +174,7 @@ const Login = ({ onLogin }) => {
                     <button
                       type="button"
                       className="signup-button"
-                      onClick={() => navigate("/signup")} 
+                      onClick={() => onSwitchToSignup && onSwitchToSignup()} 
                     >
                       Sign up instead
                     </button>

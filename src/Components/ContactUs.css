@@ -568,8 +568,9 @@
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 2.5rem;
+  align-items: stretch;
 }
 
 .info-card {
@@ -581,6 +582,7 @@
   text-align: center;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  height: 100%;
 }
 
 .info-card::before {
@@ -662,7 +664,7 @@
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #28a745, #20833a);
   color: white;
-  border-radius: 20px;
+  border-radius: 10px;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -729,16 +731,16 @@
 }
 
 .team-cards-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: center;
-  gap: 4rem;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: nowrap;
 }
 
 .team-contact-card {
-  width: 280px;
+  width: 220px;
   padding: 3rem 2rem;
   background: white;
   border-radius: 24px;

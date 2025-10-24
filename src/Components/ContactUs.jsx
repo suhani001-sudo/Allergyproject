@@ -412,6 +412,45 @@ function ContactUs() {
                             <span>Email</span>
                         </a>
                     </div>
+
+                    <div className="team-contact-card">
+                        <div className="team-avatar">
+                            <div className="avatar-circle">
+                                <span className="avatar-initial">R</span>
+                            </div>
+                        </div>
+                        <h3 className="team-member-name">Radhika</h3>
+                        <a href="mailto:radhika@safebytes.com" className="contact-button">
+                            <span className="button-icon">✉️</span>
+                            <span>Email</span>
+                        </a>
+                    </div>
+
+                    <div className="team-contact-card">
+                        <div className="team-avatar">
+                            <div className="avatar-circle">
+                                <span className="avatar-initial">A</span>
+                            </div>
+                        </div>
+                        <h3 className="team-member-name">Ayush</h3>
+                        <a href="mailto:ayush@safebytes.com" className="contact-button">
+                            <span className="button-icon">✉️</span>
+                            <span>Email</span>
+                        </a>
+                    </div>
+
+                    <div className="team-contact-card">
+                        <div className="team-avatar">
+                            <div className="avatar-circle">
+                                <span className="avatar-initial">S</span>
+                            </div>
+                        </div>
+                        <h3 className="team-member-name">Sabia</h3>
+                        <a href="mailto:sabia@safebytes.com" className="contact-button">
+                            <span className="button-icon">✉️</span>
+                            <span>Email</span>
+                        </a>
+                    </div>
                 </div>
             </section>
 
