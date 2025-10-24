@@ -256,6 +256,8 @@ function RestaurantDashboard(props) {
                     else if (item.id === 'Allergies') goTo('form');
                     else if (item.id === 'Contact') goTo('analytics');
                     else if (item.id === 'About') navigate('/about-us');
+                    else if (item.id === 'Dashboard') navigate('/restaurant-dashboard');
+                    else if (item.id === 'Profile') navigate('/restaurant-dashboard');
                   }}
                 >
                   <span className="nav-label">{item.label}</span>

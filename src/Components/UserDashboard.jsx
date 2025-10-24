@@ -81,13 +81,16 @@ function UserDashboard(props) {
   function handleNavClick(itemId) {
     setActiveNavItem(itemId);
     if (itemId === 'Restaurants') {
-      // Navigate to restaurant page
       navigate('/restaurants');
+    } else if (itemId === 'My Allergies') {
+      navigate('/allergy-info');
+    } else if (itemId === 'Contact') {
+      navigate('/dashboard');
     } else if (itemId === 'About') {
-      // Navigate to About Us page
       navigate('/about-us');
+    } else if (itemId === 'Profile') {
+      navigate('/dashboard');
     }
-    // Add other navigation logic as needed
   }
 
     // STEP 7.1: Handle feedback form submission

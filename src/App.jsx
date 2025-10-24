@@ -209,7 +209,6 @@ function App() {
             } 
           />
 
-<<<<<<< HEAD
           {/* Allergy Information page route */}
           <Route 
             path="/allergy-info" 
@@ -220,7 +219,8 @@ function App() {
                 <Navigate to="/login" replace />
               )
             } 
-=======
+           />
+
           {/* Profile page route for users */}
           <Route
             path="/profile"
@@ -231,7 +231,7 @@ function App() {
                 <Navigate to="/login" replace />
               )
             }
->>>>>>> b0fb312278daf7dd4f5ea556756d74563f204b35
+
           />
 
           {/* STEP 12: Restaurant dashboard route for restaurant owners */}

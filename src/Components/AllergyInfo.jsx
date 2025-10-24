@@ -143,8 +143,21 @@ function AllergyInfo() {
     setActiveNavItem(itemId);
     if (itemId === 'Restaurants') {
       navigate('/restaurants');
+    } else if (itemId === 'Allergy Info') {
+      // If already on allergy info page, scroll to top
+      if (window.location.pathname === '/allergy-info') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/allergy-info');
+      }
+    } else if (itemId === 'My Allergies') {
+      navigate('/allergy-info');
+    } else if (itemId === 'Contact') {
+      navigate('/dashboard');
     } else if (itemId === 'About') {
       navigate('/about-us');
+    } else if (itemId === 'Profile') {
+      navigate('/dashboard');
     }
   };
 
