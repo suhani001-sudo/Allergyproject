@@ -370,6 +370,10 @@ body, html {
 /* Category Badge */
 .rd-card-category {
   margin-bottom: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .rd-category-badge {
@@ -381,6 +385,38 @@ body, html {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.rd-restaurant-badge {
+  background: linear-gradient(135deg, #6B8E23, #8FBC8F);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(107, 142, 35, 0.2);
+}
+
+/* Loading and Error States */
+.rd-loading,
+.rd-error {
+  text-align: center;
+  padding: 2rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.rd-loading {
+  color: #6B8E23;
+  background: #f0f8f0;
+  border: 1px solid #d4edda;
+}
+
+.rd-error {
+  color: #dc3545;
+  background: #ffe6e6;
+  border: 1px solid #ffcccc;
 }
 
 /* Ingredients Section */

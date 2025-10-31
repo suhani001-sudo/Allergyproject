@@ -71,16 +71,46 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Login attempt:", formData);
-      setIsLoading(false);
+    try {
+      // Call backend API
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      // ✅ Pass role to App.jsx
-      if (formData.email && formData.password) {
+      const data = await response.json();
+
+      if (response.ok && data.token) {
+        // Store token and user data
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        console.log("Login successful:", data);
+        
+        // Pass role to App.jsx
         onLogin(formData.role);
+      } else {
+        // Show error message
+        setErrors({
+          ...errors,
+          general: data.message || 'Login failed. Please try again.',
+        });
       }
-    }, 1500);
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrors({
+        ...errors,
+        general: 'Network error. Please check your connection and try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -158,6 +188,20 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                     <span className="error-message">{errors.password}</span>
                   )}
                 </div>
+
+                {/* General error message */}
+                {errors.general && formData.role === "user" && (
+                  <div className="error-message general-error" style={{
+                    color: '#ff4444',
+                    backgroundColor: '#ffe6e6',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    marginBottom: '15px',
+                    textAlign: 'center'
+                  }}>
+                    {errors.general}
+                  </div>
+                )}
 
                 <div className="form-options">
                   <button

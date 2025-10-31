@@ -1,9 +1,22 @@
-import { Router } from 'express';
-import { addRestaurant, listRestaurants } from '../controllers/restaurantController.js';
+import express from 'express';
+import {
+  createRestaurant,
+  getAllRestaurants,
+  getRestaurantById,
+  updateRestaurant,
+  deleteRestaurant,
+} from '../controllers/restaurantController.js';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/', addRestaurant);
-router.get('/', listRestaurants);
+// Restaurant CRUD routes (public access)
+router.route('/')
+  .post(createRestaurant)       // Create new restaurant
+  .get(getAllRestaurants);      // Get all restaurants (with filters)
+
+router.route('/:id')
+  .get(getRestaurantById)       // Get single restaurant
+  .put(updateRestaurant)        // Update restaurant
+  .delete(deleteRestaurant);    // Delete restaurant
 
 export default router;
