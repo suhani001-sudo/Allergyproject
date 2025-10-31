@@ -61,25 +61,54 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Signup attempt:", formData);
-      setIsLoading(false);
+    try {
+      // Call backend API
+      const response = await fetch('http://localhost:5000/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      // Navigate to dashboards based on role
-      if (formData.role === "user") {
-        navigate("/user-dashboard");
+      const data = await response.json();
+
+      if (response.ok && data.token) {
+        // Store token and user data
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        console.log("Signup successful:", data);
+        
+        // Call onSignup callback to update App.jsx state
+        onSignup(formData);
       } else {
-        navigate("/restaurant-dashboard");
+        // Show error message
+        setErrors({
+          ...errors,
+          general: data.message || 'Signup failed. Please try again.',
+        });
       }
-    }, 1500);
+    } catch (error) {
+      console.error("Signup error:", error);
+      setErrors({
+        ...errors,
+        general: 'Network error. Please check your connection and try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -167,6 +196,20 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     <span className="error-message">{errors.password}</span>
                   )}
                 </div>
+
+                {/* General error message */}
+                {errors.general && formData.role === "user" && (
+                  <div className="error-message general-error" style={{
+                    color: '#ff4444',
+                    backgroundColor: '#ffe6e6',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    marginBottom: '15px',
+                    textAlign: 'center'
+                  }}>
+                    {errors.general}
+                  </div>
+                )}
 
                 <div className="form-options">
                   <button

@@ -1,0 +1,183 @@
+### Food Allergy Management System - API Testing
+### Base URL
+@baseUrl = http://localhost:5000
+@token = YOUR_TOKEN_HERE
+
+### ============================================
+### 1. CHECK SERVER STATUS
+### ============================================
+GET {{baseUrl}}/
+
+### ============================================
+### 2. AUTHENTICATION
+### ============================================
+
+### Signup - Create new user
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Login - Get authentication token
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### ============================================
+### 3. ALLERGY MANAGEMENT (Protected)
+### ============================================
+
+### Create Allergy Record
+POST {{baseUrl}}/api/allergies
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Peanut Allergy",
+  "severity": "high",
+  "symptoms": ["itchy throat", "hives", "difficulty breathing", "swelling"],
+  "triggers": ["peanuts", "peanut butter", "peanut oil"],
+  "notes": "Diagnosed in 2020. Carry EpiPen at all times.",
+  "diagnosedDate": "2020-03-15",
+  "lastReaction": "2024-10-20"
+}
+
+### Get All User's Allergies
+GET {{baseUrl}}/api/allergies
+Authorization: Bearer {{token}}
+
+### Get Single Allergy (replace :id with actual ID)
+GET {{baseUrl}}/api/allergies/ALLERGY_ID_HERE
+Authorization: Bearer {{token}}
+
+### Update Allergy (replace :id with actual ID)
+PUT {{baseUrl}}/api/allergies/ALLERGY_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Peanut Allergy",
+  "severity": "severe",
+  "symptoms": ["itchy throat", "hives", "difficulty breathing", "anaphylaxis"],
+  "triggers": ["peanuts", "peanut butter", "peanut oil", "tree nuts"],
+  "notes": "Updated: Now includes tree nut sensitivity.",
+  "lastReaction": "2025-10-30"
+}
+
+### Delete Allergy (replace :id with actual ID)
+DELETE {{baseUrl}}/api/allergies/ALLERGY_ID_HERE
+Authorization: Bearer {{token}}
+
+### ============================================
+### 4. RESTAURANT MANAGEMENT (Public)
+### ============================================
+
+### Create Restaurant
+POST {{baseUrl}}/api/restaurants
+Content-Type: application/json
+
+{
+  "name": "Allergy-Safe Bistro",
+  "location": "New York, NY",
+  "address": "123 Main Street, New York, NY 10001",
+  "phone": "+1-555-123-4567",
+  "website": "https://allergysafebistro.com",
+  "allergyFriendlyMenu": [
+    {
+      "dishName": "Gluten-Free Pasta",
+      "allergensFree": ["gluten", "dairy", "nuts"],
+      "price": 15.99,
+      "description": "Delicious pasta made with rice flour",
+      "category": "main"
+    },
+    {
+      "dishName": "Vegan Chocolate Cake",
+      "allergensFree": ["dairy", "eggs", "nuts"],
+      "price": 8.99,
+      "description": "Rich chocolate cake made with plant-based ingredients",
+      "category": "dessert"
+    }
+  ],
+  "rating": 4.5,
+  "allergyRating": 5
+}
+
+### Get All Restaurants
+GET {{baseUrl}}/api/restaurants
+
+### Get Restaurants by Location
+GET {{baseUrl}}/api/restaurants?location=New York
+
+### Get Restaurants by Allergen-Free Filter
+GET {{baseUrl}}/api/restaurants?allergyFree=gluten
+
+### Get Restaurants with Multiple Filters
+GET {{baseUrl}}/api/restaurants?location=New York&allergyFree=nuts
+
+### Get Single Restaurant (replace :id with actual ID)
+GET {{baseUrl}}/api/restaurants/RESTAURANT_ID_HERE
+
+### Update Restaurant (replace :id with actual ID)
+PUT {{baseUrl}}/api/restaurants/RESTAURANT_ID_HERE
+Content-Type: application/json
+
+{
+  "name": "Allergy-Safe Bistro & Cafe",
+  "rating": 4.8,
+  "allergyRating": 5
+}
+
+### Delete Restaurant (replace :id with actual ID)
+DELETE {{baseUrl}}/api/restaurants/RESTAURANT_ID_HERE
+
+### ============================================
+### 5. USER PROFILE MANAGEMENT (Protected)
+### ============================================
+
+### Get Current User Profile
+GET {{baseUrl}}/api/users/profile
+Authorization: Bearer {{token}}
+
+### Update User Profile
+PUT {{baseUrl}}/api/users/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "email": "newemail@example.com"
+}
+
+### Get User Dashboard Stats
+GET {{baseUrl}}/api/users/stats
+Authorization: Bearer {{token}}
+
+### Get User by ID with Allergies (replace :id with actual user ID)
+GET {{baseUrl}}/api/users/USER_ID_HERE
+Authorization: Bearer {{token}}
+
+### Delete User Account (WARNING: This deletes user and all allergies!)
+DELETE {{baseUrl}}/api/users/account
+Authorization: Bearer {{token}}
+
+### ============================================
+### TESTING WORKFLOW
+### ============================================
+### 1. Check server status (GET /)
+### 2. Signup (POST /api/auth/signup)
+### 3. Login (POST /api/auth/login) - Copy the token
+### 4. Replace {{token}} variable at top with your actual token
+### 5. Create allergy (POST /api/allergies)
+### 6. Get allergies (GET /api/allergies) - Copy an allergy ID
+### 7. Update allergy (PUT /api/allergies/:id)
+### 8. Create restaurant (POST /api/restaurants)
+### 9. Get restaurants (GET /api/restaurants)
+### 10. Get user profile (GET /api/users/profile)

@@ -1,23 +1,3 @@
-/* STEP 1: Reset and base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
-}
-
 /* STEP 2: Main container styles */
 .restaurant-page {
   min-height: 100vh;
@@ -28,6 +8,8 @@ body {
   padding-top: 80px; /* Account for fixed navbar */
   margin: 0;
   position: relative;
+  font-family: 'Arial', sans-serif;
+  color: #333;
 }
 
 /* STEP 3: Navigation bar matching Dashboard styling */
@@ -348,7 +330,7 @@ body {
   text-align: center;
 }
 
-/* STEP 6: Menu grid styles */
+/* STEP 6: Menu card styles - SafeBytes Theme */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -358,49 +340,63 @@ body {
 
 .menu-card {
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(107, 142, 35, 0.1);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.menu-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #6B8E23, #8FBC8F);
 }
 
 .menu-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 35px rgba(107, 142, 35, 0.2);
+  border-color: #6B8E23;
 }
 
-.item-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 1.5rem;
+/* Card content without image - full padding */
+.card-content-full {
+  padding: 2rem;
 }
 
 .item-name {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
 }
 
 .item-description {
-  color: #7f8c8d;
-  margin-bottom: 1rem;
-  line-height: 1.5;
+  color: #5a6c7d;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .item-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e8f5e9;
 }
 
 .item-price {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #27ae60;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #6B8E23;
+  letter-spacing: -0.5px;
 }
 
 .order-button {
@@ -469,104 +465,35 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  gap: 0.75rem;
 }
 
 .item-category {
-  background: #e8f5e9;
-  color: #6B904A;
-  padding: 0.25rem 0.5rem;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #e8f5e9, #d4edda);
+  color: #6B8E23;
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
   font-size: 0.75rem;
-  font-weight: 500;
-  margin-left: 0.5rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(107, 142, 35, 0.15);
 }
 
-/* Ingredients Section */
-.ingredients-section {
-  margin-bottom: 1rem;
-}
-
-.ingredients-title {
+/* Restaurant Name Badge */
+.restaurant-name-badge {
+  background: linear-gradient(135deg, #6B8E23, #8FBC8F);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #555;
-  margin-bottom: 0.5rem;
+  margin: 0.75rem 0 1rem 0;
+  display: inline-block;
+  box-shadow: 0 3px 10px rgba(107, 142, 35, 0.25);
 }
 
-.ingredients-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.ingredient-tag {
-  background: #f0f8ff;
-  color: #4a90e2;
-  padding: 0.2rem 0.4rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.ingredient-tag.more {
-  background: #f5f5f5;
-  color: #888;
-  font-style: italic;
-}
-
-/* Allergens Section */
-.allergens-section {
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  background: #fff3cd;
-  border-radius: 8px;
-  border-left: 4px solid #ffc107;
-}
-
-.allergens-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #856404;
-  margin-bottom: 0.5rem;
-}
-
-.allergens-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.allergen-tag {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 0.2rem 0.4rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-/* Tags Section */
-.tags-section {
-  margin-bottom: 1rem;
-}
-
-.tags-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.food-tag {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 0.2rem 0.4rem;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  font-style: italic;
-}
+/* Removed unused sections: ingredients, allergens, tags */
 
 /* Mobile responsive for filters */
 @media (max-width: 768px) {

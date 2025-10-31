@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RestaurantDashboard.css';
 import Footer from './Footer';
@@ -13,59 +13,47 @@ function RestaurantDashboard(props) {
   
   // STEP 1.2: Initialize navigation hook
   const navigate = useNavigate();
-  // STEP 2: Set up initial menu items with ingredients
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: 'Grilled Chicken Salad',
-      price: 15.99,
-      description: 'Fresh mixed greens with grilled chicken breast, cherry tomatoes, and balsamic vinaigrette.',
-      allergens: ['eggs'],
-      ingredients: ['Chicken breast', 'Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Balsamic vinegar', 'Olive oil', 'Salt', 'Pepper'],
-      available: true,
-      category: 'Salad'
-    },
-    {
-      id: 2,
-      name: 'Pasta Alfredo',
-      price: 18.50,
-      description: 'Creamy alfredo sauce with fettuccine pasta, topped with parmesan cheese.',
-      allergens: ['dairy', 'gluten', 'eggs'],
-      ingredients: ['Fettuccine pasta', 'Heavy cream', 'Parmesan cheese', 'Butter', 'Garlic', 'Salt', 'Black pepper', 'Parsley'],
-      available: true,
-      category: 'Pasta'
-    },
-    {
-      id: 3,
-      name: 'Tofu Stir-Fry',
-      price: 16.75,
-      description: 'Mixed vegetables with tofu in a light soy sauce, served with jasmine rice.',
-      allergens: ['soy'],
-      ingredients: ['Firm tofu', 'Broccoli', 'Carrots', 'Bell peppers', 'Snap peas', 'Soy sauce', 'Ginger', 'Garlic', 'Sesame oil', 'Jasmine rice'],
-      available: false,
-      category: 'Vegetarian'
-    },
-    {
-      id: 4,
-      name: 'Beef Burger',
-      price: 19.99,
-      description: 'Juicy beef patty with lettuce, tomato, onion, and special sauce on a brioche bun.',
-      allergens: ['gluten', 'eggs', 'dairy'],
-      ingredients: ['Beef patty', 'Brioche bun', 'Lettuce', 'Tomato', 'Red onion', 'Pickles', 'Cheese', 'Special sauce', 'Salt', 'Pepper'],
-      available: true,
-      category: 'Main Course'
-    },
-    {
-      id: 5,
-      name: 'Mediterranean Quinoa Bowl',
-      price: 14.25,
-      description: 'Quinoa bowl with roasted vegetables, feta cheese, olives, and tahini dressing.',
-      allergens: ['dairy'],
-      ingredients: ['Quinoa', 'Roasted vegetables', 'Feta cheese', 'Kalamata olives', 'Cucumber', 'Red onion', 'Tahini', 'Lemon juice', 'Olive oil', 'Fresh herbs'],
-      available: true,
-      category: 'Healthy'
+  
+  // STEP 2: Set up menu items state (will be fetched from database)
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // STEP 2.1: Fetch menu items from database
+  useEffect(function() {
+    async function fetchMenuItems() {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5000/api/restaurants/menu');
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Transform backend data to match component structure
+          const transformedItems = data.data.map(function(item) {
+            return {
+              id: item._id,
+              name: item.itemName,
+              price: item.price,
+              description: item.description,
+              allergens: item.allergens || [],
+              ingredients: item.ingredients || [],
+              category: item.category,
+              restaurantName: item.restaurantName,
+              available: true
+            };
+          });
+          setItems(transformedItems);
+        }
+      } catch (err) {
+        console.error('Error fetching menu items:', err);
+        setError('Failed to load menu items');
+      } finally {
+        setLoading(false);
+      }
     }
-  ]);
+    
+    fetchMenuItems();
+  }, []);
 
   // STEP 3: Form state for adding/editing items
   const [formData, setFormData] = useState({
@@ -279,6 +267,9 @@ function RestaurantDashboard(props) {
         <section id="rd-menu" className="rd-section">
           <h2 className="rd-section-title">Menu Items</h2>
 
+          {loading && <div className="rd-loading">Loading menu items...</div>}
+          {error && <div className="rd-error">{error}</div>}
+
           <div className="rd-list">
             {items.map(function(item) {
               return (
@@ -295,6 +286,9 @@ function RestaurantDashboard(props) {
 
                   <div className="rd-card-category">
                     <span className="rd-category-badge">{item.category || 'Main Course'}</span>
+                    {item.restaurantName && (
+                      <span className="rd-restaurant-badge">🏪 {item.restaurantName}</span>
+                    )}
                   </div>
 
                   <p className="rd-desc">{item.description}</p>
