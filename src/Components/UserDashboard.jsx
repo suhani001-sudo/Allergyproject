@@ -61,7 +61,7 @@ function UserDashboard(props) {
 
   // STEP 5: Create array of navigation items
   const navItems = [
-    { id: 'Restaurants',  label: 'Restaurants' },
+    { id: 'Dashboard',  label: 'Dashboard' },
     { id: 'My Allergies', label: 'Allergies' },
     { id: 'Contact', label: 'Contact' },
     { id: 'About',  label: 'About us' },
@@ -80,8 +80,8 @@ function UserDashboard(props) {
   // STEP 7: Function to handle navigation clicks
   function handleNavClick(itemId) {
     setActiveNavItem(itemId);
-    if (itemId === 'Restaurants') {
-      navigate('/restaurants');
+    if (itemId === 'Dashboard') {
+      navigate('/Dashboard');
     } else if (itemId === 'My Allergies') {
       navigate('/allergy-info');
     } else if (itemId === 'Contact') {

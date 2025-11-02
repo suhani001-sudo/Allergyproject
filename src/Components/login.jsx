@@ -72,6 +72,10 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
     setIsLoading(true);
 
     try {
+      // Create an AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       // Call backend API
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
@@ -82,7 +86,10 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
           email: formData.email,
           password: formData.password,
         }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
@@ -104,18 +111,58 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setErrors({
-        ...errors,
-        general: 'Network error. Please check your connection and try again.',
-      });
+      
+      if (error.name === 'AbortError') {
+        setErrors({
+          ...errors,
+          general: 'Backend server is not responding. Please make sure the backend server is running on port 5000.',
+        });
+      } else {
+        setErrors({
+          ...errors,
+          general: 'Network error. Please check your connection and try again.',
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  console.log("Login component rendering", { formData, errors, isLoading });
+  
   return (
-    <div className="login-container">
-      <div className="login-form-container">
+    <div className="login-container" style={{ minHeight: '100vh', background: '#6B8E23' }}>
+      <div className="login-form-container" style={{ background: 'white', padding: '1.5rem', borderRadius: '23px', maxWidth: '400px', position: 'relative' }}>
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(255, 255, 255, 0.9)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            borderRadius: '23px'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                border: '4px solid #f3f3f3',
+                borderTop: '4px solid #6B8E23',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                animation: 'spin 1s linear infinite',
+                margin: '0 auto 10px'
+              }}></div>
+              <p style={{ color: '#6B8E23', fontWeight: 'bold' }}>Signing in...</p>
+            </div>
+          </div>
+        )}
+        
         {/* Logo Section */}
         <div className="logo-section">
           <h1 className="app-title">SafeBytes</h1>
@@ -164,6 +211,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                       onChange={handleInputChange}
                       placeholder="Enter your email"
                       required={formData.role === "user"}
+                      style={{ padding: '0.8rem' }}
                     />
                   </div>
                   {errors.email && formData.role === "user" && (
@@ -182,6 +230,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                       onChange={handleInputChange}
                       placeholder="Enter your password"
                       required={formData.role === "user"}
+                      style={{ padding: '0.8rem' }}
                     />
                   </div>
                   {errors.password && formData.role === "user" && (
@@ -242,6 +291,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                       onChange={handleInputChange}
                       placeholder="Enter your business email"
                       required={formData.role === "restaurant"}
+                      style={{ padding: '0.8rem' }}
                     />
                   </div>
                   {errors.email && formData.role === "restaurant" && (
@@ -260,12 +310,27 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                       onChange={handleInputChange}
                       placeholder="Enter your password"
                       required={formData.role === "restaurant"}
+                      style={{ padding: '0.8rem' }}
                     />
                   </div>
                   {errors.password && formData.role === "restaurant" && (
                     <span className="error-message">{errors.password}</span>
                   )}
                 </div>
+
+                {/* General error message */}
+                {errors.general && formData.role === "restaurant" && (
+                  <div className="error-message general-error" style={{
+                    color: '#ff4444',
+                    backgroundColor: '#ffe6e6',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    marginBottom: '15px',
+                    textAlign: 'center'
+                  }}>
+                    {errors.general}
+                  </div>
+                )}
 
                 <div className="form-options">
                   <button

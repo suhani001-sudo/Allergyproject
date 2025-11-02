@@ -73,73 +73,7 @@ function App() {
     return <SplashScreen />;
   }
 
-  // STEP 6.1: Show signup page if needed
-  if (isSignup && !isLoggedIn) {
-    return (
-      <CartProvider>
-        <Router>
-          <Routes>
-            {/* Public About page */}
-            <Route 
-              path="/about-us" 
-              element={<AboutUs />} 
-            />
-            <Route 
-              path="/contact" 
-              element={<ContactUs />} 
-            />
-            <Route 
-              path="/signup" 
-              element={
-                <Signup 
-                  onSignup={handleSignup} 
-                  onSwitchToLogin={handleSwitchToLogin}
-                />
-              } 
-            />
-            <Route 
-              path="*" 
-              element={<Navigate to="/signup" replace />} 
-            />
-          </Routes>
-        </Router>
-      </CartProvider>
-    );
-  }
-
-  // STEP 6.2: Show login page if not logged in and not in signup mode
-  if (!isLoggedIn && !isSignup) {
-    return (
-      <CartProvider>
-        <Router>
-          <Routes>
-            {/* Public About page */}
-            <Route 
-              path="/about-us" 
-              element={<AboutUs />} 
-            />
-            <Route 
-              path="/contact" 
-              element={<ContactUs />} 
-            />
-            <Route 
-              path="/login" 
-              element={
-                <Login 
-                  onLogin={handleLogin} 
-                  onSwitchToSignup={function() { setIsSignup(true); }} 
-                />
-              }
-            />
-            <Route 
-              path="*" 
-              element={<Navigate to="/login" replace />} 
-            />
-          </Routes>
-        </Router>
-      </CartProvider>
-    );
-  }
+  console.log("App rendering", { isLoggedIn, role, showSplash });
 
   // STEP 7: Return the main app with routing
   return (
@@ -159,14 +93,17 @@ function App() {
           <Route 
             path="/login" 
             element={
-              !isLoggedIn ? (
-                <Login 
-                  onLogin={handleLogin} 
-                  onSwitchToSignup={function() { setIsSignup(true); }} 
-                />
-              ) : (
-                <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
-              )
+              (() => {
+                console.log("Login route - isLoggedIn:", isLoggedIn, "role:", role);
+                return !isLoggedIn ? (
+                  <Login 
+                    onLogin={handleLogin} 
+                    onSwitchToSignup={function() { setIsSignup(true); }} 
+                  />
+                ) : (
+                  <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+                );
+              })()
             } 
           />
           
@@ -250,7 +187,9 @@ function App() {
           <Route 
             path="/" 
             element={
-              <Navigate to={isLoggedIn ? (role === "user" ? "/dashboard" : "/restaurant-dashboard") : "/login"} replace />
+              isLoggedIn 
+                ? <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+                : <Navigate to="/login" replace />
             } 
           />
           

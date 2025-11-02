@@ -72,11 +72,10 @@ function RestaurantDashboard(props) {
   const [activeNav, setActiveNav] = useState('menu');
 
   // STEP 4.2: Main top navbar active state like dashboard
-  const [activeTopNav, setActiveTopNav] = useState('Restaurants');
+  const [activeTopNav, setActiveTopNav] = useState('Dashboard');
   const topNavItems = [
-    { id: 'Dashboard', label: 'Dashboard', action: function() { navigate('/dashboard'); } },
-    { id: 'Restaurants', label: 'Restaurants' },
-    { id: 'Allergies', label: 'Allergies' },
+   
+    { id: 'Dashboard', label: 'Dashboard' },
     { id: 'Contact', label: 'Contact' },
     { id: 'About', label: 'About us' },
     { id: 'Profile', label: 'Profile' },

@@ -131,7 +131,7 @@ function AllergyInfo() {
 
   // Navigation items
   const navItems = [
-    { id: 'Restaurants', label: 'Restaurants' },
+    { id: 'Dashboard', label: 'Dashboard' },
     { id: 'My Allergies', label: 'My Allergies' },
     { id: 'Contact', label: 'Contact' },
     { id: 'About', label: 'About us' },
@@ -140,8 +140,8 @@ function AllergyInfo() {
 
   const handleNavClick = (itemId) => {
     setActiveNavItem(itemId);
-    if (itemId === 'Restaurants') {
-      navigate('/restaurants');
+    if (itemId === 'Dashboard') {
+      navigate('/dashboard');
     } else if (itemId === 'My Allergies') {
       if (window.location.pathname === '/allergy-info') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
