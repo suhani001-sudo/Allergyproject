@@ -311,20 +311,56 @@
   100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 768px) {
+/* Tablet and below */
+@media (max-width: 1024px) {
   .login-form-container {
+    max-width: 380px;
     padding: 1.5rem;
-    margin: 1rem;
-    max-width: 300px;
+  }
+}
+
+/* Mobile landscape and portrait tablets */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 0.5rem;
+  }
+
+  .login-form-container {
+    padding: 1.5rem 1.25rem;
+    margin: 0.5rem;
+    max-width: 90%;
+    border-radius: 20px;
+  }
+  
+  .app-title {
+    font-size: 1.35rem;
+  }
+
+  .app-tagline {
+    font-size: 0.75rem;
   }
   
   .role-selector {
-    flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.5rem;
+    padding: 5px;
+  }
+
+  .role-option {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.85rem;
   }
   
-  .role-option {
-    border-radius: 12px;
+  .form-title {
+    font-size: 0.95rem;
+  }
+
+  .form-group label {
+    font-size: 0.8rem;
+  }
+
+  .input-wrapper input {
+    padding: 0.75rem;
+    font-size: 0.85rem;
   }
   
   .form-options {
@@ -332,40 +368,125 @@
   }
   
   .login-button {
-    padding: 0.7rem 1rem;
-  }
-  
-  .signup-button {
-    padding: 0.5rem 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-form-container {
-    padding: 1.25rem;
-    max-width: 280px;
-  }
-  
-  .form-options {
-    gap: 0.6rem;
-  }
-  
-  .login-button {
-    padding: 0.6rem 0.8rem;
+    padding: 0.75rem 1rem;
     font-size: 0.85rem;
   }
   
   .signup-button {
-    padding: 0.4rem 0.8rem;
+    padding: 0.55rem 1rem;
     font-size: 0.8rem;
   }
-  
-  .form-title {
-    font-size: 0.9rem;
+
+  .signup-prompt {
+    font-size: 0.75rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 0.25rem;
+  }
+
+  .login-form-container {
+    padding: 1.25rem 1rem;
+    max-width: 95%;
+    margin: 0.25rem;
+    border-radius: 18px;
+  }
+
+  .app-title {
+    font-size: 1.25rem;
+  }
+
+  .app-tagline {
+    font-size: 0.7rem;
   }
   
+  .role-selector {
+    gap: 0.4rem;
+    padding: 4px;
+  }
+
+  .role-option {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .form-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.85rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
   .input-wrapper input {
-    padding: 0.7rem;
+    padding: 0.65rem;
+    font-size: 0.8rem;
+    border-radius: 14px;
+  }
+  
+  .form-options {
+    gap: 0.7rem;
+  }
+  
+  .login-button {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.8rem;
+    border-radius: 14px;
+  }
+  
+  .signup-button {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.75rem;
+    border-radius: 14px;
+  }
+
+  .signup-prompt {
+    font-size: 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .error-message {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .login-form-container {
+    padding: 1rem 0.85rem;
+  }
+
+  .app-title {
+    font-size: 1.15rem;
+  }
+
+  .role-option {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .input-wrapper input {
+    padding: 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .login-button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .signup-button {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.7rem;
   }
 }
 

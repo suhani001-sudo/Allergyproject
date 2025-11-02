@@ -22,7 +22,6 @@ function ContactUs() {
     // Navigation items
     const navItems = [
         { id: 'Dashboard', label: 'Dashboard' },
-        { id: 'Restaurants', label: 'Restaurants' },
         { id: 'Allergies', label: 'Allergies' },
         { id: 'Contact', label: 'Contact' },
         { id: 'About', label: 'About us' },
@@ -34,8 +33,6 @@ function ContactUs() {
         setActiveNavItem(itemId);
         if (itemId === 'Dashboard') {
             navigate('/dashboard');
-        } else if (itemId === 'Restaurants') {
-            navigate('/restaurants');
         } else if (itemId === 'Allergies') {
             navigate('/allergy-info');
         } else if (itemId === 'Contact') {
@@ -99,29 +96,49 @@ function ContactUs() {
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (validateForm()) {
-            // Show success message
-            setShowSuccess(true);
+            try {
+                // Send message to backend
+                const response = await fetch('http://localhost:5000/api/contact-messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...formData,
+                        userType: 'user'
+                    })
+                });
 
-            // Reset form
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                subject: '',
-                message: ''
-            });
+                const data = await response.json();
 
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                setShowSuccess(false);
-            }, 5000);
+                if (data.success) {
+                    // Show success message
+                    setShowSuccess(true);
 
-            // Log form data (for demonstration)
-            console.log('Form submitted:', formData);
+                    // Reset form
+                    setFormData({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        subject: '',
+                        message: ''
+                    });
+
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        setShowSuccess(false);
+                    }, 5000);
+                } else {
+                    alert('Failed to send message. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('An error occurred. Please try again later.');
+            }
         }
     };
 
@@ -375,81 +392,6 @@ function ContactUs() {
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                         ></iframe>
-                    </div>
-                </div>
-            </section>
-
-            {/* Team Quick Contact Section */}
-            <section className="team-contact-section animate-on-scroll">
-                <div className="team-header">
-                    <h2 className="team-title">Connect with Our Team</h2>
-                    <p className="team-subtitle">Dedicated to your food safety</p>
-                </div>
-
-                <div className="team-cards-container">
-                    <div className="team-contact-card">
-                        <div className="team-avatar">
-                            <div className="avatar-circle">
-                                <span className="avatar-initial">S</span>
-                            </div>
-                        </div>
-                        <h3 className="team-member-name">Suhani </h3>
-                        <a href="mailto:suhani@safebytes.com" className="contact-button">
-                            <span className="button-icon">✉️</span>
-                            <span>Email</span>
-                        </a>
-                    </div>
-
-                    <div className="team-contact-card">
-                        <div className="team-avatar">
-                            <div className="avatar-circle">
-                                <span className="avatar-initial">P</span>
-                            </div>
-                        </div>
-                        <h3 className="team-member-name">Prince</h3>
-                        <a href="mailto:prince@safebytes.com" className="contact-button">
-                            <span className="button-icon">✉️</span>
-                            <span>Email</span>
-                        </a>
-                    </div>
-
-                    <div className="team-contact-card">
-                        <div className="team-avatar">
-                            <div className="avatar-circle">
-                                <span className="avatar-initial">R</span>
-                            </div>
-                        </div>
-                        <h3 className="team-member-name">Radhika</h3>
-                        <a href="mailto:radhika@safebytes.com" className="contact-button">
-                            <span className="button-icon">✉️</span>
-                            <span>Email</span>
-                        </a>
-                    </div>
-
-                    <div className="team-contact-card">
-                        <div className="team-avatar">
-                            <div className="avatar-circle">
-                                <span className="avatar-initial">A</span>
-                            </div>
-                        </div>
-                        <h3 className="team-member-name">Ayush</h3>
-                        <a href="mailto:ayush@safebytes.com" className="contact-button">
-                            <span className="button-icon">✉️</span>
-                            <span>Email</span>
-                        </a>
-                    </div>
-
-                    <div className="team-contact-card">
-                        <div className="team-avatar">
-                            <div className="avatar-circle">
-                                <span className="avatar-initial">S</span>
-                            </div>
-                        </div>
-                        <h3 className="team-member-name">Sabia</h3>
-                        <a href="mailto:sabia@safebytes.com" className="contact-button">
-                            <span className="button-icon">✉️</span>
-                            <span>Email</span>
-                        </a>
                     </div>
                 </div>
             </section>

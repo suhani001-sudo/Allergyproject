@@ -19,12 +19,12 @@ function RestaurantDashboard(props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // STEP 2.1: Fetch menu items from database
+  // STEP 2.1: Fetch menu items from database and remove duplicates
   useEffect(function() {
     async function fetchMenuItems() {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/restaurants/menu');
+        const response = await fetch('http://localhost:5000/api/menus');
         const data = await response.json();
         
         if (data.success && data.data) {
@@ -35,14 +35,36 @@ function RestaurantDashboard(props) {
               name: item.itemName,
               price: item.price,
               description: item.description,
-              allergens: item.allergens || [],
+              allergens: item.allergenInfo || [],
               ingredients: item.ingredients || [],
               category: item.category,
               restaurantName: item.restaurantName,
-              available: true
+              available: true,
+              imageUrl: item.imageUrl,
+              isVegetarian: item.isVegetarian,
+              isVegan: item.isVegan,
+              isGlutenFree: item.isGlutenFree
             };
           });
-          setItems(transformedItems);
+          
+          // Remove duplicates using _id, or name+price as fallback
+          const uniqueItems = [];
+          const seenIds = new Set();
+          const seenNamePrice = new Set();
+          
+          transformedItems.forEach(function(item) {
+            const namePrice = `${item.name.toLowerCase()}-${item.price}`;
+            
+            if (item.id && !seenIds.has(item.id)) {
+              seenIds.add(item.id);
+              uniqueItems.push(item);
+            } else if (!item.id && !seenNamePrice.has(namePrice)) {
+              seenNamePrice.add(namePrice);
+              uniqueItems.push(item);
+            }
+          });
+          
+          setItems(uniqueItems);
         }
       } catch (err) {
         console.error('Error fetching menu items:', err);
@@ -74,11 +96,10 @@ function RestaurantDashboard(props) {
   // STEP 4.2: Main top navbar active state like dashboard
   const [activeTopNav, setActiveTopNav] = useState('Dashboard');
   const topNavItems = [
-   
-    { id: 'Dashboard', label: 'Dashboard' },
-    { id: 'Contact', label: 'Contact' },
-    { id: 'About', label: 'About us' },
-    { id: 'Profile', label: 'Profile' },
+    { id: 'Dashboard', label: 'Dashboard', path: '/restaurant-dashboard' },
+    { id: 'Contact', label: 'Contact', path: '/restaurant-contact' },
+    { id: 'About', label: 'About us', path: '/restaurant-about' },
+    { id: 'Profile', label: 'Profile', path: '/restaurant-profile' },
   ];
 
   // STEP 4.3: Helper to scroll to a section smoothly and mark nav active
@@ -130,7 +151,7 @@ function RestaurantDashboard(props) {
   }
 
   // STEP 8: Add a new item or update an existing one
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!formData.name.trim()) {
@@ -143,34 +164,96 @@ function RestaurantDashboard(props) {
       return;
     }
 
-    const newItem = {
-      id: editingId ? editingId : Date.now(),
-      name: formData.name.trim(),
+    const menuItemData = {
+      itemName: formData.name.trim(),
       price: parseFloat(priceNumber.toFixed(2)),
       description: formData.description.trim(),
-      allergens: formData.allergens,
-      ingredients: formData.ingredients,
-      category: formData.category,
-      available: true,
+      allergenInfo: formData.allergens,
+      category: formData.category.toLowerCase(),
+      restaurantName: 'SafeBytes Restaurant', // You can make this dynamic
+      imageUrl: 'https://via.placeholder.com/300x200?text=Menu+Item'
     };
 
-    if (editingId) {
-      setItems(function(prev) {
-        return prev.map(function(it) {
-          if (it.id === editingId) {
-            return { ...newItem, available: it.available };
-          } else {
-            return it;
-          }
+    try {
+      if (editingId) {
+        // Update existing item
+        const response = await fetch(`http://localhost:5000/api/menus/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(menuItemData)
         });
-      });
-    } else {
-      setItems(function(prev) {
-        return [...prev, newItem];
-      });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Refresh menu items
+          const fetchResponse = await fetch('http://localhost:5000/api/menus');
+          const fetchData = await fetchResponse.json();
+          
+          if (fetchData.success && fetchData.data) {
+            const transformedItems = fetchData.data.map(function(item) {
+              return {
+                id: item._id,
+                name: item.itemName,
+                price: item.price,
+                description: item.description,
+                allergens: item.allergenInfo || [],
+                ingredients: item.ingredients || [],
+                category: item.category,
+                restaurantName: item.restaurantName,
+                available: true,
+                imageUrl: item.imageUrl
+              };
+            });
+            setItems(transformedItems);
+          }
+          alert('Menu item updated successfully!');
+        } else {
+          alert('Failed to update menu item.');
+        }
+      } else {
+        // Add new item
+        const response = await fetch('http://localhost:5000/api/menus', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(menuItemData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Refresh menu items
+          const fetchResponse = await fetch('http://localhost:5000/api/menus');
+          const fetchData = await fetchResponse.json();
+          
+          if (fetchData.success && fetchData.data) {
+            const transformedItems = fetchData.data.map(function(item) {
+              return {
+                id: item._id,
+                name: item.itemName,
+                price: item.price,
+                description: item.description,
+                allergens: item.allergenInfo || [],
+                ingredients: item.ingredients || [],
+                category: item.category,
+                restaurantName: item.restaurantName,
+                available: true,
+                imageUrl: item.imageUrl
+              };
+            });
+            setItems(transformedItems);
+          }
+          alert('Menu item added successfully!');
+        } else {
+          alert('Failed to add menu item.');
+        }
+      }
+      
+      resetForm();
+    } catch (error) {
+      console.error('Error saving menu item:', error);
+      alert('An error occurred while saving the menu item.');
     }
-
-    resetForm();
   }
 
   // STEP 9: Start editing an item by loading its data into the form
@@ -187,16 +270,50 @@ function RestaurantDashboard(props) {
   }
 
   // STEP 10: Delete an item using confirm()
-  function deleteItem(id) {
+  async function deleteItem(id) {
     const ok = window.confirm('Are you sure you want to delete this item?');
     if (!ok) return;
-    setItems(function(prev) {
-      return prev.filter(function(it) {
-        return it.id !== id;
+    
+    try {
+      const response = await fetch(`http://localhost:5000/api/menus/${id}`, {
+        method: 'DELETE'
       });
-    });
-    if (editingId === id) {
-      resetForm();
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Refresh menu items
+        const fetchResponse = await fetch('http://localhost:5000/api/menus');
+        const fetchData = await fetchResponse.json();
+        
+        if (fetchData.success && fetchData.data) {
+          const transformedItems = fetchData.data.map(function(item) {
+            return {
+              id: item._id,
+              name: item.itemName,
+              price: item.price,
+              description: item.description,
+              allergens: item.allergenInfo || [],
+              ingredients: item.ingredients || [],
+              category: item.category,
+              restaurantName: item.restaurantName,
+              available: true,
+              imageUrl: item.imageUrl
+            };
+          });
+          setItems(transformedItems);
+        }
+        alert('Menu item deleted successfully!');
+      } else {
+        alert('Failed to delete menu item.');
+      }
+      
+      if (editingId === id) {
+        resetForm();
+      }
+    } catch (error) {
+      console.error('Error deleting menu item:', error);
+      alert('An error occurred while deleting the menu item.');
     }
   }
 
@@ -237,14 +354,9 @@ function RestaurantDashboard(props) {
                   className={`nav-link ${activeTopNav === item.id ? 'active' : ''}`}
                   onClick={function() {
                     setActiveTopNav(item.id);
-                    if (item.action) {
-                      item.action();
-                    } else if (item.id === 'Restaurants') goTo('menu');
-                    else if (item.id === 'Allergies') goTo('form');
-                    else if (item.id === 'Contact') goTo('analytics');
-                    else if (item.id === 'About') navigate('/about-us');
-                    else if (item.id === 'Dashboard') navigate('/restaurant-dashboard');
-                    else if (item.id === 'Profile') navigate('/restaurant-dashboard');
+                    if (item.path) {
+                      navigate(item.path);
+                    }
                   }}
                 >
                   <span className="nav-label">{item.label}</span>
@@ -262,14 +374,131 @@ function RestaurantDashboard(props) {
 
       {/* MAIN CONTENT */}
       <main className="rd-main">
+        {/* ADD/EDIT FORM SECTION - MOVED TO TOP */}
+        <section id="rd-form" className="rd-section rd-form-section">
+          <h2 className="rd-section-title">{editingId ? 'Edit Item' : 'Add New Item'}</h2>
+
+          <form className="rd-form" onSubmit={handleSubmit}>
+            <div className="rd-form-grid">
+              {/* Name */}
+              <div className="rd-form-group">
+                <label className="rd-label" htmlFor="name">Name</label>
+                <input
+                  className="rd-input"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter item name"
+                />
+              </div>
+
+              {/* Price */}
+              <div className="rd-form-group">
+                <label className="rd-label" htmlFor="price">Price (₹)</label>
+                <input
+                  className="rd-input"
+                  id="price"
+                  name="price"
+                  type="number"
+                  step="0.01"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  placeholder="0.00"
+                />
+              </div>
+
+              {/* Category */}
+              <div className="rd-form-group">
+                <label className="rd-label" htmlFor="category">Category</label>
+                <select
+                  className="rd-select"
+                  id="category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                >
+                  <option value="Main Course">Main Course</option>
+                  <option value="Appetizer">Appetizer</option>
+                  <option value="Salad">Salad</option>
+                  <option value="Pasta">Pasta</option>
+                  <option value="Vegetarian">Vegetarian</option>
+                  <option value="Healthy">Healthy</option>
+                  <option value="Dessert">Dessert</option>
+                  <option value="Beverage">Beverage</option>
+                </select>
+              </div>
+
+              {/* Description - Full Width */}
+              <div className="rd-form-group rd-form-group-full">
+                <label className="rd-label" htmlFor="description">Description</label>
+                <textarea
+                  className="rd-textarea"
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Short description of the dish"
+                  rows="3"
+                />
+              </div>
+
+              {/* Ingredients - Full Width */}
+              <div className="rd-form-group rd-form-group-full">
+                <label className="rd-label" htmlFor="ingredients">Ingredients</label>
+                <input
+                  className="rd-input"
+                  id="ingredients"
+                  name="ingredients"
+                  value={formData.ingredients.join(', ')}
+                  onChange={handleIngredientsChange}
+                  placeholder="Enter ingredients separated by commas (e.g., Chicken, Rice, Vegetables)"
+                />
+              </div>
+
+              {/* Allergens - Full Width */}
+              <div className="rd-form-group rd-form-group-full">
+                <span className="rd-label">Allergens</span>
+                <div className="rd-checkboxes">
+                  {ALLERGENS.map(function(al) {
+                    return (
+                      <label key={al} className="rd-check">
+                        <input
+                          type="checkbox"
+                          value={al}
+                          checked={formData.allergens.includes(al)}
+                          onChange={handleAllergenChange}
+                        />
+                        <span>{al}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Form buttons */}
+            <div className="rd-form-actions">
+              <button type="submit" className="rd-btn rd-btn-primary">
+                {editingId ? '✓ Update Item' : '+ Add Item'}
+              </button>
+              {editingId && (
+                <button type="button" className="rd-btn rd-btn-secondary" onClick={resetForm}>
+                  ✕ Cancel
+                </button>
+              )}
+            </div>
+          </form>
+        </section>
+
         {/* MENU LIST SECTION */}
         <section id="rd-menu" className="rd-section">
-          <h2 className="rd-section-title">Menu Items</h2>
+          <h2 className="rd-section-title">Menu Items ({items.length})</h2>
 
           {loading && <div className="rd-loading">Loading menu items...</div>}
           {error && <div className="rd-error">{error}</div>}
 
-          <div className="rd-list">
+          <div className="rd-menu-grid">
             {items.map(function(item) {
               return (
                 <div key={item.id} className="rd-card">
@@ -326,14 +555,17 @@ function RestaurantDashboard(props) {
                   </div>
 
                   <div className="rd-card-actions">
-                    <button className="rd-btn" onClick={function() { toggleAvailability(item.id); }}>
-                      Toggle Availability
+                    <button className="rd-btn rd-btn-toggle" onClick={function() { toggleAvailability(item.id); }}>
+                      {item.available ? '✓ Available' : '✕ Unavailable'}
                     </button>
-                    <button className="rd-btn rd-btn-secondary" onClick={function() { startEdit(item); }}>
-                      Edit
+                    <button className="rd-btn rd-btn-secondary" onClick={function() { 
+                      startEdit(item);
+                      document.getElementById('rd-form').scrollIntoView({ behavior: 'smooth' });
+                    }}>
+                      ✎ Edit
                     </button>
                     <button className="rd-btn rd-btn-danger" onClick={function() { deleteItem(item.id); }}>
-                      Delete
+                      🗑 Delete
                     </button>
                   </div>
                 </div>
@@ -342,135 +574,24 @@ function RestaurantDashboard(props) {
           </div>
         </section>
 
-        {/* ADD/EDIT FORM SECTION */}
-        <section id="rd-form" className="rd-section">
-          <h2 className="rd-section-title">{editingId ? 'Edit Item' : 'Add New Item'}</h2>
-
-          <form className="rd-form" onSubmit={handleSubmit}>
-            {/* Name */}
-            <div className="rd-form-row">
-              <label className="rd-label" htmlFor="name">Name</label>
-              <input
-                className="rd-input"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter item name"
-              />
-            </div>
-
-            {/* Price */}
-            <div className="rd-form-row">
-              <label className="rd-label" htmlFor="price">Price</label>
-              <input
-                className="rd-input"
-                id="price"
-                name="price"
-                type="number"
-                step="0.01"
-                value={formData.price}
-                onChange={handleInputChange}
-                placeholder="0.00"
-              />
-            </div>
-
-            {/* Description */}
-            <div className="rd-form-row">
-              <label className="rd-label" htmlFor="description">Description</label>
-              <textarea
-                className="rd-textarea"
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Short description of the dish"
-              />
-            </div>
-
-            {/* Category */}
-            <div className="rd-form-row">
-              <label className="rd-label" htmlFor="category">Category</label>
-              <select
-                className="rd-input"
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-              >
-                <option value="Main Course">Main Course</option>
-                <option value="Appetizer">Appetizer</option>
-                <option value="Salad">Salad</option>
-                <option value="Pasta">Pasta</option>
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Healthy">Healthy</option>
-                <option value="Dessert">Dessert</option>
-                <option value="Beverage">Beverage</option>
-              </select>
-            </div>
-
-            {/* Ingredients */}
-            <div className="rd-form-row">
-              <label className="rd-label" htmlFor="ingredients">Ingredients</label>
-              <input
-                className="rd-input"
-                id="ingredients"
-                name="ingredients"
-                value={formData.ingredients.join(', ')}
-                onChange={handleIngredientsChange}
-                placeholder="Enter ingredients separated by commas (e.g., Chicken, Rice, Vegetables)"
-              />
-            </div>
-
-            {/* Allergens */}
-            <div className="rd-form-row">
-              <span className="rd-label">Allergens</span>
-              <div className="rd-checkboxes">
-                {ALLERGENS.map(function(al) {
-                  return (
-                    <label key={al} className="rd-check">
-                      <input
-                        type="checkbox"
-                        value={al}
-                        checked={formData.allergens.includes(al)}
-                        onChange={handleAllergenChange}
-                      />
-                      <span>{al}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Form buttons */}
-            <div className="rd-form-actions">
-              <button type="submit" className="rd-btn">
-                {editingId ? 'Update Item' : 'Add Item'}
-              </button>
-              {editingId && (
-                <button type="button" className="rd-btn rd-btn-secondary" onClick={resetForm}>
-                  Cancel Edit
-                </button>
-              )}
-            </div>
-          </form>
-        </section>
-
         {/* ANALYTICS SECTION */}
         <section id="rd-analytics" className="rd-section rd-analytics">
-          <h2 className="rd-section-title">Analytics</h2>
+          <h2 className="rd-section-title">📊 Quick Stats</h2>
           <div className="rd-analytics-grid">
             <div className="rd-analytics-card">
-              <div className="rd-analytics-number">{totalItems}</div>
+              <div className="rd-analytics-icon">📋</div>
+              <div className="rd-analytics-value">{totalItems}</div>
               <div className="rd-analytics-label">Total Items</div>
             </div>
             <div className="rd-analytics-card">
-              <div className="rd-analytics-number">{availableItems}</div>
-              <div className="rd-analytics-label">Available Items</div>
+              <div className="rd-analytics-icon">✓</div>
+              <div className="rd-analytics-value">{availableItems}</div>
+              <div className="rd-analytics-label">Available</div>
             </div>
             <div className="rd-analytics-card">
-              <div className="rd-analytics-number">{itemsWithAnyAllergens}</div>
-              <div className="rd-analytics-label">Items With Allergens</div>
+              <div className="rd-analytics-icon">⚠️</div>
+              <div className="rd-analytics-value">{itemsWithAnyAllergens}</div>
+              <div className="rd-analytics-label">With Allergens</div>
             </div>
           </div>
         </section>

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './AboutUs.css';
+import './AboutUs.css'; // Reusing the same CSS
 import Footer from './Footer';
 
-function AboutUs() {
+function RestaurantAboutUs() {
     const navigate = useNavigate();
     const [activeNavItem, setActiveNavItem] = useState('About');
 
-    // Navigation items
+    // Navigation items for Restaurant Dashboard
     const navItems = [
         { id: 'Dashboard', label: 'Dashboard' },
-        { id: 'Allergies', label: 'Allergies' },
         { id: 'Contact', label: 'Contact' },
         { id: 'About', label: 'About us' },
         { id: 'Profile', label: 'Profile' }
@@ -20,15 +19,13 @@ function AboutUs() {
     function handleNavClick(itemId) {
         setActiveNavItem(itemId);
         if (itemId === 'Dashboard') {
-            navigate('/dashboard');
-        } else if (itemId === 'Allergies') {
-            navigate('/allergy-info');
+            navigate('/restaurant-dashboard');
         } else if (itemId === 'Contact') {
-            navigate('/contact');
+            navigate('/restaurant-contact');
         } else if (itemId === 'About') {
-            navigate('/about-us');
+            navigate('/restaurant-about');
         } else if (itemId === 'Profile') {
-            navigate('/profile');
+            navigate('/restaurant-profile');
         }
     }
 
@@ -65,7 +62,7 @@ function AboutUs() {
             {/* Navbar */}
             <nav className="navbar">
                 <div className="nav-container">
-                    <div className="nav-logo" onClick={() => navigate('/dashboard')}>
+                    <div className="nav-logo" onClick={() => navigate('/restaurant-dashboard')}>
                         <img
                             src="/images/green_logo.jpg"
                             alt="SafeBytes Logo"
@@ -100,24 +97,24 @@ function AboutUs() {
             {/* Hero Section - Premium Design */}
             <section className="premium-hero">
                 <div className="hero-background">
-                    <div className="floating-icon float-1">🥗</div>
-                    <div className="floating-icon float-2">🍎</div>
-                    <div className="floating-icon float-3">🥑</div>
+                    <div className="floating-icon float-1">🍽️</div>
+                    <div className="floating-icon float-2">🥗</div>
+                    <div className="floating-icon float-3">🍕</div>
                     <div className="floating-icon float-4">🌿</div>
                 </div>
                 <div className="hero-content-wrapper">
                     <div className="hero-text-content">
-                        <h1 className="hero-main-title">About SafeBytes</h1>
-                        <h2 className="hero-subtitle">Eat Smart, Stay Safe</h2>
+                        <h1 className="hero-main-title">Restaurant Partner Portal</h1>
+                        <h2 className="hero-subtitle">Safe Dining, Together</h2>
                         <p className="hero-tagline">
-                            Empowering safe dining for everyone with food allergies
+                            Partnering with SafeBytes to provide allergy-safe dining experiences
                         </p>
                         <div className="hero-decorative-line"></div>
                     </div>
                     <div className="hero-illustration">
                         <div className="illustration-circle">
                             <div className="inner-circle">
-                                <span className="illustration-icon">🛡️</span>
+                                <span className="illustration-icon">🏪</span>
                             </div>
                         </div>
                     </div>
@@ -140,10 +137,10 @@ function AboutUs() {
                             <div className="side-icon-badge">🎯</div>
                             <h2 className="side-title">Our Mission</h2>
                             <p className="side-text">
-                                Our mission is to promote food safety and awareness by empowering users with clear
-                                allergen information and healthy eating choices. We strive to make dining worry-free
-                                for individuals with food allergies by providing accurate, accessible, and actionable
-                                information at their fingertips.
+                                Our goal is to provide allergy-safe dining experiences for all users by maintaining 
+                                accurate, up-to-date allergen information. We collaborate with SafeBytes to ensure 
+                                every dish is properly labeled, giving customers confidence in their food choices and 
+                                helping them dine without worry.
                             </p>
                             <div className="side-decorative-element"></div>
                         </div>
@@ -158,17 +155,17 @@ function AboutUs() {
                     <div className="split-side vision-side">
                         <div className="side-graphic">
                             <div className="graphic-circle vision-circle">
-                                <span className="graphic-emoji">🌱</span>
+                                <span className="graphic-emoji">🌟</span>
                             </div>
                         </div>
                         <div className="side-content">
                             <div className="side-icon-badge">🌟</div>
                             <h2 className="side-title">Our Vision</h2>
                             <p className="side-text">
-                                We aim to create a world where no one has to worry about hidden allergens — where
-                                technology ensures safe and confident dining experiences for everyone. Through innovation
-                                and awareness, we envision a future where food allergies are no longer a barrier to
-                                enjoying meals with peace of mind.
+                                We envision a future where restaurants and technology work hand-in-hand to create 
+                                inclusive dining environments. By partnering with SafeBytes, we aim to set new standards 
+                                in food safety transparency, making every meal a safe and enjoyable experience for 
+                                customers with dietary restrictions.
                             </p>
                             <div className="side-decorative-element"></div>
                         </div>
@@ -179,62 +176,62 @@ function AboutUs() {
             {/* Project Highlights - Interactive Cards */}
             <section className="highlights-section">
                 <div className="highlights-header animate-on-scroll">
-                    <h2 className="highlights-title">Why Choose SafeBytes?</h2>
-                    <p className="highlights-subtitle">Premium features designed for your safety</p>
+                    <h2 className="highlights-title">Why Partner With SafeBytes?</h2>
+                    <p className="highlights-subtitle">Premium features for restaurant partners</p>
                 </div>
 
                 <div className="highlights-grid animate-on-scroll">
                     <div className="highlight-card card-1">
                         <div className="card-icon-wrapper">
-                            <div className="card-icon">👤</div>
+                            <div className="card-icon">📋</div>
                         </div>
-                        <h3 className="card-title">Personalized Allergy Profiles</h3>
-                        <p className="card-description">Customize your profile with detailed allergy information and severity levels</p>
+                        <h3 className="card-title">Easy Menu Management</h3>
+                        <p className="card-description">Effortlessly add, edit, and manage your menu items with detailed allergen information</p>
                         <div className="card-glow"></div>
                     </div>
 
                     <div className="highlight-card card-2">
                         <div className="card-icon-wrapper">
-                            <div className="card-icon">🥗</div>
+                            <div className="card-icon">🛡️</div>
                         </div>
-                        <h3 className="card-title">Safe Food Recommendations</h3>
-                        <p className="card-description">Discover allergy-friendly meals and alternatives tailored to you</p>
+                        <h3 className="card-title">Allergen Accuracy</h3>
+                        <p className="card-description">Ensure customer safety with comprehensive allergen tracking and labeling</p>
                         <div className="card-glow"></div>
                     </div>
 
                     <div className="highlight-card card-3">
                         <div className="card-icon-wrapper">
-                            <div className="card-icon">🧠</div>
+                            <div className="card-icon">👥</div>
                         </div>
-                        <h3 className="card-title">Awareness & Education</h3>
-                        <p className="card-description">Stay informed with comprehensive allergen data and safety tips</p>
+                        <h3 className="card-title">Reach More Customers</h3>
+                        <p className="card-description">Connect with health-conscious diners actively seeking safe dining options</p>
                         <div className="card-glow"></div>
                     </div>
 
                     <div className="highlight-card card-4">
                         <div className="card-icon-wrapper">
-                            <div className="card-icon">🏥</div>
+                            <div className="card-icon">📊</div>
                         </div>
-                        <h3 className="card-title">Health-Focused Approach</h3>
-                        <p className="card-description">Medical-grade accuracy in allergen detection and reporting</p>
+                        <h3 className="card-title">Real-Time Analytics</h3>
+                        <p className="card-description">Track menu performance and customer preferences with detailed insights</p>
                         <div className="card-glow"></div>
                     </div>
 
                     <div className="highlight-card card-5">
                         <div className="card-icon-wrapper">
-                            <div className="card-icon">📱</div>
+                            <div className="card-icon">⚡</div>
                         </div>
-                        <h3 className="card-title">Responsive Design</h3>
-                        <p className="card-description">Seamless experience across all devices and screen sizes</p>
+                        <h3 className="card-title">Instant Updates</h3>
+                        <p className="card-description">Update menu availability and information in real-time across the platform</p>
                         <div className="card-glow"></div>
                     </div>
 
                     <div className="highlight-card card-6">
                         <div className="card-icon-wrapper">
-                            <div className="card-icon">🔍</div>
+                            <div className="card-icon">🤝</div>
                         </div>
-                        <h3 className="card-title">Smart Search</h3>
-                        <p className="card-description">Quickly find safe restaurants and dishes in your area</p>
+                        <h3 className="card-title">Dedicated Support</h3>
+                        <p className="card-description">Get assistance from our team to optimize your restaurant profile</p>
                         <div className="card-glow"></div>
                     </div>
                 </div>
@@ -243,11 +240,11 @@ function AboutUs() {
             {/* Diagonal Divider */}
             <div className="diagonal-divider"></div>
 
-            {/* Team Section - Premium Cards */}
+            {/* Benefits Section */}
             <section className="team-section">
                 <div className="team-header animate-on-scroll">
-                    <h2 className="team-title">Meet Our Team</h2>
-                    <p className="team-subtitle">Dedicated to building a safer dining future</p>
+                    <h2 className="team-title">Partnership Benefits</h2>
+                    <p className="team-subtitle">What you get as a SafeBytes restaurant partner</p>
                     <div className="title-underline"></div>
                 </div>
 
@@ -256,11 +253,11 @@ function AboutUs() {
                         <div className="team-card-inner">
                             <div className="team-avatar">
                                 <div className="avatar-circle">
-                                    <span className="avatar-initial">S</span>
+                                    <span className="avatar-initial">✓</span>
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Suhani </h3>
+                            <h3 className="team-member-name">Verified Badge</h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -273,11 +270,11 @@ function AboutUs() {
                         <div className="team-card-inner">
                             <div className="team-avatar">
                                 <div className="avatar-circle">
-                                    <span className="avatar-initial">P</span>
+                                    <span className="avatar-initial">🎯</span>
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Prince</h3>
+                            <h3 className="team-member-name">Priority Listing</h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -290,11 +287,11 @@ function AboutUs() {
                         <div className="team-card-inner">
                             <div className="team-avatar">
                                 <div className="avatar-circle">
-                                    <span className="avatar-initial">R</span>
+                                    <span className="avatar-initial">📈</span>
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Radhika</h3>
+                            <h3 className="team-member-name">Growth Insights</h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -307,11 +304,11 @@ function AboutUs() {
                         <div className="team-card-inner">
                             <div className="team-avatar">
                                 <div className="avatar-circle">
-                                    <span className="avatar-initial">A</span>
+                                    <span className="avatar-initial">💬</span>
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Ayush</h3>
+                            <h3 className="team-member-name">Customer Feedback</h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -324,11 +321,11 @@ function AboutUs() {
                         <div className="team-card-inner">
                             <div className="team-avatar">
                                 <div className="avatar-circle">
-                                    <span className="avatar-initial">S</span>
+                                    <span className="avatar-initial">🔒</span>
                                 </div>
                                 <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Sabia</h3>
+                            <h3 className="team-member-name">Data Security</h3>
                             <div className="team-decorative-dots">
                                 <span className="dot"></span>
                                 <span className="dot"></span>
@@ -342,49 +339,49 @@ function AboutUs() {
             {/* Technologies Section - Modern Badges */}
             <section className="tech-section animate-on-scroll">
                 <div className="tech-header">
-                    <h2 className="tech-title">Built With Modern Technologies</h2>
-                    <p className="tech-subtitle">Powered by industry-leading tools</p>
+                    <h2 className="tech-title">Powered By Modern Technology</h2>
+                    <p className="tech-subtitle">Reliable, secure, and scalable platform</p>
                 </div>
 
                 <div className="tech-badges-container">
                     <div className="tech-badge" style={{ animationDelay: '0.1s' }}>
-                        <span className="badge-text">HTML</span>
-                    </div>
-                    <div className="tech-badge" style={{ animationDelay: '0.2s' }}>
-                        <span className="badge-text">CSS</span>
-                    </div>
-                    <div className="tech-badge" style={{ animationDelay: '0.3s' }}>
-                        <span className="badge-text">JavaScript</span>
-                    </div>
-                    <div className="tech-badge" style={{ animationDelay: '0.4s' }}>
                         <span className="badge-text">React</span>
                     </div>
-                    <div className="tech-badge" style={{ animationDelay: '0.5s' }}>
+                    <div className="tech-badge" style={{ animationDelay: '0.2s' }}>
                         <span className="badge-text">Node.js</span>
                     </div>
-                    <div className="tech-badge" style={{ animationDelay: '0.6s' }}>
+                    <div className="tech-badge" style={{ animationDelay: '0.3s' }}>
                         <span className="badge-text">MongoDB</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.4s' }}>
+                        <span className="badge-text">Express</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.5s' }}>
+                        <span className="badge-text">Cloud Hosting</span>
+                    </div>
+                    <div className="tech-badge" style={{ animationDelay: '0.6s' }}>
+                        <span className="badge-text">SSL Secure</span>
                     </div>
                 </div>
             </section>
 
-            {/* Call to Action - Keep As-Is */}
+            {/* Call to Action */}
             <section className="about-section fade-in">
                 <div className="cta-container">
-                    <h2 className="cta-title">Ready to Dine Safely?</h2>
+                    <h2 className="cta-title">Ready to Get Started?</h2>
                     <p className="cta-text">
-                        Join thousands of users who trust SafeBytes for their food safety needs
+                        Manage your menu and reach more customers with SafeBytes
                     </p>
-                    <button className="cta-button" onClick={() => navigate('/restaurants')}>
-                        Explore Restaurants
+                    <button className="cta-button" onClick={() => navigate('/restaurant-dashboard')}>
+                        Go to Dashboard
                     </button>
                 </div>
             </section>
 
-            {/* Footer - Keep As-Is */}
+            {/* Footer */}
             <Footer />
         </div>
     );
 }
 
-export default AboutUs;
+export default RestaurantAboutUs;

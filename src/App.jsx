@@ -12,6 +12,9 @@ import { CartProvider } from "./Components/CartContext";
 import AboutUs from "./Components/AboutUs";
 import ContactUs from "./Components/ContactUs";
 import Profile from "./Components/Profile";
+import RestaurantAboutUs from "./Components/RestaurantAboutUs";
+import RestaurantProfile from "./Components/RestaurantProfile";
+import RestaurantContactUs from "./Components/RestaurantContactUs";
 import "./App.css";
 
 function App() {
@@ -177,6 +180,42 @@ function App() {
             element={
               isLoggedIn && role === "restaurant" ? (
                 <ResturantDashboard onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+
+          {/* Restaurant About Us page route */}
+          <Route 
+            path="/restaurant-about" 
+            element={
+              isLoggedIn && role === "restaurant" ? (
+                <RestaurantAboutUs />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+
+          {/* Restaurant Profile page route */}
+          <Route 
+            path="/restaurant-profile" 
+            element={
+              isLoggedIn && role === "restaurant" ? (
+                <RestaurantProfile />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+
+          {/* Restaurant Contact Us page route */}
+          <Route 
+            path="/restaurant-contact" 
+            element={
+              isLoggedIn && role === "restaurant" ? (
+                <RestaurantContactUs />
               ) : (
                 <Navigate to="/login" replace />
               )

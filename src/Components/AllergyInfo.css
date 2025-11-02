@@ -677,14 +677,88 @@
 }
 
 
-/* Responsive Design */
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Large tablets */
+@media (max-width: 1024px) {
+  .nav-container {
+    padding: 0 1.5rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .allergens-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Tablets and below */
 @media (max-width: 768px) {
+  .allergy-info-container {
+    padding-top: 60px;
+  }
+
+  .navbar {
+    height: 60px;
+  }
+
+  .nav-container {
+    height: 60px;
+    padding: 0 1rem;
+  }
+
+  .logo-image {
+    height: 50px;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  .nav-links {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-link {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .logout-button {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .allergy-header {
+    padding: 3rem 1rem;
+  }
+
   .header-title {
     font-size: 2rem;
+    line-height: 1.2;
   }
   
   .header-description {
     font-size: 1rem;
+  }
+
+  .search-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .allergens-section {
+    padding: 2rem 1rem;
   }
   
   .allergens-container {
@@ -693,7 +767,7 @@
   }
   
   .allergen-card {
-    margin: 0 1rem;
+    margin: 0;
   }
   
   .floating-tip {
@@ -703,85 +777,235 @@
     max-width: none;
   }
   
-  .nav-container {
-    padding: 0 1rem;
-  }
-  
-  .nav-links {
-    gap: 0.5rem;
-  }
-  
-  .nav-link {
-    padding: 0.6rem 1rem;
-    font-size: 0.85rem;
-  }
-  
-  .logo-image {
-    height: 50px;
-  }
-  
   .modal-content {
     margin: 1rem;
     max-height: 90vh;
+    width: calc(100% - 2rem);
   }
   
   .modal-header {
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .modal-title h2 {
+    font-size: 1.5rem;
   }
   
   .modal-body {
     padding: 1.5rem;
     max-height: 70vh;
   }
+
+  .content-section h4 {
+    font-size: 1rem;
+  }
+
+  .content-section p {
+    font-size: 0.9rem;
+  }
 }
 
+/* Mobile devices */
 @media (max-width: 480px) {
+  .allergy-info-container {
+    padding-top: 55px;
+  }
+
+  .navbar {
+    height: 55px;
+  }
+
+  .nav-container {
+    height: 55px;
+    padding: 0 0.75rem;
+  }
+
+  .logo-image {
+    height: 40px;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .logout-button {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .allergy-header {
+    padding: 2.5rem 0.75rem;
+  }
+
   .header-content {
-    padding: 2rem 1rem;
+    padding: 2rem 0.75rem;
   }
   
   .header-title {
-    font-size: 1.8rem;
+    font-size: 1.75rem;
+  }
+
+  .header-description {
+    font-size: 0.9rem;
+  }
+
+  .search-section {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  }
+
+  .allergens-section {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .allergens-container {
+    gap: 1.25rem;
+  }
+
+  .allergen-card {
+    border-radius: 16px;
   }
   
   .card-header {
     padding: 1.5rem;
   }
+
+  .card-icon {
+    font-size: 2.5rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .card-preview {
+    font-size: 0.85rem;
+  }
+
+  .expand-button {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .floating-tip {
+    bottom: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .tip-text {
+    font-size: 0.85rem;
+  }
   
   .ingredients-list,
   .symptoms-list,
   .alternatives-list {
-    flex-direction: column;
+    gap: 0.5rem;
   }
-  
-  .nav-container {
-    flex-direction: column;
-    height: auto;
-    padding: 1rem;
-    gap: 1rem;
-  }
-  
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .nav-link {
-    padding: 0.5rem 0.75rem;
+
+  .ingredient-tag,
+  .symptom-tag,
+  .alternative-tag {
     font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
   }
   
   .modal-content {
     margin: 0.5rem;
     max-height: 95vh;
+    width: calc(100% - 1rem);
+    border-radius: 18px;
   }
   
   .modal-header {
     padding: 1rem;
   }
+
+  .modal-title h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-close {
+    font-size: 1.75rem;
+    width: 32px;
+    height: 32px;
+  }
   
   .modal-body {
     padding: 1rem;
+    max-height: 75vh;
+  }
+
+  .content-section {
+    margin-bottom: 1.25rem;
+  }
+
+  .content-section h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .content-section p {
+    font-size: 0.85rem;
+  }
+
+  .precautions-list li {
+    font-size: 0.85rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .nav-container {
+    padding: 0 0.5rem;
+  }
+
+  .logo-text {
+    font-size: 1rem;
+  }
+
+  .nav-link,
+  .logout-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+  }
+
+  .header-description {
+    font-size: 0.85rem;
+  }
+
+  .card-icon {
+    font-size: 2.25rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .modal-title h2 {
+    font-size: 1.15rem;
+  }
+
+  .content-section h4 {
+    font-size: 0.9rem;
   }
 }
 

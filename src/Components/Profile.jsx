@@ -73,24 +73,84 @@ function Profile() {
     const [newFoodAlternative, setNewFoodAlternative] = useState('');
 
     // ========================================
-    // LOAD DATA FROM LOCALSTORAGE
+    // LOAD DATA FROM BACKEND
     // ========================================
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
+        async function fetchUserProfile() {
             try {
-                const parsedUser = JSON.parse(storedUser);
-                const loadedData = {
-                    ...userData,
-                    fullName: parsedUser.name || 'XYZ',
-                    email: parsedUser.email || 'XYZ@gmail.com'
-                };
-                setUserData(loadedData);
-                setTempUserData(loadedData);
+                const token = localStorage.getItem('token');
+                const storedUser = localStorage.getItem('user');
+                
+                if (storedUser) {
+                    const parsedUser = JSON.parse(storedUser);
+                    
+                    // Try to fetch from backend
+                    try {
+                        const response = await fetch('http://localhost:5000/api/user-profile', {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            const data = result.data || result;
+                            const loadedData = {
+                                ...userData,
+                                fullName: data.fullName || parsedUser.name || 'XYZ',
+                                username: data.username || parsedUser.email?.split('@')[0] || 'xyz_user',
+                                email: data.email || parsedUser.email || 'XYZ@gmail.com',
+                                phone: data.phone || '+1 (555) 123-4567',
+                                gender: data.gender || 'Male',
+                                dateOfBirth: data.dateOfBirth || '1999-01-01',
+                                city: data.city || 'New York',
+                                state: data.state || 'NY',
+                                country: data.country || 'USA',
+                                dietaryPreference: data.dietaryPreference || 'Vegetarian',
+                                allergySensitivity: data.allergySensitivity || 'Medium',
+                                favoriteCuisine: data.favoriteCuisine || 'Italian'
+                            };
+                            setUserData(loadedData);
+                            setTempUserData(loadedData);
+                            
+                            // Update allergies if available
+                            if (data.allergies && data.allergies.length > 0) {
+                                setAllergies(data.allergies);
+                            }
+                            
+                            // Update favorite foods if available
+                            if (data.favoriteFoods && data.favoriteFoods.length > 0) {
+                                setFavoriteFoods(data.favoriteFoods);
+                            }
+                        } else {
+                            // Fallback to localStorage
+                            const loadedData = {
+                                ...userData,
+                                fullName: parsedUser.name || 'XYZ',
+                                email: parsedUser.email || 'XYZ@gmail.com'
+                            };
+                            setUserData(loadedData);
+                            setTempUserData(loadedData);
+                        }
+                    } catch (fetchError) {
+                        console.error('Error fetching from backend:', fetchError);
+                        // Fallback to localStorage
+                        const loadedData = {
+                            ...userData,
+                            fullName: parsedUser.name || 'XYZ',
+                            email: parsedUser.email || 'XYZ@gmail.com'
+                        };
+                        setUserData(loadedData);
+                        setTempUserData(loadedData);
+                    }
+                }
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
         }
+        
+        fetchUserProfile();
     }, []);
 
     // ========================================
@@ -101,16 +161,46 @@ function Profile() {
         setIsEditing(true);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(tempUserData.email)) {
             alert('Please enter a valid email address');
             return;
         }
-        setUserData({ ...tempUserData });
-        setIsEditing(false);
-        localStorage.setItem('user', JSON.stringify(tempUserData));
-        showSuccessMessage('Your details have been updated successfully!');
+        
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:5000/api/user-profile', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tempUserData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                setUserData({ ...tempUserData });
+                setIsEditing(false);
+                
+                // Update localStorage
+                const storedUser = JSON.parse(localStorage.getItem('user'));
+                localStorage.setItem('user', JSON.stringify({
+                    ...storedUser,
+                    name: tempUserData.fullName,
+                    email: tempUserData.email
+                }));
+                
+                showSuccessMessage('Your details have been updated successfully!');
+            } else {
+                const errorData = await response.json();
+                alert(errorData.message || 'Failed to update profile');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('Network error. Please try again.');
+        }
     };
 
     const handleCancel = () => {
@@ -270,7 +360,7 @@ function Profile() {
     // ========================================
     const navItems = [
         { id: 'Dashboard', label: 'Dashboard', path: '/dashboard' },
-        { id: 'Restaurants', label: 'Restaurants', path: '/restaurants' },
+
         { id: 'Allergies', label: 'Allergies', path: '/allergy-info' },
         { id: 'Contact', label: 'Contact', path: '/contact' },
         { id: 'About', label: 'About us', path: '/about-us' },
