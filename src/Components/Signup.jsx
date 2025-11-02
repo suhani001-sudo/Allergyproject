@@ -301,7 +301,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
         </div>
 
         {/* Back to Login Section */}
-        <div className="switch-section">
+        {/* <div className="switch-section">
           <div className="switch-prompt">Already have an account?</div>
           <button
             type="button"
@@ -310,7 +310,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
           >
             Sign in instead
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
