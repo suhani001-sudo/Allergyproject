@@ -466,39 +466,53 @@ html {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .info-card {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.5rem;
-  background: rgba(248, 249, 250, 0.5);
-  border-radius: 12px;
-  border: 1px solid rgba(107, 142, 35, 0.05);
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid rgba(107, 142, 35, 0.12);
   transition: all 0.3s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  min-height: 50px;
 }
 
 .info-card:hover {
-  background: rgba(248, 249, 250, 0.8);
-  border-color: rgba(107, 142, 35, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  background: rgba(248, 249, 250, 0.6);
+  border-color: rgba(107, 142, 35, 0.25);
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.08);
+  transform: translateY(-1px);
 }
 
 .info-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #666;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #6B8E23;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  min-width: 100px;
+  flex-shrink: 0;
 }
 
 .info-value {
-  font-size: 1.1rem;
-  color: #333;
-  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2c3e50;
+  font-weight: 500;
+  flex: 1;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sensitivity-badge {
@@ -530,13 +544,16 @@ html {
 
 .edit-input,
 .edit-textarea {
-  padding: 0.875rem;
-  border: 2px solid rgba(107, 142, 35, 0.2);
-  border-radius: 10px;
-  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid rgba(107, 142, 35, 0.25);
+  border-radius: 6px;
+  font-size: 0.9rem;
   font-family: inherit;
   transition: all 0.3s ease;
-  background: white;
+  background: #fafafa;
+  color: #2c3e50;
+  flex: 1;
+  text-align: right;
 }
 
 .edit-input:focus,

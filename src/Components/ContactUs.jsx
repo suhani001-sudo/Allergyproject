@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout as logout } from '../utils/authUtils';
 import './ContactUs.css';
 import Footer from './Footer';
 
@@ -18,6 +19,10 @@ function ContactUs() {
 
     const [showSuccess, setShowSuccess] = useState(false);
     const [errors, setErrors] = useState({});
+    
+    // Inbox replies state
+    const [replies, setReplies] = useState([]);
+    const [loadingReplies, setLoadingReplies] = useState(false);
 
     // Navigation items
     const navItems = [
@@ -46,9 +51,7 @@ function ContactUs() {
 
     // Handle logout
     function handleLogout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout(navigate);
     }
 
     // Handle form input changes
@@ -101,15 +104,21 @@ function ContactUs() {
 
         if (validateForm()) {
             try {
+                // Get user info from localStorage
+                const token = localStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                
                 // Send message to backend
                 const response = await fetch('http://localhost:5000/api/contact-messages', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        ...(token && { 'Authorization': `Bearer ${token}` })
                     },
                     body: JSON.stringify({
                         ...formData,
-                        userType: 'user'
+                        userType: 'user',
+                        userId: user._id || user.id
                     })
                 });
 
@@ -140,6 +149,51 @@ function ContactUs() {
                 alert('An error occurred. Please try again later.');
             }
         }
+    };
+
+    // Fetch user replies
+    useEffect(() => {
+        fetchReplies();
+    }, []);
+
+    const fetchReplies = async () => {
+        try {
+            setLoadingReplies(true);
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                setLoadingReplies(false);
+                return;
+            }
+            
+            const response = await fetch('http://localhost:5000/api/message-replies/user', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setReplies(data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching replies:', error);
+        } finally {
+            setLoadingReplies(false);
+        }
+    };
+
+    // Format date
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     };
 
     // Scroll animation effect
@@ -330,6 +384,173 @@ function ContactUs() {
                     </form>
                 </div>
             </section>
+
+            {/* Inbox Section - Restaurant Replies */}
+            {replies.length > 0 && (
+                <section className="inbox-section" style={{
+                    padding: '4rem 2rem',
+                    background: 'linear-gradient(135deg, #f0f8f0 0%, #e8f5e9 100%)',
+                    position: 'relative'
+                }}>
+                    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                padding: '0.75rem 1.5rem',
+                                borderRadius: '50px',
+                                marginBottom: '1rem',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                            }}>
+                                <span style={{ fontSize: '1.5rem' }}>📬</span>
+                                <span style={{ fontWeight: '700', color: '#6B8E23', fontSize: '1.1rem' }}>Your Inbox</span>
+                            </div>
+                            <h2 style={{
+                                fontSize: '2.5rem',
+                                fontWeight: '800',
+                                color: '#2c3e50',
+                                marginBottom: '0.5rem'
+                            }}>
+                                Restaurant Replies
+                            </h2>
+                            <p style={{ color: '#666', fontSize: '1.1rem' }}>
+                                {replies.filter(r => !r.isRead).length} unread message{replies.filter(r => !r.isRead).length !== 1 ? 's' : ''}
+                            </p>
+                        </div>
+
+                        {loadingReplies ? (
+                            <div style={{ textAlign: 'center', padding: '3rem' }}>
+                                <div style={{
+                                    width: '50px',
+                                    height: '50px',
+                                    border: '4px solid #f3f3f3',
+                                    borderTop: '4px solid #6B8E23',
+                                    borderRadius: '50%',
+                                    animation: 'spin 1s linear infinite',
+                                    margin: '0 auto'
+                                }}></div>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'grid', gap: '1.5rem' }}>
+                                {replies.slice(0, 3).map((reply) => (
+                                    <div 
+                                        key={reply._id}
+                                        style={{
+                                            background: 'white',
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            boxShadow: reply.isRead ? '0 2px 12px rgba(0,0,0,0.08)' : '0 4px 16px rgba(107, 142, 35, 0.2)',
+                                            border: reply.isRead ? '2px solid #e8e8e8' : '2px solid #6B8E23',
+                                            transition: 'all 0.3s ease',
+                                            position: 'relative'
+                                        }}
+                                    >
+                                        {!reply.isRead && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '1rem',
+                                                right: '1rem',
+                                                background: 'linear-gradient(135deg, #ff6b6b, #ee5a6f)',
+                                                color: 'white',
+                                                padding: '0.4rem 1rem',
+                                                borderRadius: '20px',
+                                                fontSize: '0.75rem',
+                                                fontWeight: '700',
+                                                textTransform: 'uppercase',
+                                                animation: 'pulse 2s infinite'
+                                            }}>
+                                                New
+                                            </div>
+                                        )}
+                                        
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                            <div style={{
+                                                width: '50px',
+                                                height: '50px',
+                                                borderRadius: '50%',
+                                                background: 'linear-gradient(135deg, #6B8E23, #8FBC8F)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                color: 'white',
+                                                fontSize: '1.5rem',
+                                                fontWeight: '700',
+                                                boxShadow: '0 4px 12px rgba(107, 142, 35, 0.3)'
+                                            }}>
+                                                {reply.restaurantName.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.2rem', fontWeight: '700', color: '#2c3e50' }}>
+                                                    {reply.restaurantName}
+                                                </h3>
+                                                <p style={{ margin: 0, fontSize: '0.85rem', color: '#999', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    <span>🕒</span>
+                                                    {formatDate(reply.replyDate)}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div style={{
+                                            background: '#f8f9fa',
+                                            padding: '1rem',
+                                            borderRadius: '12px',
+                                            borderLeft: '4px solid #dee2e6',
+                                            marginBottom: '1rem'
+                                        }}>
+                                            <div style={{ fontSize: '0.75rem', fontWeight: '700', color: '#999', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                                                Your Message
+                                            </div>
+                                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#555', lineHeight: '1.6' }}>
+                                                {reply.originalMessage}
+                                            </p>
+                                        </div>
+
+                                        <div style={{
+                                            background: 'linear-gradient(135deg, #f5f7fa 0%, #e8ecf3 100%)',
+                                            padding: '1rem',
+                                            borderRadius: '12px',
+                                            borderLeft: '4px solid #6B8E23'
+                                        }}>
+                                            <div style={{ fontSize: '0.75rem', fontWeight: '700', color: '#6B8E23', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                                                Restaurant Reply
+                                            </div>
+                                            <p style={{ margin: 0, fontSize: '0.95rem', color: '#555', lineHeight: '1.7' }}>
+                                                {reply.replyMessage}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {replies.length > 3 && (
+                            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                                <button
+                                    onClick={() => navigate('/inbox')}
+                                    style={{
+                                        padding: '1rem 2rem',
+                                        background: 'linear-gradient(135deg, #6B8E23, #8FBC8F)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '12px',
+                                        fontSize: '1rem',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 4px 12px rgba(107, 142, 35, 0.3)',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                                    onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+                                >
+                                    View All Messages ({replies.length})
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
 
             {/* Contact Information Section */}
             <section className="contact-info-section">

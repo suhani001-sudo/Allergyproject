@@ -1,0 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========================================
+   USER INBOX PAGE
+   ======================================== */
+
+.inbox-page {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f5f5f5 100%);
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 70px;
+  margin: 0;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+
+/* ========================================
+   NAVBAR
+   ======================================== */
+
+.inbox-page .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(107, 142, 35, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.inbox-page .nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.inbox-page .nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.inbox-page .nav-logo:hover {
+  transform: scale(1.05);
+}
+
+.inbox-page .logo-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.2);
+}
+
+.inbox-page .logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6B8E23, #556B2F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.inbox-page .nav-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inbox-page .nav-link {
+  position: relative;
+  padding: 0.6rem 1.2rem;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.inbox-page .nav-link:hover {
+  color: #6B8E23;
+  background: rgba(107, 142, 35, 0.1);
+}
+
+.inbox-page .nav-link.active {
+  color: #6B8E23;
+  background: rgba(107, 142, 35, 0.15);
+}
+
+.inbox-page .active-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background: linear-gradient(90deg, #6B8E23, #556B2F);
+  border-radius: 3px 3px 0 0;
+}
+
+.inbox-page .logout-button {
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.inbox-page .logout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* ========================================
+   HERO SECTION
+   ======================================== */
+
+.inbox-hero {
+  position: relative;
+  background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
+  padding: 4rem 2rem;
+  overflow: hidden;
+}
+
+.hero-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.3;
+}
+
+.inbox-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 1.5rem;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.hero-icon {
+  font-size: 1.8rem;
+}
+
+.hero-badge-text {
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.inbox-hero-title {
+  color: white;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.inbox-hero-subtitle {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  animation: fadeInUp 0.6s ease-out 0.1s backwards;
+}
+
+.inbox-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.2s backwards;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  min-width: 150px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+/* ========================================
+   INBOX CONTENT
+   ======================================== */
+
+.inbox-content-wrapper {
+  padding: 3rem 2rem;
+}
+
+.inbox-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.inbox-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.filter-btn:hover {
+  border-color: #6B8E23;
+  color: #6B8E23;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.2);
+}
+
+.filter-btn.active {
+  border-color: #6B8E23;
+  background: linear-gradient(135deg, #6B8E23, #8FBC8F);
+  color: white;
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+}
+
+/* ========================================
+   MESSAGES GRID
+   ======================================== */
+
+.messages-grid {
+  display: grid;
+  gap: 1.5rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.message-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.message-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.message-card.unread {
+  border-color: #6B8E23;
+  background: linear-gradient(to right, #ffffff, #f0f8f0);
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.restaurant-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.restaurant-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6B8E23, #8FBC8F);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+}
+
+.restaurant-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 0.25rem 0;
+}
+
+.message-date {
+  font-size: 0.85rem;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.date-icon {
+  font-size: 0.9rem;
+}
+
+.unread-badge {
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.message-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.original-message,
+.reply-message {
+  padding: 1.25rem;
+  border-radius: 12px;
+}
+
+.original-message {
+  background: #f8f9fa;
+  border-left: 4px solid #dee2e6;
+}
+
+.reply-message {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf3 100%);
+  border-left: 4px solid #6B8E23;
+}
+
+.message-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6B8E23;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.message-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
+}
+
+.message-actions {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mark-read-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6B8E23, #8FBC8F);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+  font-size: 0.9rem;
+}
+
+.mark-read-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(107, 142, 35, 0.4);
+}
+
+/* ========================================
+   EMPTY & LOADING STATES
+   ======================================== */
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+}
+
+.empty-state p {
+  color: #999;
+  font-size: 1rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #6B8E23;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .inbox-hero-title {
+    font-size: 2rem;
+  }
+
+  .inbox-hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .inbox-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    min-width: 100%;
+  }
+
+  .inbox-filters {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+  }
+
+  .message-card {
+    padding: 1.5rem;
+  }
+
+  .restaurant-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inbox-page .nav-links {
+    display: none;
+  }
+}

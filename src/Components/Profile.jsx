@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/userService';
+import { handleLogout as logout } from '../utils/authUtils';
 import './Profile.css';
 
 function Profile() {
@@ -181,6 +182,14 @@ function Profile() {
         
         try {
             const token = localStorage.getItem('token');
+            
+            // Check if token exists
+            if (!token) {
+                alert('Session expired. Please login again.');
+                navigate('/login');
+                return;
+            }
+            
             const response = await fetch('http://localhost:5000/api/user-profile', {
                 method: 'PUT',
                 headers: {
@@ -204,13 +213,26 @@ function Profile() {
                 }));
                 
                 showSuccessMessage('Your details have been updated successfully!');
+            } else if (response.status === 401) {
+                alert('Session expired. Please login again.');
+                localStorage.clear();
+                navigate('/login');
             } else {
                 const errorData = await response.json();
                 alert(errorData.message || 'Failed to update profile');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Network error. Please try again.');
+            // Fallback: Save to localStorage only
+            setUserData({ ...tempUserData });
+            setIsEditing(false);
+            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+            localStorage.setItem('user', JSON.stringify({
+                ...storedUser,
+                name: tempUserData.fullName,
+                email: tempUserData.email
+            }));
+            showSuccessMessage('Changes saved locally!');
         }
     };
 
@@ -361,9 +383,7 @@ function Profile() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout(navigate);
     };
 
     // ========================================

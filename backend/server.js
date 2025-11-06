@@ -14,6 +14,7 @@ import feedbackRoutes from './routes/feedbackRoutes.js';
 import userProfileRoutes from './routes/userProfileRoutes.js';
 import restaurantProfileRoutes from './routes/restaurantProfileRoutes.js';
 import contactMessageRoutes from './routes/contactMessageRoutes.js';
+import messageReplyRoutes from './routes/messageReplyRoutes.js';
 
 const app = express();
 
@@ -41,7 +42,8 @@ app.get('/', (req, res) => {
       feedback: '/api/feedback',
       userProfile: '/api/user-profile',
       restaurantProfile: '/api/restaurant-profile',
-      contactMessages: '/api/contact-messages'
+      contactMessages: '/api/contact-messages',
+      messageReplies: '/api/message-replies'
     }
   });
 });
@@ -57,6 +59,7 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api/user-profile', userProfileRoutes);
 app.use('/api/restaurant-profile', restaurantProfileRoutes);
 app.use('/api/contact-messages', contactMessageRoutes);
+app.use('/api/message-replies', messageReplyRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

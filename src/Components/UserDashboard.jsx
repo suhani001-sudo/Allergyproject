@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import './UserDashboard.css';
 import './PremiumFeedback.css';
 import Footer from './Footer';
+import { handleLogout as logout } from '../utils/authUtils';
 
 function UserDashboard(props) {
-    // STEP 1: Get the onLogout function from props
-    const onLogout = props.onLogout;
-
     // STEP 2: Initialize navigation and cart hooks
     const navigate = useNavigate();
+    
+    // Centralized logout handler
+    const handleLogout = () => {
+        logout(navigate);
+    };
 
 
     // STEP 3: Set up state variables
@@ -28,7 +31,12 @@ function UserDashboard(props) {
     const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
 
-    // STEP 3.3: FAQs state
+    // STEP 3.3: Stats animation state
+    const [restaurantCount, setRestaurantCount] = useState(0);
+    const [userCount, setUserCount] = useState(0);
+    const [safetyRate, setSafetyRate] = useState(0);
+
+    // STEP 3.4: FAQs state
     const [faqs, setFaqs] = useState([
         {
             id: 1,
@@ -68,6 +76,61 @@ function UserDashboard(props) {
     { id: 'Profile', icon: '👤', label: 'Profile' }
 
   ];
+
+    // STEP 4: Stats counter animation using Intersection Observer
+    useEffect(() => {
+        let hasAnimated = false;
+        
+        const animateCounter = (setter, target, suffix = '') => {
+            let current = 0;
+            const increment = target / 50; // 50 steps
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    setter(target);
+                    clearInterval(timer);
+                } else {
+                    setter(Math.floor(current));
+                }
+            }, 30);
+            return timer;
+        };
+        
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !hasAnimated) {
+                        hasAnimated = true;
+                        console.log('🎯 Stats section visible! Starting animation...');
+                        
+                        // Start all three animations
+                        animateCounter(setRestaurantCount, 50);
+                        animateCounter(setUserCount, 10000);
+                        animateCounter(setSafetyRate, 99.9);
+                    }
+                });
+            },
+            {
+                threshold: 0.3, // Trigger when 30% of section is visible
+                rootMargin: '0px'
+            }
+        );
+        
+        // Find and observe the stats section
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            console.log('✅ Stats section found, observing...');
+            observer.observe(statsSection);
+        } else {
+            console.log('❌ Stats section NOT found');
+        }
+        
+        return () => {
+            if (statsSection) {
+                observer.unobserve(statsSection);
+            }
+        };
+    }, []);
 
     // Fetch feedbacks from backend on component mount
     useEffect(() => {
@@ -229,7 +292,7 @@ function UserDashboard(props) {
                     <button
                         className="logout-button"
                         onClick={() => {
-                            onLogout();
+                            handleLogout();
                             setIsMobileMenuOpen(false);
                         }}
                     >
@@ -284,18 +347,24 @@ function UserDashboard(props) {
             <section className="stats-section">
                 <div className="stats-container">
                     <div className="stat-card">
-                        <div className="stat-number">50+</div>
-                        <div className="stat-label">Allergy-Safe Restaurants</div>
+                        <div className="stat-number" style={{ color: '#6B8E23' }}>
+                            {restaurantCount}+
+                        </div>
+                        <div className="stat-label" style={{color: 'black'}}>Allergy-Safe Restaurants</div>
                     </div>
 
                     <div className="stat-card">
-                        <div className="stat-number">10K+</div>
-                        <div className="stat-label">Happy Users</div>
+                        <div className="stat-number" style={{ color: '#6B8E23' }}>
+                            {userCount >= 1000 ? `${(userCount / 1000).toFixed(0)}K` : userCount}+
+                        </div>
+                        <div className="stat-label" style={{color: 'black'}}>Happy Users</div>
                     </div>
 
                     <div className="stat-card">
-                        <div className="stat-number">99.9%</div>
-                        <div className="stat-label">Safety Rate</div>
+                        <div className="stat-number" style={{ color: '#6B8E23' }}>
+                            {safetyRate.toFixed(1)}%
+                        </div>
+                        <div className="stat-label" style={{color: 'black'}}>Safety Rate</div>
                     </div>
                 </div>
             </section>

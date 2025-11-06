@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RestaurantDashboard.css';
 import Footer from './Footer';
+import { handleLogout as logout } from '../utils/authUtils';
 
 // STEP 1: Define the allergen options we will use in the form and display
 const ALLERGENS = ['Nuts', 'Dairy', 'Gluten', 'Soy', 'Eggs', 'Shellfish'];
 
 
 function RestaurantDashboard(props) {
-  // STEP 1.1: Get the onLogout function from props
-  const onLogout = props.onLogout;
-  
   // STEP 1.2: Initialize navigation hook
   const navigate = useNavigate();
+  
+  // Centralized logout handler
+  const handleLogout = () => {
+    logout(navigate);
+  };
   
   // STEP 2: Set up menu items state (will be fetched from database)
   const [items, setItems] = useState([]);
@@ -366,7 +369,7 @@ function RestaurantDashboard(props) {
             })}
           </div>
 
-          <button className="logout-button" onClick={function() { onLogout(); }}>
+          <button className="logout-button" onClick={handleLogout}>
             <span className="logout-text">Logout</span>
           </button>
         </div>

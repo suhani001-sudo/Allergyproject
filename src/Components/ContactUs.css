@@ -581,7 +581,11 @@ html {
   text-align: center;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  min-height: 320px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .info-card::before {
@@ -619,9 +623,7 @@ html {
   transition: all 0.4s ease;
 }
 
-.info-card:hover .card-icon-wrapper {
-  transform: scale(1.1) rotate(5deg);
-}
+/* Emoji icon animation removed - icons stay static on hover */
 
 .card-icon {
   font-size: 2.5rem;
@@ -639,6 +641,10 @@ html {
   color: #666;
   margin-bottom: 1.5rem;
   line-height: 1.6;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-link {
@@ -660,12 +666,13 @@ html {
 
 .card-badge {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #28a745, #20833a);
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #6B8E23, #8BC34A);
   color: white;
   border-radius: 10px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 /* ========================================
@@ -994,4 +1001,78 @@ html {
     padding: 1rem 2rem;
     font-size: 1rem;
   }
+}
+
+/* ========================================
+   ANIMATIONS FOR RESTAURANT CONTACT PAGE
+   ======================================== */
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Toast Notification Animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

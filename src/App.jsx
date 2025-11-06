@@ -15,6 +15,7 @@ import Profile from "./Components/Profile";
 import RestaurantAboutUs from "./Components/RestaurantAboutUs";
 import RestaurantProfile from "./Components/RestaurantProfile";
 import RestaurantContactUs from "./Components/RestaurantContactUs";
+import UserInbox from "./Components/UserInbox";
 import "./App.css";
 
 function App() {
@@ -171,7 +172,18 @@ function App() {
                 <Navigate to="/login" replace />
               )
             }
+          />
 
+          {/* Inbox page route for users */}
+          <Route
+            path="/inbox"
+            element={
+              isLoggedIn && role === "user" ? (
+                <UserInbox />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
 
           {/* STEP 12: Restaurant dashboard route for restaurant owners */}

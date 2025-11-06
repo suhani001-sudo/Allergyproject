@@ -267,7 +267,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                     <button
                       type="button"
                       className="signup-button"
-                      onClick={() => onSwitchToSignup && onSwitchToSignup()} 
+                      onClick={() => navigate('/signup')} 
                     >
                       Sign up instead
                     </button>
@@ -347,7 +347,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                     <button
                       type="button"
                       className="signup-button"
-                      onClick={() => onSwitchToSignup()}
+                      onClick={() => navigate('/signup')}
                     >
                       Sign up instead
                     </button>

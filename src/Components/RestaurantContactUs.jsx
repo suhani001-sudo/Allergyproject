@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout as logout } from '../utils/authUtils';
 import './ContactUs.css'; // Reusing the same CSS
 import Footer from './Footer';
 
@@ -12,18 +13,16 @@ function RestaurantContactUs() {
     const [loading, setLoading] = useState(true);
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [filterStatus, setFilterStatus] = useState('all');
-
-    // Form state
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: ''
-    });
-
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [errors, setErrors] = useState({});
+    
+    // Reply functionality
+    const [replyingTo, setReplyingTo] = useState(null);
+    const [replyText, setReplyText] = useState('');
+    const [sendingReply, setSendingReply] = useState(false);
+    
+    // Toast notification
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState('success'); // 'success' or 'error'
 
     // Navigation items for Restaurant Dashboard
     const navItems = [
@@ -43,87 +42,9 @@ function RestaurantContactUs() {
 
     // Handle logout
     function handleLogout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout(navigate);
     }
 
-    // Handle form input changes
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        // Clear error for this field when user starts typing
-        if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
-        }
-    };
-
-    // Validate form
-    const validateForm = () => {
-        const newErrors = {};
-
-        if (!formData.name.trim()) {
-            newErrors.name = 'Name is required';
-        }
-
-        if (!formData.email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = 'Invalid email format';
-        }
-
-        if (!formData.subject.trim()) {
-            newErrors.subject = 'Subject is required';
-        }
-
-        if (!formData.message.trim()) {
-            newErrors.message = 'Message is required';
-        } else if (formData.message.trim().length < 10) {
-            newErrors.message = 'Message must be at least 10 characters';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!validateForm()) {
-            return;
-        }
-
-        try {
-            // Here you can add API call to send the contact form
-            console.log('Restaurant Contact Form Data:', formData);
-            
-            // Show success message
-            setShowSuccess(true);
-            
-            // Reset form
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                subject: '',
-                message: ''
-            });
-
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                setShowSuccess(false);
-            }, 5000);
-        } catch (error) {
-            console.error('Error submitting form:', error);
-        }
-    };
 
     // Fetch messages from backend
     useEffect(() => {
@@ -185,8 +106,126 @@ function RestaurantContactUs() {
         });
     };
 
+    // Handle reply submission
+    const handleSendReply = async (messageId) => {
+        if (!replyText.trim()) {
+            alert('Please enter a reply message');
+            return;
+        }
+
+        try {
+            setSendingReply(true);
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch('http://localhost:5000/api/message-replies', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    originalMessageId: messageId,
+                    replyMessage: replyText
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Show success toast
+                setToastMessage('✅ Reply sent successfully! The user will see your response in their inbox.');
+                setToastType('success');
+                setShowToast(true);
+                
+                setReplyingTo(null);
+                setReplyText('');
+                
+                // Refresh messages to update status
+                fetchMessages();
+                
+                // Hide toast after 5 seconds
+                setTimeout(() => setShowToast(false), 5000);
+            } else {
+                // Show error toast
+                setToastMessage('❌ ' + (data.message || 'Failed to send reply. Please try again.'));
+                setToastType('error');
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 5000);
+            }
+        } catch (error) {
+            console.error('Error sending reply:', error);
+            setToastMessage('❌ Error sending reply. Please try again.');
+            setToastType('error');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 5000);
+        } finally {
+            setSendingReply(false);
+        }
+    };
+
     return (
         <div className="contact-page">
+            {/* Toast Notification */}
+            {showToast && (
+                <div style={{
+                    position: 'fixed',
+                    top: '100px',
+                    right: '20px',
+                    zIndex: 9999,
+                    background: toastType === 'success' 
+                        ? 'linear-gradient(135deg, #4CAF50, #45a049)' 
+                        : 'linear-gradient(135deg, #f44336, #e53935)',
+                    color: 'white',
+                    padding: '1.25rem 2rem',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    minWidth: '350px',
+                    animation: 'slideInRight 0.4s ease-out, fadeOut 0.5s ease-in 4.5s forwards',
+                    fontSize: '1rem',
+                    fontWeight: '600'
+                }}>
+                    <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: 'rgba(255,255,255,0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.5rem'
+                    }}>
+                        {toastType === 'success' ? '✓' : '✕'}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        {toastMessage}
+                    </div>
+                    <button
+                        onClick={() => setShowToast(false)}
+                        style={{
+                            background: 'rgba(255,255,255,0.2)',
+                            border: 'none',
+                            color: 'white',
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            fontSize: '1.2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
+                        onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
+            
             {/* Navbar */}
             <nav className="navbar">
                 <div className="nav-container">
@@ -222,67 +261,197 @@ function RestaurantContactUs() {
                 </div>
             </nav>
 
-            {/* Hero Section */}
-            <section className="contact-hero">
-                <div className="contact-hero-content">
-                    <div className="hero-icon">📧</div>
-                    <h1 className="contact-hero-title">User Messages</h1>
-                    <p className="contact-hero-subtitle">
-                        View and manage messages from your customers
+            {/* Modern Hero Section */}
+            <section style={{
+                background: 'linear-gradient(135deg, #6B8E23 0%, #556B2F 100%)',
+                padding: '4rem 2rem',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                    opacity: 0.3
+                }}></div>
+                <div style={{
+                    maxWidth: '1200px',
+                    margin: '0 auto',
+                    textAlign: 'center',
+                    position: 'relative',
+                    zIndex: 1
+                }}>
+                    <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '50px',
+                        backdropFilter: 'blur(10px)',
+                        marginBottom: '1.5rem',
+                        animation: 'fadeInDown 0.6s ease-out'
+                    }}>
+                        <span style={{ fontSize: '2rem' }}>📬</span>
+                        <span style={{ color: '#6B8E23', fontWeight: '700', fontSize: '1.1rem' }}>Your Inbox</span>
+                    </div>
+                    <h1 style={{
+                        color: 'white',
+                        fontSize: '3rem',
+                        fontWeight: '800',
+                        marginBottom: '1rem',
+                        textShadow: '0 2px 20px rgba(0,0,0,0.2)',
+                        animation: 'fadeInUp 0.6s ease-out'
+                    }}>
+                        Messages from Customers
+                    </h1>
+                    <p style={{
+                        color: 'rgba(255, 255, 255, 0.95)',
+                        fontSize: '1.2rem',
+                        maxWidth: '600px',
+                        margin: '0 auto',
+                        lineHeight: '1.6',
+                        animation: 'fadeInUp 0.6s ease-out 0.1s backwards'
+                    }}>
+                        View, manage, and respond to customer inquiries in real-time
                     </p>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '2rem',
+                        marginTop: '2rem',
+                        animation: 'fadeInUp 0.6s ease-out 0.2s backwards'
+                    }}>
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            padding: '1rem 1.5rem',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(10px)'
+                        }}>
+                            <div style={{ fontSize: '2rem', fontWeight: '800', color: 'white' }}>{messages.length}</div>
+                            <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)' }}>Total Messages</div>
+                        </div>
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            padding: '1rem 1.5rem',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(10px)'
+                        }}>
+                            <div style={{ fontSize: '2rem', fontWeight: '800', color: 'white' }}>{messages.filter(m => m.status === 'unread').length}</div>
+                            <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)' }}>Unread</div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* Messages Section */}
-            <div className="contact-content-wrapper">
-                <div className="contact-container">
-                    <div className="messages-section" style={{ marginBottom: '3rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                            <h2 className="section-title">Customer Messages</h2>
-                            <div style={{ display: 'flex', gap: '1rem' }}>
-                                <button 
-                                    onClick={() => setFilterStatus('all')}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: '8px',
-                                        border: filterStatus === 'all' ? '2px solid #6B8E23' : '1px solid #ddd',
-                                        background: filterStatus === 'all' ? '#6B8E23' : 'white',
-                                        color: filterStatus === 'all' ? 'white' : '#333',
-                                        cursor: 'pointer',
-                                        fontWeight: '600'
-                                    }}
-                                >
-                                    All ({messages.length})
-                                </button>
-                                <button 
-                                    onClick={() => setFilterStatus('unread')}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: '8px',
-                                        border: filterStatus === 'unread' ? '2px solid #ff9800' : '1px solid #ddd',
-                                        background: filterStatus === 'unread' ? '#ff9800' : 'white',
-                                        color: filterStatus === 'unread' ? 'white' : '#333',
-                                        cursor: 'pointer',
-                                        fontWeight: '600'
-                                    }}
-                                >
-                                    Unread ({messages.filter(m => m.status === 'unread').length})
-                                </button>
-                                <button 
-                                    onClick={() => setFilterStatus('read')}
-                                    style={{
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: '8px',
-                                        border: filterStatus === 'read' ? '2px solid #2196F3' : '1px solid #ddd',
-                                        background: filterStatus === 'read' ? '#2196F3' : 'white',
-                                        color: filterStatus === 'read' ? 'white' : '#333',
-                                        cursor: 'pointer',
-                                        fontWeight: '600'
-                                    }}
-                                >
-                                    Read ({messages.filter(m => m.status === 'read').length})
-                                </button>
-                            </div>
+            <div className="contact-content-wrapper" style={{ padding: '4rem 2rem' }}>
+                <div className="contact-container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <div className="messages-section" style={{ marginBottom: '4rem' }}>
+                        <div style={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center', 
+                            marginBottom: '2.5rem',
+                            gap: '1rem',
+                            flexWrap: 'wrap'
+                        }}>
+                            <button 
+                                onClick={() => setFilterStatus('all')}
+                                style={{
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '12px',
+                                    border: filterStatus === 'all' ? '2px solid #6B8E23' : '2px solid #e0e0e0',
+                                    background: filterStatus === 'all' ? 'linear-gradient(135deg, #6B8E23, #8FBC8F)' : 'white',
+                                    color: filterStatus === 'all' ? 'white' : '#666',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '0.95rem',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: filterStatus === 'all' ? '0 4px 12px rgba(107, 142, 35, 0.3)' : '0 2px 8px rgba(0,0,0,0.05)'
+                                }}
+                                onMouseOver={(e) => {
+                                    if (filterStatus !== 'all') {
+                                        e.target.style.borderColor = '#6B8E23';
+                                        e.target.style.color = '#6B8E23';
+                                        e.target.style.transform = 'translateY(-2px)';
+                                    }
+                                }}
+                                onMouseOut={(e) => {
+                                    if (filterStatus !== 'all') {
+                                        e.target.style.borderColor = '#e0e0e0';
+                                        e.target.style.color = '#666';
+                                        e.target.style.transform = 'translateY(0)';
+                                    }
+                                }}
+                            >
+                                📊 All ({messages.length})
+                            </button>
+                            <button 
+                                onClick={() => setFilterStatus('unread')}
+                                style={{
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '12px',
+                                    border: filterStatus === 'unread' ? '2px solid #ff9800' : '2px solid #e0e0e0',
+                                    background: filterStatus === 'unread' ? 'linear-gradient(135deg, #ff9800, #ff6b35)' : 'white',
+                                    color: filterStatus === 'unread' ? 'white' : '#666',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '0.95rem',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: filterStatus === 'unread' ? '0 4px 12px rgba(255, 152, 0, 0.3)' : '0 2px 8px rgba(0,0,0,0.05)'
+                                }}
+                                onMouseOver={(e) => {
+                                    if (filterStatus !== 'unread') {
+                                        e.target.style.borderColor = '#ff9800';
+                                        e.target.style.color = '#ff9800';
+                                        e.target.style.transform = 'translateY(-2px)';
+                                    }
+                                }}
+                                onMouseOut={(e) => {
+                                    if (filterStatus !== 'unread') {
+                                        e.target.style.borderColor = '#e0e0e0';
+                                        e.target.style.color = '#666';
+                                        e.target.style.transform = 'translateY(0)';
+                                    }
+                                }}
+                            >
+                                🔔 Unread ({messages.filter(m => m.status === 'unread').length})
+                            </button>
+                            <button 
+                                onClick={() => setFilterStatus('read')}
+                                style={{
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '12px',
+                                    border: filterStatus === 'read' ? '2px solid #2196F3' : '2px solid #e0e0e0',
+                                    background: filterStatus === 'read' ? 'linear-gradient(135deg, #2196F3, #1976D2)' : 'white',
+                                    color: filterStatus === 'read' ? 'white' : '#666',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '0.95rem',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: filterStatus === 'read' ? '0 4px 12px rgba(33, 150, 243, 0.3)' : '0 2px 8px rgba(0,0,0,0.05)'
+                                }}
+                                onMouseOver={(e) => {
+                                    if (filterStatus !== 'read') {
+                                        e.target.style.borderColor = '#2196F3';
+                                        e.target.style.color = '#2196F3';
+                                        e.target.style.transform = 'translateY(-2px)';
+                                    }
+                                }}
+                                onMouseOut={(e) => {
+                                    if (filterStatus !== 'read') {
+                                        e.target.style.borderColor = '#e0e0e0';
+                                        e.target.style.color = '#666';
+                                        e.target.style.transform = 'translateY(0)';
+                                    }
+                                }}
+                            >
+                                ✓ Read ({messages.filter(m => m.status === 'read').length})
+                            </button>
                         </div>
 
                         {loading ? (
@@ -298,13 +467,30 @@ function RestaurantContactUs() {
                                 {filteredMessages.map((message) => (
                                     <div 
                                         key={message._id}
+                                        className="message-card-hover"
                                         style={{
-                                            background: 'white',
-                                            border: message.status === 'unread' ? '2px solid #ff9800' : '1px solid #e0e0e0',
-                                            borderRadius: '12px',
-                                            padding: '1.5rem',
-                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                                            transition: 'all 0.3s ease'
+                                            background: message.status === 'unread' 
+                                                ? 'linear-gradient(to right, #ffffff, #fff8f0)' 
+                                                : 'white',
+                                            border: message.status === 'unread' ? '2px solid #ff9800' : '2px solid #e8e8e8',
+                                            borderRadius: '16px',
+                                            padding: '2rem',
+                                            boxShadow: message.status === 'unread' 
+                                                ? '0 4px 16px rgba(255, 152, 0, 0.15)' 
+                                                : '0 2px 12px rgba(0,0,0,0.08)',
+                                            transition: 'all 0.3s ease',
+                                            position: 'relative',
+                                            overflow: 'hidden'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-4px)';
+                                            e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.12)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = message.status === 'unread' 
+                                                ? '0 4px 16px rgba(255, 152, 0, 0.15)' 
+                                                : '0 2px 12px rgba(0,0,0,0.08)';
                                         }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
@@ -345,140 +531,166 @@ function RestaurantContactUs() {
                                                     <button
                                                         onClick={() => updateMessageStatus(message._id, 'read')}
                                                         style={{
-                                                            padding: '0.4rem 1rem',
-                                                            borderRadius: '6px',
+                                                            padding: '0.5rem 1.2rem',
+                                                            borderRadius: '8px',
                                                             border: 'none',
-                                                            background: '#2196F3',
+                                                            background: 'linear-gradient(135deg, #2196F3, #1976D2)',
                                                             color: 'white',
                                                             cursor: 'pointer',
                                                             fontSize: '0.85rem',
-                                                            fontWeight: '600'
+                                                            fontWeight: '600',
+                                                            boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)',
+                                                            transition: 'all 0.3s ease'
                                                         }}
+                                                        onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                                                        onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
                                                     >
-                                                        Mark as Read
+                                                        📖 Mark as Read
                                                     </button>
                                                 )}
-                                                {message.status === 'read' && (
+                                                {message.status !== 'replied' && message.userId && (
                                                     <button
-                                                        onClick={() => updateMessageStatus(message._id, 'replied')}
+                                                        onClick={() => {
+                                                            setReplyingTo(message._id);
+                                                            setReplyText('');
+                                                        }}
                                                         style={{
-                                                            padding: '0.4rem 1rem',
-                                                            borderRadius: '6px',
+                                                            padding: '0.5rem 1.2rem',
+                                                            borderRadius: '8px',
                                                             border: 'none',
-                                                            background: '#4CAF50',
+                                                            background: 'linear-gradient(135deg, #6B8E23, #8FBC8F)',
                                                             color: 'white',
                                                             cursor: 'pointer',
                                                             fontSize: '0.85rem',
-                                                            fontWeight: '600'
+                                                            fontWeight: '600',
+                                                            boxShadow: '0 2px 8px rgba(107, 142, 35, 0.3)',
+                                                            transition: 'all 0.3s ease'
                                                         }}
+                                                        onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                                                        onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
                                                     >
-                                                        Mark as Replied
+                                                        💬 Reply
                                                     </button>
+                                                )}
+                                                {message.status !== 'replied' && !message.userId && (
+                                                    <span style={{
+                                                        padding: '0.5rem 1.2rem',
+                                                        borderRadius: '8px',
+                                                        background: '#f0f0f0',
+                                                        color: '#999',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: '600',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem'
+                                                    }}>
+                                                        ⚠️ Anonymous Message
+                                                    </span>
+                                                )}
+                                                {message.status === 'replied' && (
+                                                    <span style={{
+                                                        padding: '0.5rem 1.2rem',
+                                                        borderRadius: '8px',
+                                                        background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                                                        color: 'white',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: '600',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem'
+                                                    }}>
+                                                        ✓ Replied
+                                                    </span>
                                                 )}
                                             </div>
                                         </div>
+                                        
+                                        {/* Reply Box */}
+                                        {replyingTo === message._id && (
+                                            <div style={{
+                                                marginTop: '1rem',
+                                                padding: '1.5rem',
+                                                background: 'linear-gradient(135deg, #f0f8f0 0%, #e8f5e9 100%)',
+                                                borderRadius: '12px',
+                                                animation: 'slideDown 0.3s ease-out'
+                                            }}>
+                                                <h4 style={{ margin: '0 0 1rem 0', color: '#2c3e50', fontSize: '1rem' }}>
+                                                    ✍️ Write your reply
+                                                </h4>
+                                                <textarea
+                                                    value={replyText}
+                                                    onChange={(e) => setReplyText(e.target.value)}
+                                                    placeholder="Type your response here..."
+                                                    style={{
+                                                        width: '100%',
+                                                        minHeight: '120px',
+                                                        padding: '1rem',
+                                                        border: '2px solid #ddd',
+                                                        borderRadius: '8px',
+                                                        fontSize: '0.95rem',
+                                                        fontFamily: 'inherit',
+                                                        resize: 'vertical',
+                                                        marginBottom: '1rem',
+                                                        transition: 'border-color 0.3s ease'
+                                                    }}
+                                                    onFocus={(e) => e.target.style.borderColor = '#6B8E23'}
+                                                    onBlur={(e) => e.target.style.borderColor = '#ddd'}
+                                                />
+                                                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                                    <button
+                                                        onClick={() => {
+                                                            setReplyingTo(null);
+                                                            setReplyText('');
+                                                        }}
+                                                        style={{
+                                                            padding: '0.6rem 1.5rem',
+                                                            borderRadius: '8px',
+                                                            border: '2px solid #ddd',
+                                                            background: 'white',
+                                                            color: '#666',
+                                                            cursor: 'pointer',
+                                                            fontSize: '0.9rem',
+                                                            fontWeight: '600',
+                                                            transition: 'all 0.3s ease'
+                                                        }}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleSendReply(message._id)}
+                                                        disabled={sendingReply || !replyText.trim()}
+                                                        style={{
+                                                            padding: '0.6rem 1.5rem',
+                                                            borderRadius: '8px',
+                                                            border: 'none',
+                                                            background: sendingReply || !replyText.trim() 
+                                                                ? '#ccc' 
+                                                                : 'linear-gradient(135deg, #6B8E23, #8FBC8F)',
+                                                            color: 'white',
+                                                            cursor: sendingReply || !replyText.trim() ? 'not-allowed' : 'pointer',
+                                                            fontSize: '0.9rem',
+                                                            fontWeight: '600',
+                                                            boxShadow: '0 4px 12px rgba(107, 142, 35, 0.4)',
+                                                            transition: 'all 0.3s ease'
+                                                        }}
+                                                    >
+                                                        {sendingReply ? '📤 Sending...' : '📨 Send Reply'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Contact Form */}
-                    <div className="contact-form-section">
-                        <h2 className="section-title">Send Us a Message</h2>
-                        <p className="section-description">
-                            Fill out the form below and our support team will get back to you within 24 hours.
-                        </p>
-
-                        {showSuccess && (
-                            <div className="success-message">
-                                <span className="success-icon">✓</span>
-                                <p>Thank you for contacting us! We'll get back to you soon.</p>
-                            </div>
-                        )}
-
-                        <form className="contact-form" onSubmit={handleSubmit}>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label htmlFor="name">Restaurant/Owner Name *</label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleInputChange}
-                                        className={errors.name ? 'error' : ''}
-                                        placeholder="Enter your name"
-                                    />
-                                    {errors.name && <span className="error-message">{errors.name}</span>}
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="email">Email Address *</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-                                        className={errors.email ? 'error' : ''}
-                                        placeholder="your.email@example.com"
-                                    />
-                                    {errors.email && <span className="error-message">{errors.email}</span>}
-                                </div>
-                            </div>
-
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label htmlFor="phone">Phone Number (Optional)</label>
-                                    <input
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleInputChange}
-                                        placeholder="+1 (555) 123-4567"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="subject">Subject *</label>
-                                    <input
-                                        type="text"
-                                        id="subject"
-                                        name="subject"
-                                        value={formData.subject}
-                                        onChange={handleInputChange}
-                                        className={errors.subject ? 'error' : ''}
-                                        placeholder="What is this about?"
-                                    />
-                                    {errors.subject && <span className="error-message">{errors.subject}</span>}
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="message">Message *</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleInputChange}
-                                    className={errors.message ? 'error' : ''}
-                                    rows="6"
-                                    placeholder="Tell us more about your inquiry..."
-                                ></textarea>
-                                {errors.message && <span className="error-message">{errors.message}</span>}
-                            </div>
-
-                            <button type="submit" className="submit-button">
-                                <span>Send Message</span>
-                                <span className="button-icon">→</span>
-                            </button>
-                        </form>
-                    </div>
-
                     {/* Contact Information */}
-                    <div className="contact-info-section">
+                    <div className="contact-info-section" style={{ 
+                        marginTop: '4rem',
+                        paddingTop: '4rem',
+                        borderTop: '2px solid #e8e8e8'
+                    }}>
                         <h2 className="section-title">Contact Information</h2>
                         <p className="section-description">
                             Reach out to us through any of these channels

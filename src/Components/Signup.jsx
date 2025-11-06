@@ -225,7 +225,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     <button
                       type="button"
                       className="login-switch"
-                      onClick={() => onSwitchToLogin && onSwitchToLogin()}
+                      onClick={() => navigate('/login')}
                     >
                       Log In
                     </button>
@@ -294,6 +294,17 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                   >
                     {isLoading ? "Signing Up..." : "Sign Up"}
                   </button>
+
+                  <div className="signup-section">
+                    <div className="signup-prompt">Already have an account?</div>
+                    <button
+                      type="button"
+                      className="login-switch"
+                      onClick={() => navigate('/login')}
+                    >
+                      Log In
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>

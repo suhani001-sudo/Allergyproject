@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout as logout } from '../utils/authUtils';
 import './AboutUs.css'; // Reusing the same CSS
 import Footer from './Footer';
 
@@ -31,9 +32,7 @@ function RestaurantAboutUs() {
 
     // Handle logout
     function handleLogout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout(navigate);
     }
 
     // Scroll animation effect

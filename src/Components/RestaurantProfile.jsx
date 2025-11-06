@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout as logout } from '../utils/authUtils';
 import restaurantService from '../services/restaurantService';
 import './Profile.css'; // Reusing the same CSS
 import Footer from './Footer';
@@ -138,6 +139,14 @@ function RestaurantProfile() {
 
         try {
             const token = localStorage.getItem('token');
+            
+            // Check if token exists
+            if (!token) {
+                showErrorMessage('Session expired. Please login again.');
+                setTimeout(() => navigate('/login'), 2000);
+                return;
+            }
+            
             const response = await fetch('http://localhost:5000/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
@@ -162,13 +171,27 @@ function RestaurantProfile() {
                 }));
                 
                 showSuccessMessage('Profile updated successfully!');
+            } else if (response.status === 401) {
+                showErrorMessage('Session expired. Please login again.');
+                localStorage.clear();
+                setTimeout(() => navigate('/login'), 2000);
             } else {
                 const errorData = await response.json();
                 showErrorMessage(errorData.message || 'Failed to update profile');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            showErrorMessage('Network error. Please try again.');
+            // Fallback: Save to localStorage
+            setRestaurantData({ ...tempRestaurantData });
+            setIsEditing(false);
+            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+            localStorage.setItem('user', JSON.stringify({
+                ...storedUser,
+                name: tempRestaurantData.ownerName,
+                email: tempRestaurantData.email,
+                restaurantName: tempRestaurantData.restaurantName
+            }));
+            showSuccessMessage('Changes saved locally!');
         }
     };
 
@@ -187,6 +210,13 @@ function RestaurantProfile() {
     const handleSaveContact = async () => {
         try {
             const token = localStorage.getItem('token');
+            
+            if (!token) {
+                showErrorMessage('Session expired. Please login again.');
+                setTimeout(() => navigate('/login'), 2000);
+                return;
+            }
+            
             const response = await fetch('http://localhost:5000/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
@@ -200,6 +230,10 @@ function RestaurantProfile() {
                 setRestaurantData({ ...tempRestaurantData });
                 setIsEditingContact(false);
                 showSuccessMessage('Contact information updated successfully!');
+            } else if (response.status === 401) {
+                showErrorMessage('Session expired. Please login again.');
+                localStorage.clear();
+                setTimeout(() => navigate('/login'), 2000);
             } else {
                 showErrorMessage('Failed to update contact information');
             }
@@ -265,9 +299,7 @@ function RestaurantProfile() {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout(navigate);
     };
 
     // ========================================

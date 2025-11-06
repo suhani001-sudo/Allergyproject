@@ -188,7 +188,13 @@ function AllergyInfo() {
 
           <button
             className="logout-button"
-            onClick={() => navigate('/login')}
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              localStorage.removeItem('isLoggedIn');
+              localStorage.removeItem('role');
+              navigate('/login');
+            }}
           >
             <span className="logout-text">Logout</span>
           </button>
