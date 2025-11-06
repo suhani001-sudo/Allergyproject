@@ -132,9 +132,10 @@ function UserRestaurantPage(props) {
       <section className="search-section">
         <div className="search-container">
           <div className="search-filters">
+            
             <input
               type="text"
-              placeholder="Search menu items by name, description, or restaurant..."
+              placeholder="Search menu items by name, description..."
               value={searchTerm}
               onChange={function(e) { setSearchTerm(e.target.value); }}
               className="search-input"
@@ -253,7 +254,7 @@ function UserRestaurantPage(props) {
                       {/* Price - Always Present */}
                       <div className="item-footer">
                         <span className="item-price">
-                          ${typeof item.price === 'number' ? item.price.toFixed(2) : (item.price || '0.00')}
+                          ₹{typeof item.price === 'number' ? item.price.toFixed(2) : (item.price || '0.00')}
                         </span>
                       </div>
                     </div>

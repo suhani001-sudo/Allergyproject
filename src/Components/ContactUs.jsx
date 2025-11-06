@@ -11,7 +11,7 @@ function ContactUs() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        phone: '',
+        phone: '', 
         subject: '',
         message: ''
     });
@@ -362,7 +362,7 @@ function ContactUs() {
                             <span className="card-icon">📍</span>
                         </div>
                         <h3 className="card-title">Address</h3>
-                        <p className="card-text">Sensation Software Solutions, Indore, India</p>
+                        <p className="card-text">Ludhian,Punjab</p>
                         <a href="#map" className="card-link">View Map</a>
                     </div>
 

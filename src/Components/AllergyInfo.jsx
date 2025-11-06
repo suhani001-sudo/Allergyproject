@@ -210,10 +210,10 @@ function AllergyInfo() {
       <section className="search-section">
         <div className="search-container">
           <div className="search-box">
-            <span className="search-icon">🔍</span>
+          
             <input
               type="text"
-              placeholder="Search for allergens..."
+              placeholder="    Search for allergens... 🔍"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"

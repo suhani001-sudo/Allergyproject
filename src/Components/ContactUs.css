@@ -1,13 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
-/* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* ========================================
-   PREMIUM CONTACT US PAGE
-   ======================================== */
 
 .contact-page {
   min-height: 100vh;
@@ -21,9 +17,6 @@ html {
   font-family: 'Poppins', 'Inter', system-ui, sans-serif;
 }
 
-/* ========================================
-   NAVBAR - MATCHING ABOUT US
-   ======================================== */
 
 .contact-page .navbar {
   position: fixed;
@@ -172,9 +165,6 @@ html {
   box-shadow: 0 8px 25px rgba(220, 53, 69, 0.2);
 }
 
-/* ========================================
-   HERO SECTION
-   ======================================== */
 
 .contact-hero {
   position: relative;
@@ -324,10 +314,6 @@ html {
   font-size: 7rem;
 }
 
-/* ========================================
-   WAVE DIVIDER
-   ======================================== */
-
 .wave-divider {
   position: relative;
   width: 100%;
@@ -341,9 +327,6 @@ html {
   height: 100%;
 }
 
-/* ========================================
-   SUCCESS MESSAGE
-   ======================================== */
 
 .success-message {
   position: fixed;
@@ -536,9 +519,6 @@ html {
   transform: translateX(5px);
 }
 
-/* ========================================
-   CONTACT INFO SECTION
-   ======================================== */
 
 .contact-info-section {
   padding: 6rem 2rem;
@@ -660,17 +640,16 @@ html {
 
 .card-badge {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #28a745, #20833a);
-  color: white;
+  padding: 0.75rem 1.5rem;
+  background: rgba(107, 142, 35, 0.1);
+  color: #6B8E23;
+  text-decoration: none;
   border-radius: 10px;
-  font-size: 0.85rem;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-/* ========================================
-   MAP SECTION
-   ======================================== */
+
 
 .map-section {
   padding: 6rem 2rem;
