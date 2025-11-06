@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 import './UserInbox.css';
 import Footer from './Footer';
 
@@ -31,9 +32,20 @@ function UserInbox() {
     }
 
     // Handle logout
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    
     function handleLogout() {
-        logout(navigate);
+        setShowLogoutModal(true);
     }
+    
+    const confirmLogout = () => {
+        setShowLogoutModal(false);
+        logout(navigate);
+    };
+    
+    const cancelLogout = () => {
+        setShowLogoutModal(false);
+    };
 
     // Fetch replies from backend
     useEffect(() => {
@@ -105,6 +117,13 @@ function UserInbox() {
 
     return (
         <div className="inbox-page">
+            {/* Logout Confirmation Modal */}
+            <LogoutConfirmModal 
+                isOpen={showLogoutModal}
+                onConfirm={confirmLogout}
+                onCancel={cancelLogout}
+            />
+
             {/* Navbar */}
             <nav className="navbar">
                 <div className="nav-container">

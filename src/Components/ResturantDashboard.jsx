@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './RestaurantDashboard.css';
 import Footer from './Footer';
 import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 
 // STEP 1: Define the allergen options we will use in the form and display
 const ALLERGENS = ['Nuts', 'Dairy', 'Gluten', 'Soy', 'Eggs', 'Shellfish'];
@@ -12,9 +13,21 @@ function RestaurantDashboard(props) {
   // STEP 1.2: Initialize navigation hook
   const navigate = useNavigate();
   
+  // Logout modal state
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
   // Centralized logout handler
   const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+  
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
     logout(navigate);
+  };
+  
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
   
   // STEP 2: Set up menu items state (will be fetched from database)
@@ -341,6 +354,13 @@ function RestaurantDashboard(props) {
   // STEP 13: Render the component with simple sections
   return (
     <div className="rd-container">
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal 
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
+
       {/* MAIN NAVBAR (matches dashboard style) */}
       <nav className="navbar">
         <div className="nav-container">

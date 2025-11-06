@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 import './UserRestaurantPage.css';
 
 function UserRestaurantPage(props) {
-  // STEP 1: Get the onLogout function from props
-  const onLogout = props.onLogout;
-  
   // STEP 2: Initialize navigation and cart hooks
   const navigate = useNavigate();
+  
+  // Logout modal state
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
+  // Centralized logout handler
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+  
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    logout(navigate);
+  };
+  
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
+  };
   
   
   // STEP 3: Define state variables for managing data
@@ -83,6 +99,13 @@ function UserRestaurantPage(props) {
 
   return (
     <div className="restaurant-page">
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmModal 
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
+
       {/* STEP 6: Render header with original nav bar style */}
       <nav className="navbar">
         <div className="nav-container">
@@ -122,7 +145,7 @@ function UserRestaurantPage(props) {
             </button>
           </div>
 
-          <button className="logout-button" onClick={onLogout}>
+          <button className="logout-button" onClick={handleLogout}>
             <span className="logout-text">Logout</span>
           </button>
         </div>

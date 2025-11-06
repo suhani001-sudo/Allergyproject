@@ -4,14 +4,27 @@ import './UserDashboard.css';
 import './PremiumFeedback.css';
 import Footer from './Footer';
 import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 
 function UserDashboard(props) {
     // STEP 2: Initialize navigation and cart hooks
     const navigate = useNavigate();
     
+    // Logout modal state
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    
     // Centralized logout handler
     const handleLogout = () => {
+        setShowLogoutModal(true);
+    };
+    
+    const confirmLogout = () => {
+        setShowLogoutModal(false);
         logout(navigate);
+    };
+    
+    const cancelLogout = () => {
+        setShowLogoutModal(false);
     };
 
 
@@ -245,7 +258,12 @@ function UserDashboard(props) {
 
     return (
         <div className="home-container">
-
+            {/* Logout Confirmation Modal */}
+            <LogoutConfirmModal 
+                isOpen={showLogoutModal}
+                onConfirm={confirmLogout}
+                onCancel={cancelLogout}
+            />
 
             <nav className="navbar">
                 <div className="nav-container">

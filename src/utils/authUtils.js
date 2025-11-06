@@ -24,12 +24,12 @@ export const handleLogout = (navigate) => {
         
         console.log('✅ User logged out successfully');
         
-        // Redirect to login page
-        navigate('/login', { replace: true });
+        // Use window.location for a full page reload to reset App state
+        window.location.href = '/login';
     } catch (error) {
         console.error('❌ Error during logout:', error);
         // Force redirect even if there's an error
-        navigate('/login', { replace: true });
+        window.location.href = '/login';
     }
 };
 

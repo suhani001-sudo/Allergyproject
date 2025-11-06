@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 import './ContactUs.css'; // Reusing the same CSS
 import Footer from './Footer';
 
@@ -41,9 +42,20 @@ function RestaurantContactUs() {
     }
 
     // Handle logout
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    
     function handleLogout() {
-        logout(navigate);
+        setShowLogoutModal(true);
     }
+    
+    const confirmLogout = () => {
+        setShowLogoutModal(false);
+        logout(navigate);
+    };
+    
+    const cancelLogout = () => {
+        setShowLogoutModal(false);
+    };
 
 
     // Fetch messages from backend
@@ -165,6 +177,13 @@ function RestaurantContactUs() {
 
     return (
         <div className="contact-page">
+            {/* Logout Confirmation Modal */}
+            <LogoutConfirmModal 
+                isOpen={showLogoutModal}
+                onConfirm={confirmLogout}
+                onCancel={cancelLogout}
+            />
+
             {/* Toast Notification */}
             {showToast && (
                 <div style={{

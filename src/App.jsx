@@ -60,11 +60,19 @@ function App() {
 
   // STEP 5: Function to handle user logout
   function handleLogout() {
+    // Clear all authentication data
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("role");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("restaurantData");
+    localStorage.removeItem("userData");
+    sessionStorage.clear();
+    
+    // Update state
     setIsLoggedIn(false);
     setRole(null);
-    setIsSignup(false); // Reset signup state on logout
+    setIsSignup(false);
   }
 
   // STEP 5.1: Function to handle switching back to login from signup

@@ -521,6 +521,8 @@ html {
 .contact-info-section {
   padding: 6rem 2rem;
   background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .info-header {
@@ -546,117 +548,127 @@ html {
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: stretch;
 }
 
 .info-card {
   position: relative;
-  padding: 2.5rem;
-  background: white;
-  border-radius: 24px;
-  border: 1px solid rgba(107, 142, 35, 0.1);
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  min-height: 320px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.info-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(107, 142, 35, 0.05), transparent);
-  transform: rotate(45deg);
-  transition: all 0.6s ease;
-}
-
-.info-card:hover::before {
-  left: 100%;
+  padding: 2.5rem 2rem !important;
+  background: #f8f9fa !important;
+  border-radius: 16px !important;
+  border: none !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  overflow: hidden !important;
+  min-height: 320px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  width: 100% !important;
 }
 
 .info-card:hover {
-  transform: translateY(-15px);
-  box-shadow: 0 25px 60px rgba(107, 142, 35, 0.2);
-  border-color: rgba(107, 142, 35, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .card-icon-wrapper {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #6B8E23, #8BC34A);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 30px rgba(107, 142, 35, 0.3);
-  transition: all 0.4s ease;
+  width: 60px !important;
+  height: 60px !important;
+  margin: 0 auto 1.5rem !important;
+  background: linear-gradient(135deg, #7FA03C, #6B8E23) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  transition: none !important;
+  flex-shrink: 0 !important;
+  transform: none !important;
 }
 
-/* Emoji icon animation removed - icons stay static on hover */
+.card-icon-wrapper:hover {
+  transform: none !important;
+  animation: none !important;
+}
+
+.info-card:hover .card-icon-wrapper {
+  transform: none !important;
+  animation: none !important;
+}
 
 .card-icon {
-  font-size: 2.5rem;
+  font-size: 1.8rem !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.card-icon:hover {
+  transform: none !important;
+  animation: none !important;
 }
 
 .card-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 1rem;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: #2c3e50 !important;
+  margin: 0 0 1rem 0 !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
 }
 
 .card-text {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 0.9rem !important;
+  color: #666 !important;
+  line-height: 1.6 !important;
+  margin: 0 0 1.5rem 0 !important;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
 }
 
 .card-link {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background: rgba(107, 142, 35, 0.1);
+  padding: 0.65rem 1.5rem;
+  background: rgba(107, 142, 35, 0.08);
   color: #6B8E23;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+  border: none;
 }
 
 .card-link:hover {
-  background: linear-gradient(135deg, #6B8E23, #8BC34A);
-  color: white;
-  transform: scale(1.05);
+  background: rgba(107, 142, 35, 0.15);
+  color: #5a7a1f;
+  transform: translateY(-2px);
 }
 
 .card-badge {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-
-  background: linear-gradient(135deg, #6B8E23, #8BC34A);
+  padding: 0.65rem 1.5rem;
+  background: linear-gradient(135deg, #6B8E23, #7FA03C);
   color: white;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  background: rgba(107, 142, 35, 0.1);
-  color: #6B8E23;
-  text-decoration: none;
-  border-radius: 10px;
-
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+.card-badge:hover {
+  background: linear-gradient(135deg, #5a7a1f, #6B8E23);
+  transform: translateY(-2px);
 }
 
 
@@ -880,6 +892,20 @@ html {
   .hero-content-wrapper {
     grid-template-columns: 1fr;
     text-align: center;
+  }
+
+  .hero-illustration {
+    order: -1;
+    margin-bottom: 2rem;
+  }
+
+  .cta-buttons {
+    justify-content: center;
+  }
+
+  .info-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
 
   .hero-main-title {

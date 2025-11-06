@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 import './AboutUs.css'; // Reusing the same CSS
 import Footer from './Footer';
 
@@ -31,9 +32,20 @@ function RestaurantAboutUs() {
     }
 
     // Handle logout
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    
     function handleLogout() {
-        logout(navigate);
+        setShowLogoutModal(true);
     }
+    
+    const confirmLogout = () => {
+        setShowLogoutModal(false);
+        logout(navigate);
+    };
+    
+    const cancelLogout = () => {
+        setShowLogoutModal(false);
+    };
 
     // Scroll animation effect
     useEffect(() => {
@@ -58,6 +70,13 @@ function RestaurantAboutUs() {
 
     return (
         <div className="about-page">
+            {/* Logout Confirmation Modal */}
+            <LogoutConfirmModal 
+                isOpen={showLogoutModal}
+                onConfirm={confirmLogout}
+                onCancel={cancelLogout}
+            />
+
             {/* Navbar */}
             <nav className="navbar">
                 <div className="nav-container">

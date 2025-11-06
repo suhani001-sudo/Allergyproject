@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/userService';
 import { handleLogout as logout } from '../utils/authUtils';
+import LogoutConfirmModal from './LogoutConfirmModal';
 import './Profile.css';
 
 function Profile() {
@@ -382,8 +383,19 @@ function Profile() {
         }
     };
 
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    
     const handleLogout = () => {
+        setShowLogoutModal(true);
+    };
+    
+    const confirmLogout = () => {
+        setShowLogoutModal(false);
         logout(navigate);
+    };
+    
+    const cancelLogout = () => {
+        setShowLogoutModal(false);
     };
 
     // ========================================
@@ -476,6 +488,13 @@ function Profile() {
     // ========================================
     return (
         <div className="profile-page">
+            {/* Logout Confirmation Modal */}
+            <LogoutConfirmModal 
+                isOpen={showLogoutModal}
+                onConfirm={confirmLogout}
+                onCancel={cancelLogout}
+            />
+
             {/* Navbar */}
             <nav className="navbar">
                 <div className="nav-container">
