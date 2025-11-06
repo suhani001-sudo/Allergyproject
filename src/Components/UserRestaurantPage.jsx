@@ -25,7 +25,7 @@ function UserRestaurantPage(props) {
         setLoading(true);
         
         // Fetch menu items from your backend API
-        const response = await fetch('http://localhost:5000/api/restaurants/menu');
+        const response = await fetch('http://localhost:5000/api/menus');
         const data = await response.json();
         
         if (data.success && data.data && data.data.length > 0) {
@@ -37,7 +37,12 @@ function UserRestaurantPage(props) {
               description: item.description,
               price: item.price,
               category: item.category,
-              restaurantName: item.restaurantName
+              restaurantName: item.restaurantName,
+              imageUrl: item.imageUrl,
+              allergenInfo: item.allergenInfo || [],
+              isVegetarian: item.isVegetarian,
+              isVegan: item.isVegan,
+              isGlutenFree: item.isGlutenFree
             };
           });
           
@@ -63,9 +68,10 @@ function UserRestaurantPage(props) {
 
   // STEP 5: Filter items based on search term and category
   const filteredItems = items.filter(function(item) {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (item.restaurantName && item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase()));
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = (item.name && item.name.toLowerCase().includes(searchLower)) ||
+                         (item.description && item.description.toLowerCase().includes(searchLower)) ||
+                         (item.restaurantName && item.restaurantName.toLowerCase().includes(searchLower));
     
     const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
     
@@ -73,7 +79,7 @@ function UserRestaurantPage(props) {
   });
 
   // Get unique categories for filter dropdown
-  const categories = ['All', ...new Set(items.map(item => item.category))];
+  const categories = ['All', ...new Set(items.map(item => item.category || 'other').filter(Boolean))];
 
   return (
     <div className="restaurant-page">
@@ -187,23 +193,68 @@ function UserRestaurantPage(props) {
               {filteredItems.map(function(item) {
                 return (
                   <div key={item.id} className="menu-card">
+                    {/* Menu Item Image */}
+                    <div className="menu-card-image">
+                      <img 
+                        src={item.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop'} 
+                        alt={item.name}
+                        onError={function(e) {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop';
+                        }}
+                      />
+                      {/* Diet badges */}
+                      <div className="diet-badges">
+                        {item.isVegan && <span className="badge badge-vegan">🌱 Vegan</span>}
+                        {item.isVegetarian && !item.isVegan && <span className="badge badge-vegetarian">🥬 Vegetarian</span>}
+                        {item.isGlutenFree && <span className="badge badge-gluten-free">🌾 Gluten Free</span>}
+                      </div>
+                    </div>
+                    
                     <div className="card-content-full">
+                      {/* Dish Name and Category - Always Present */}
                       <div className="item-header">
-                        <h3 className="item-name">{item.name}</h3>
-                        <div className="item-category">{item.category}</div>
+                        <h3 className="item-name">
+                          {item.name || `Delicious ${(item.category || 'Dish').charAt(0).toUpperCase() + (item.category || 'Dish').slice(1)}`}
+                        </h3>
+                        <div className="item-category">{item.category || 'other'}</div>
                       </div>
                       
-                      {/* Restaurant Name */}
-                      {item.restaurantName && (
-                        <div className="restaurant-name-badge">
-                          🏪 {item.restaurantName}
+                      {/* Restaurant Name - Always Present */}
+                      <div className="restaurant-name-badge">
+                        🏪 {item.restaurantName || 'SafeBytes Restaurant'}
+                      </div>
+                      
+                      {/* Description - Always Present */}
+                      <p className="item-description">
+                        {item.description || 'A delicious dish prepared with fresh ingredients. Ask our staff for more details about this item.'}
+                      </p>
+                      
+                      {/* Allergen Information - Always Present */}
+                      <div className="allergen-info">
+                        <strong>⚠️ Contains:</strong>
+                        <div className="allergen-tags">
+                          {item.allergenInfo && item.allergenInfo.length > 0 ? (
+                            item.allergenInfo.map(function(allergen, index) {
+                              return (
+                                <span key={index} className="allergen-tag">
+                                  {allergen}
+                                </span>
+                              );
+                            })
+                          ) : (
+                            <span className="allergen-tag allergen-tag-safe">
+                              No known allergens
+                            </span>
+                          )}
                         </div>
-                      )}
+                      </div>
                       
-                      <p className="item-description">{item.description}</p>
-                      
+                      {/* Price - Always Present */}
                       <div className="item-footer">
-                        <span className="item-price">${typeof item.price === 'number' ? item.price.toFixed(2) : item.price}</span>
+                        <span className="item-price">
+                          ${typeof item.price === 'number' ? item.price.toFixed(2) : (item.price || '0.00')}
+                        </span>
                       </div>
                     </div>
                   </div>

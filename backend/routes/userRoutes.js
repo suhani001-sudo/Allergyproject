@@ -4,6 +4,7 @@ import {
   getUserProfile,
   getUserById,
   updateUserProfile,
+  changePassword,
   deleteUser,
   getUserStats,
 } from '../controllers/userController.js';
@@ -19,6 +20,8 @@ router.route('/profile')
   .put(updateUserProfile);  // Update logged-in user's profile
 
 router.get('/stats', getUserStats);  // Get user dashboard stats
+
+router.put('/change-password', changePassword);  // Change user password
 
 router.delete('/account', deleteUser);  // Delete user account
 

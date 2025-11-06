@@ -1,3 +1,8 @@
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* STEP 1: Base container and layout */
 body, html {
   overflow-y: scroll;
@@ -101,16 +106,40 @@ body, html {
   font-weight: 700;
 }
 
-/* STEP 4: Menu list styling */
-.rd-list {
-  display: flex;
-  flex-wrap: wrap;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  margin-top: 20px;
-  
+/* STEP 4: Menu list grid - Responsive */
+.rd-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+  animation: rd-fade-up 600ms ease 200ms both;
 }
 
+/* Responsive grid breakpoints */
+@media (min-width: 1400px) {
+  .rd-menu-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .rd-menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .rd-menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .rd-menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* STEP 5: Menu card styling */
 .rd-card {
   background: rgba(255,255,255,0.95);
   border: 1px solid rgba(107, 142, 35, 0.12);
@@ -229,11 +258,53 @@ body, html {
   border-color: rgba(162, 34, 34, 0.25);
 }
 
+.rd-btn-primary {
+  background: linear-gradient(135deg, #6B8E23, #556B2F);
+  color: white;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+}
+
+.rd-btn-primary:hover {
+  background: linear-gradient(135deg, #556B2F, #4a5f28);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(107, 142, 35, 0.4);
+}
+
+.rd-btn-toggle {
+  background: rgba(107, 142, 35, 0.1);
+  color: #6B8E23;
+  border-color: rgba(107, 142, 35, 0.25);
+}
+
 /* STEP 7: Form styling */
+.rd-form-section {
+  background: linear-gradient(135deg, rgba(107, 142, 35, 0.05) 0%, rgba(107, 142, 35, 0.02) 100%);
+  border: 2px solid rgba(107, 142, 35, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
 .rd-form {
+  display: block;
+}
+
+.rd-form-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.9rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rd-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rd-form-group-full {
+  grid-column: 1 / -1;
 }
 
 .rd-form-row {
@@ -248,7 +319,8 @@ body, html {
 }
 
 .rd-input,
-.rd-textarea {
+.rd-textarea,
+.rd-select {
   background: rgba(255,255,255,0.95);
   border: 1px solid rgba(107, 142, 35, 0.18);
   border-radius: 10px;
@@ -256,12 +328,15 @@ body, html {
   font-size: 0.95rem;
   color: #2f3b1a;
   box-shadow: 0 6px 16px rgba(0,0,0,0.04) inset;
+  transition: all 0.2s ease;
 }
 
 .rd-input:focus,
-.rd-textarea:focus {
+.rd-textarea:focus,
+.rd-select:focus {
   outline: 2px solid rgba(107, 142, 35, 0.30);
   outline-offset: 2px;
+  border-color: #6B8E23;
 }
 
 .rd-textarea {
@@ -300,10 +375,19 @@ body, html {
   background: rgba(255,255,255,0.96);
   border: 1px solid rgba(107, 142, 35, 0.12);
   border-radius: 14px;
-  padding: 0.85rem;
+  padding: 1.25rem 0.85rem;
   text-align: center;
   box-shadow: 0 6px 16px rgba(0,0,0,0.06);
   transition: transform 140ms ease, box-shadow 140ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rd-analytics-icon {
+  font-size: 2rem;
+  opacity: 0.8;
 }
 
 .rd-analytics-number {
@@ -317,14 +401,281 @@ body, html {
   color: #6b6b6b;
 }
 
-/* STEP 9: Responsive tweaks */
-@media (max-width: 720px) {
-  .rd-analytics .rd-analytics-grid {
-    grid-template-columns: 1fr;
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Large tablets */
+@media (max-width: 1024px) {
+  .rd-container {
+    padding-top: 65px;
+  }
+
+  .rd-nav {
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem 0.85rem 0.75rem;
+  }
+
+  .rd-nav-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .rd-section {
+    padding: 1.5rem;
+  }
+
+  .rd-analytics-grid {
+    gap: 1rem;
+  }
+}
+
+/* Tablets and below */
+@media (max-width: 768px) {
+  .rd-container {
+    padding-top: 60px;
+  }
+
+  .rd-brand {
+    font-size: 1.15rem;
+    padding: 0.75rem 0.85rem 0.4rem 0.85rem;
+  }
+
+  .rd-nav {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem 0.75rem 0.85rem;
+  }
+
+  .rd-nav-btn {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .rd-section {
+    padding: 1.25rem 1rem;
+  }
+
+  .rd-section-title {
+    font-size: 1.5rem;
+  }
+
+  .rd-analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .rd-analytics-card {
+    padding: 1rem;
+  }
+
+  .rd-analytics-value {
+    font-size: 1.75rem;
+  }
+
+  .rd-analytics-label {
+    font-size: 0.8rem;
   }
 
   .rd-list {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .rd-card {
+    padding: 1.25rem;
+  }
+
+  .rd-card-title {
+    font-size: 1.1rem;
+  }
+
+  .rd-card-desc {
+    font-size: 0.85rem;
+  }
+
+  .rd-card-price {
+    font-size: 1.1rem;
+  }
+
+  .rd-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+  
+  .rd-form-section {
+    padding: 1.25rem;
+  }
+
+  .rd-input,
+  .rd-textarea,
+  .rd-select {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .rd-btn {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+  .rd-container {
+    padding-top: 55px;
+  }
+
+  .rd-brand {
+    font-size: 1.05rem;
+    padding: 0.65rem 0.75rem 0.35rem 0.75rem;
+  }
+
+  .rd-nav {
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem 0.65rem 0.75rem;
+  }
+
+  .rd-nav-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .rd-section {
+    padding: 1rem 0.75rem;
+  }
+
+  .rd-section-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .rd-analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .rd-analytics-card {
+    padding: 0.85rem;
+  }
+
+  .rd-analytics-value {
+    font-size: 1.5rem;
+  }
+
+  .rd-analytics-label {
+    font-size: 0.75rem;
+  }
+
+  .rd-list {
+    gap: 0.75rem;
+  }
+
+  .rd-card {
+    padding: 1rem;
+  }
+
+  .rd-card-title {
+    font-size: 1rem;
+  }
+
+  .rd-card-desc {
+    font-size: 0.8rem;
+  }
+
+  .rd-card-price {
+    font-size: 1rem;
+  }
+
+  .rd-card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .rd-card-actions .rd-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rd-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .rd-form-section {
+    padding: 1rem;
+  }
+
+  .rd-form-group label {
+    font-size: 0.85rem;
+  }
+  
+  .rd-form-actions {
+    flex-direction: column;
+  }
+  
+  .rd-form-actions .rd-btn {
+    width: 100%;
+  }
+
+  .rd-input,
+  .rd-textarea,
+  .rd-select {
+    font-size: 0.85rem;
+    padding: 0.65rem;
+  }
+
+  .rd-btn {
+    padding: 0.65rem 1.1rem;
+    font-size: 0.85rem;
+  }
+
+  .rd-category-badge,
+  .rd-restaurant-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .rd-ingredients {
+    padding: 0.65rem;
+  }
+
+  .rd-ingredients-title {
+    font-size: 0.8rem;
+  }
+
+  .rd-ingredient-tag {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.35rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .rd-brand {
+    font-size: 1rem;
+  }
+
+  .rd-nav-btn {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.7rem;
+  }
+
+  .rd-section-title {
+    font-size: 1.25rem;
+  }
+
+  .rd-analytics-value {
+    font-size: 1.35rem;
+  }
+
+  .rd-card-title {
+    font-size: 0.95rem;
+  }
+
+  .rd-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
   }
 }
 

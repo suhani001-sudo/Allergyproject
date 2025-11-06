@@ -64,6 +64,36 @@ const restaurantService = {
       throw error;
     }
   },
+
+  // Change restaurant account password
+  changePassword: async (oldPassword, newPassword) => {
+    try {
+      const response = await api.put('/users/change-password', {
+        oldPassword,
+        newPassword
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Delete restaurant account (user account + profile)
+  deleteAccount: async () => {
+    try {
+      const response = await api.delete('/users/account');
+      
+      // Clear all stored data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('role');
+      
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default restaurantService;

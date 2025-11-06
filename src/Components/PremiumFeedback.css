@@ -1,0 +1,550 @@
+/* ============================================
+   PREMIUM CINEMATIC FEEDBACK FORM STYLES
+   ============================================ */
+
+/* Premium Feedback Container with Glassmorphism */
+.premium-feedback-container {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 
+    0 8px 32px rgba(107, 142, 35, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(107, 142, 35, 0.15);
+  overflow: hidden;
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Animated gradient background */
+.premium-feedback-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(107, 142, 35, 0.05) 0%, transparent 70%);
+  animation: rotateGradient 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Premium Title with Sparkle Animation */
+.premium-feedback-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 50%, #6B8E23 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+  animation: shimmer 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.sparkle {
+  display: inline-block;
+  animation: sparkleRotate 2s ease-in-out infinite;
+  font-size: 1.5rem;
+}
+
+@keyframes sparkleRotate {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-15deg) scale(1.1); }
+  75% { transform: rotate(15deg) scale(1.1); }
+}
+
+/* Premium Subtitle */
+.premium-feedback-subtitle {
+  text-align: center;
+  color: #5a6c7d;
+  font-size: 0.95rem;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Premium Form */
+.premium-feedback-form {
+  position: relative;
+  z-index: 1;
+}
+
+/* Premium Form Group */
+.premium-form-group {
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.premium-form-group:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.premium-form-group:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+/* Premium Label */
+.premium-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.label-icon {
+  font-size: 1.2rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Premium Input Wrapper with Glow Effect */
+.premium-input-wrapper {
+  position: relative;
+}
+
+.premium-input,
+.premium-textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #2c3e50;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(107, 142, 35, 0.2);
+  border-radius: 16px;
+  outline: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.premium-input::placeholder,
+.premium-textarea::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+/* Floating Animation on Focus */
+.premium-input:focus,
+.premium-textarea:focus {
+  border-color: #6B8E23;
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(107, 142, 35, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* Input Glow Effect */
+.input-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  opacity: 0;
+  background: linear-gradient(135deg, rgba(107, 142, 35, 0.1), rgba(143, 188, 143, 0.1));
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.premium-input:focus ~ .input-glow,
+.premium-textarea:focus ~ .input-glow {
+  opacity: 1;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.02); opacity: 0.8; }
+}
+
+/* Premium Textarea */
+.premium-textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.6;
+}
+
+/* Premium Form Actions */
+.premium-form-actions {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+/* Premium Submit Button with Gradient and Ripple */
+.premium-submit-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 3rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 50%, #6B8E23 100%);
+  background-size: 200% auto;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 24px rgba(107, 142, 35, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: buttonPulse 2s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(107, 142, 35, 0.3), 0 4px 8px rgba(0, 0, 0, 0.1); }
+  50% { box-shadow: 0 12px 32px rgba(107, 142, 35, 0.4), 0 6px 12px rgba(0, 0, 0, 0.15); }
+}
+
+.premium-submit-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  background-position: 100% 50%;
+  box-shadow: 
+    0 16px 40px rgba(107, 142, 35, 0.4),
+    0 8px 16px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.premium-submit-button:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.button-text {
+  position: relative;
+  z-index: 2;
+}
+
+.button-icon {
+  font-size: 1.3rem;
+  animation: rocketFloat 1.5s ease-in-out infinite;
+}
+
+@keyframes rocketFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-5deg); }
+}
+
+/* Ripple Effect */
+.button-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.premium-submit-button:active .button-ripple {
+  animation: rippleEffect 0.6s ease-out;
+}
+
+@keyframes rippleEffect {
+  to {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   SUCCESS ANIMATION OVERLAY
+   ============================================ */
+
+.success-animation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.success-animation-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 3rem 4rem;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 
+    0 20px 60px rgba(107, 142, 35, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  border: 1px solid rgba(107, 142, 35, 0.2);
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animated Checkmark */
+.success-checkmark {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+}
+
+.checkmark-svg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 3;
+  stroke: #6B8E23;
+  stroke-miterlimit: 10;
+  animation: fillCheckmark 0.4s ease-in-out 0.4s forwards, scaleCheckmark 0.3s ease-in-out 0.9s both;
+}
+
+.checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 3;
+  stroke-miterlimit: 10;
+  stroke: #6B8E23;
+  fill: none;
+  animation: strokeCheckmark 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: strokeCheckmark 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes strokeCheckmark {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scaleCheckmark {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+
+@keyframes fillCheckmark {
+  100% {
+    box-shadow: inset 0 0 0 30px #6B8E23;
+  }
+}
+
+/* Success Text */
+.success-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  animation: fadeInUp 0.6s ease 0.8s both;
+}
+
+.success-message {
+  font-size: 1.1rem;
+  color: #5a6c7d;
+  font-weight: 500;
+  animation: fadeInUp 0.6s ease 1s both;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .premium-feedback-container {
+    padding: 2rem 1.5rem;
+    margin: 1.5rem 1rem;
+    border-radius: 20px;
+  }
+
+  .premium-feedback-title {
+    font-size: 1.5rem;
+  }
+
+  .premium-feedback-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+  }
+
+  .premium-form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .premium-input,
+  .premium-textarea {
+    padding: 0.9rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+  }
+
+  .premium-submit-button {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .success-animation-content {
+    padding: 2rem 2.5rem;
+    margin: 0 1rem;
+  }
+
+  .success-checkmark {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-title {
+    font-size: 1.5rem;
+  }
+
+  .success-message {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .premium-feedback-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .premium-feedback-title {
+    font-size: 1.3rem;
+  }
+
+  .sparkle {
+    font-size: 1.2rem;
+  }
+
+  .premium-feedback-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .premium-label {
+    font-size: 0.9rem;
+  }
+
+  .premium-input,
+  .premium-textarea {
+    padding: 0.8rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .premium-submit-button {
+    padding: 0.9rem 2rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for accessibility */
+.premium-input:focus-visible,
+.premium-textarea:focus-visible,
+.premium-submit-button:focus-visible {
+  outline: 3px solid rgba(107, 142, 35, 0.5);
+  outline-offset: 2px;
+}

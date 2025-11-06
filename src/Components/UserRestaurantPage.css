@@ -1,4 +1,4 @@
-/* STEP 2: Main container styles */
+/* STEP 2: Main container styles - Optimized for smooth scrolling */
 .restaurant-page {
   min-height: 100vh;
   width: 100vw;
@@ -10,6 +10,10 @@
   position: relative;
   font-family: 'Arial', sans-serif;
   color: #333;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* STEP 3: Navigation bar matching Dashboard styling */
@@ -223,10 +227,13 @@
   z-index: 1;
 }
 
-/* STEP 4: Search section styles */
+/* STEP 4: Search section styles - Enhanced for visibility */
 .search-section {
-  padding: 2rem 0;
-  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem 0 1rem;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(107, 142, 35, 0.1);
+  margin-bottom: 0;
 }
 
 .search-container {
@@ -245,17 +252,33 @@
 .search-input {
   width: 100%;
   max-width: 600px;
-  padding: 1rem;
-  border: 2px solid #e0e0e0;
+  padding: 1rem 1.5rem;
+  border: 2px solid rgba(107, 142, 35, 0.3);
   border-radius: 25px;
   font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
   outline: none;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
+  color: #2c3e50;
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.08);
+}
+
+.search-input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+  opacity: 1;
+}
+
+.search-input:hover {
+  border-color: rgba(107, 142, 35, 0.5);
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.12);
 }
 
 .search-input:focus {
-  border-color: #3498db;
-  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+  border-color: #6B8E23;
+  box-shadow: 0 4px 16px rgba(107, 142, 35, 0.2);
+  transform: translateY(-1px);
 }
 
 .filter-dropdowns {
@@ -265,20 +288,30 @@
 }
 
 .filter-select {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  background: white;
+  padding: 0.85rem 1.25rem;
+  border: 2px solid rgba(107, 142, 35, 0.3);
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  background: #ffffff;
+  color: #2c3e50;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 150px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 160px;
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.08);
+}
+
+.filter-select:hover {
+  border-color: rgba(107, 142, 35, 0.5);
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.12);
 }
 
 .filter-select:focus {
-  border-color: #3498db;
+  border-color: #6B8E23;
   outline: none;
-  box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+  box-shadow: 0 4px 16px rgba(107, 142, 35, 0.2);
+  transform: translateY(-1px);
 }
 
 .filter-results {
@@ -286,36 +319,46 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
+  padding: 0.75rem 0;
 }
 
 .results-count {
-  color: #666;
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: #5a6c7d;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, rgba(107, 142, 35, 0.1), rgba(143, 188, 143, 0.1));
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(107, 142, 35, 0.15);
 }
 
 .clear-filters-btn {
-  background: #ff6b6b;
+  background: linear-gradient(135deg, #6B8E23, #8FBC8F);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.2);
 }
 
 .clear-filters-btn:hover {
-  background: #ff5252;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+  background: linear-gradient(135deg, #5a7a1a, #7aac7a);
 }
 
-/* STEP 5: Main content layout */
+/* STEP 5: Main content layout - Reduced gap for tighter layout */
 .main-content {
   display: flex;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 6rem 2rem 2rem; /* Add top padding for fixed navbar */
+  padding: 2rem 2rem 2rem; /* Reduced top padding for tighter layout */
   gap: 2rem;
 }
 
@@ -330,12 +373,13 @@
   text-align: center;
 }
 
-/* STEP 6: Menu card styles - SafeBytes Theme */
+/* STEP 6: Menu card styles - SafeBytes Theme - Optimized for smooth scrolling */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
+  will-change: scroll-position;
 }
 
 .menu-card {
@@ -343,9 +387,16 @@
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(107, 142, 35, 0.1);
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  cursor: pointer;
   border: 2px solid transparent;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 580px;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .menu-card::before {
@@ -353,35 +404,48 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 4px;
+  width: 4px;
+  height: 100%;
   background: linear-gradient(90deg, #6B8E23, #8FBC8F);
 }
 
 .menu-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-5px) translateZ(0);
   box-shadow: 0 12px 35px rgba(107, 142, 35, 0.2);
   border-color: #6B8E23;
 }
 
 /* Card content without image - full padding */
 .card-content-full {
-  padding: 2rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.75rem;
 }
 
 .item-name {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 0.75rem;
+  margin: 0;
   line-height: 1.3;
+  min-height: 2.6rem;
+  display: flex;
+  align-items: center;
 }
 
 .item-description {
   color: #5a6c7d;
-  margin-bottom: 1.5rem;
+  margin: 0;
   line-height: 1.6;
   font-size: 0.95rem;
+  min-height: 4.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .item-footer {
@@ -390,6 +454,7 @@
   align-items: center;
   padding-top: 1rem;
   border-top: 1px solid #e8f5e9;
+  margin-top: auto;
 }
 
 .item-price {
@@ -436,9 +501,43 @@
 
 /* STEP 8: Responsive design */
 @media (max-width: 768px) {
+  .search-section {
+    padding: 1rem 0 0.75rem;
+  }
+  
+  .search-container {
+    padding: 0 1rem;
+  }
+  
+  .search-input {
+    max-width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .filter-select {
+    min-width: 100%;
+    padding: 0.75rem 1rem;
+  }
+  
+  .filter-results {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  
+  .results-count {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .clear-filters-btn {
+    width: 100%;
+  }
+  
   .main-content {
     flex-direction: column;
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
   
   .nav-bar {
@@ -465,8 +564,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin: 0;
   gap: 0.75rem;
+  min-height: 3rem;
 }
 
 .item-category {
@@ -478,6 +578,8 @@
   font-weight: 600;
   white-space: nowrap;
   box-shadow: 0 2px 6px rgba(107, 142, 35, 0.15);
+  flex-shrink: 0;
+  height: fit-content;
 }
 
 /* Restaurant Name Badge */
@@ -488,9 +590,115 @@
   border-radius: 25px;
   font-size: 0.85rem;
   font-weight: 600;
-  margin: 0.75rem 0 1rem 0;
+  margin: 0;
   display: inline-block;
   box-shadow: 0 3px 10px rgba(107, 142, 35, 0.25);
+  align-self: flex-start;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Menu Card Image Styles - Optimized for smooth scrolling */
+.menu-card-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f5f5f5;
+  will-change: transform;
+}
+
+.menu-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.menu-card:hover .menu-card-image img {
+  transform: scale(1.05) translateZ(0);
+}
+
+/* Diet Badges */
+.diet-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.badge-vegan {
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
+}
+
+.badge-vegetarian {
+  background: rgba(139, 195, 74, 0.9);
+  color: white;
+}
+
+.badge-gluten-free {
+  background: rgba(255, 193, 7, 0.9);
+  color: #333;
+}
+
+/* Allergen Information */
+.allergen-info {
+  margin: 0;
+  padding: 1rem;
+  background: rgba(255, 152, 0, 0.1);
+  border-left: 4px solid #ff9800;
+  border-radius: 8px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.allergen-info strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #e65100;
+  font-size: 0.9rem;
+}
+
+.allergen-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.allergen-tag {
+  background: rgba(255, 152, 0, 0.2);
+  color: #e65100;
+  padding: 0.3rem 0.7rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.allergen-tag-safe {
+  background: rgba(76, 175, 80, 0.2);
+  color: #2e7d32;
+  border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
 /* Removed unused sections: ingredients, allergens, tags */
@@ -509,5 +717,14 @@
     flex-direction: column;
     gap: 0.5rem;
     align-items: flex-start;
+  }
+  
+  .menu-card {
+    min-height: 550px;
+  }
+  
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import userService from '../services/userService';
 import './Profile.css';
 
 function Profile() {
@@ -72,25 +73,95 @@ function Profile() {
     const [newFoodName, setNewFoodName] = useState('');
     const [newFoodAlternative, setNewFoodAlternative] = useState('');
 
+    // Change password state
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [passwordError, setPasswordError] = useState('');
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+
     // ========================================
-    // LOAD DATA FROM LOCALSTORAGE
+    // LOAD DATA FROM BACKEND
     // ========================================
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
+        async function fetchUserProfile() {
             try {
-                const parsedUser = JSON.parse(storedUser);
-                const loadedData = {
-                    ...userData,
-                    fullName: parsedUser.name || 'XYZ',
-                    email: parsedUser.email || 'XYZ@gmail.com'
-                };
-                setUserData(loadedData);
-                setTempUserData(loadedData);
+                const token = localStorage.getItem('token');
+                const storedUser = localStorage.getItem('user');
+                
+                if (storedUser) {
+                    const parsedUser = JSON.parse(storedUser);
+                    
+                    // Try to fetch from backend
+                    try {
+                        const response = await fetch('http://localhost:5000/api/user-profile', {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            const data = result.data || result;
+                            const loadedData = {
+                                ...userData,
+                                fullName: data.fullName || parsedUser.name || 'XYZ',
+                                username: data.username || parsedUser.email?.split('@')[0] || 'xyz_user',
+                                email: data.email || parsedUser.email || 'XYZ@gmail.com',
+                                phone: data.phone || '+1 (555) 123-4567',
+                                gender: data.gender || 'Male',
+                                dateOfBirth: data.dateOfBirth || '1999-01-01',
+                                city: data.city || 'New York',
+                                state: data.state || 'NY',
+                                country: data.country || 'USA',
+                                dietaryPreference: data.dietaryPreference || 'Vegetarian',
+                                allergySensitivity: data.allergySensitivity || 'Medium',
+                                favoriteCuisine: data.favoriteCuisine || 'Italian'
+                            };
+                            setUserData(loadedData);
+                            setTempUserData(loadedData);
+                            
+                            // Update allergies if available
+                            if (data.allergies && data.allergies.length > 0) {
+                                setAllergies(data.allergies);
+                            }
+                            
+                            // Update favorite foods if available
+                            if (data.favoriteFoods && data.favoriteFoods.length > 0) {
+                                setFavoriteFoods(data.favoriteFoods);
+                            }
+                        } else {
+                            // Fallback to localStorage
+                            const loadedData = {
+                                ...userData,
+                                fullName: parsedUser.name || 'XYZ',
+                                email: parsedUser.email || 'XYZ@gmail.com'
+                            };
+                            setUserData(loadedData);
+                            setTempUserData(loadedData);
+                        }
+                    } catch (fetchError) {
+                        console.error('Error fetching from backend:', fetchError);
+                        // Fallback to localStorage
+                        const loadedData = {
+                            ...userData,
+                            fullName: parsedUser.name || 'XYZ',
+                            email: parsedUser.email || 'XYZ@gmail.com'
+                        };
+                        setUserData(loadedData);
+                        setTempUserData(loadedData);
+                    }
+                }
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
         }
+        
+        fetchUserProfile();
     }, []);
 
     // ========================================
@@ -101,16 +172,46 @@ function Profile() {
         setIsEditing(true);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(tempUserData.email)) {
             alert('Please enter a valid email address');
             return;
         }
-        setUserData({ ...tempUserData });
-        setIsEditing(false);
-        localStorage.setItem('user', JSON.stringify(tempUserData));
-        showSuccessMessage('Your details have been updated successfully!');
+        
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:5000/api/user-profile', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tempUserData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                setUserData({ ...tempUserData });
+                setIsEditing(false);
+                
+                // Update localStorage
+                const storedUser = JSON.parse(localStorage.getItem('user'));
+                localStorage.setItem('user', JSON.stringify({
+                    ...storedUser,
+                    name: tempUserData.fullName,
+                    email: tempUserData.email
+                }));
+                
+                showSuccessMessage('Your details have been updated successfully!');
+            } else {
+                const errorData = await response.json();
+                alert(errorData.message || 'Failed to update profile');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('Network error. Please try again.');
+        }
     };
 
     const handleCancel = () => {
@@ -266,11 +367,71 @@ function Profile() {
     };
 
     // ========================================
+    // ACCOUNT SETTINGS FUNCTIONS
+    // ========================================
+    const handleChangePassword = async () => {
+        setPasswordError('');
+        
+        // Validation
+        if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+            setPasswordError('Please fill in all password fields');
+            return;
+        }
+        
+        if (passwordData.newPassword.length < 6) {
+            setPasswordError('New password must be at least 6 characters');
+            return;
+        }
+        
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setPasswordError('New passwords do not match');
+            return;
+        }
+        
+        try {
+            setIsChangingPassword(true);
+            await userService.changePassword(passwordData.oldPassword, passwordData.newPassword);
+            
+            // Success
+            showSuccessMessage('Password changed successfully!');
+            setShowPasswordModal(false);
+            setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+        } catch (error) {
+            setPasswordError(error.message || 'Failed to change password. Please check your current password.');
+        } finally {
+            setIsChangingPassword(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including allergies and preferences.'
+        );
+        
+        if (!confirmed) return;
+        
+        // Double confirmation
+        const doubleConfirm = window.confirm(
+            'This is your last chance. Are you absolutely sure you want to delete your account?'
+        );
+        
+        if (!doubleConfirm) return;
+        
+        try {
+            await userService.deleteAccount();
+            alert('Your account has been successfully deleted.');
+            navigate('/login');
+        } catch (error) {
+            alert(error.message || 'Failed to delete account. Please try again.');
+        }
+    };
+
+    // ========================================
     // NAVIGATION DATA
     // ========================================
     const navItems = [
         { id: 'Dashboard', label: 'Dashboard', path: '/dashboard' },
-        { id: 'Restaurants', label: 'Restaurants', path: '/restaurants' },
+
         { id: 'Allergies', label: 'Allergies', path: '/allergy-info' },
         { id: 'Contact', label: 'Contact', path: '/contact' },
         { id: 'About', label: 'About us', path: '/about-us' },
@@ -740,44 +901,19 @@ function Profile() {
 
                                 <div className="settings-group">
                                     <h3 className="settings-subtitle">Security</h3>
-                                    <button className="btn-account-action" onClick={() => alert('Change password feature - Frontend ready. Backend integration pending.')}>
-                                        Change Password
+                                    <button className="btn-account-action" onClick={() => setShowPasswordModal(true)}>
+                                        🔒 Change Password
                                     </button>
-                                </div>
-
-                                <div className="settings-group">
-                                    <h3 className="settings-subtitle">Privacy Preferences</h3>
-                                    <div className="privacy-item">
-                                        <div className="privacy-info">
-                                            <span className="privacy-label">Show Email Publicly</span>
-                                            <span className="privacy-desc">Allow other users to see your email</span>
-                                        </div>
-                                        <label className="toggle-switch">
-                                            <input
-                                                type="checkbox"
-                                                checked={userData.showEmailPublic}
-                                                onChange={(e) => {
-                                                    setUserData({ ...userData, showEmailPublic: e.target.checked });
-                                                    showSuccessMessage('Privacy settings updated!');
-                                                }}
-                                            />
-                                            <span className="toggle-slider"></span>
-                                        </label>
-                                    </div>
                                 </div>
 
                                 <div className="settings-group">
                                     <h3 className="settings-subtitle">Account Management</h3>
-                                    <button className="btn-account-action" onClick={() => alert('Download data feature - Frontend ready. Backend integration pending.')}>
-                                        Download My Data
+                                    <button className="btn-account-action danger" onClick={handleDeleteAccount}>
+                                        🗑️ Delete My Account
                                     </button>
-                                    <button className="btn-account-action danger" onClick={() => {
-                                        if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                            alert('Delete account feature - Frontend ready. Backend integration pending.');
-                                        }
-                                    }}>
-                                        Delete Account
-                                    </button>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '1rem' }}>
+                                        ⚠️ Warning: Deleting your account will permanently remove all your data, including allergies, preferences, and profile information. This action cannot be undone.
+                                    </p>
                                 </div>
 
                                 <div className="info-card member-since">
@@ -789,6 +925,77 @@ function Profile() {
                     </div>
                 </div>
             </div>
+
+            {/* Change Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3 className="modal-title">Change Password</h3>
+                            <button className="modal-close" onClick={() => setShowPasswordModal(false)}>×</button>
+                        </div>
+                        
+                        <div className="modal-body">
+                            {passwordError && (
+                                <div className="error-alert">{passwordError}</div>
+                            )}
+                            
+                            <div className="form-group">
+                                <label className="form-label">Current Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Enter current password"
+                                    value={passwordData.oldPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Enter new password (min 6 characters)"
+                                    value={passwordData.newPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Confirm new password"
+                                    value={passwordData.confirmPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="modal-footer">
+                            <button 
+                                className="btn-modal-cancel" 
+                                onClick={() => {
+                                    setShowPasswordModal(false);
+                                    setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+                                    setPasswordError('');
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                className="btn-modal-submit" 
+                                onClick={handleChangePassword}
+                                disabled={isChangingPassword}
+                            >
+                                {isChangingPassword ? 'Changing...' : 'Change Password'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

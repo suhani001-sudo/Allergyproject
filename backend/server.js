@@ -10,6 +10,10 @@ import restaurantRoutes from './routes/restaurantRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import restaurantMenuRoutes from './routes/restaurantMenuRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
+import userProfileRoutes from './routes/userProfileRoutes.js';
+import restaurantProfileRoutes from './routes/restaurantProfileRoutes.js';
+import contactMessageRoutes from './routes/contactMessageRoutes.js';
 
 const app = express();
 
@@ -33,7 +37,11 @@ app.get('/', (req, res) => {
       restaurants: '/api/restaurants',
       users: '/api/users',
       menus: '/api/menus',
-      restaurantMenu: '/api/restaurants/menu'
+      restaurantMenu: '/api/restaurants/menu',
+      feedback: '/api/feedback',
+      userProfile: '/api/user-profile',
+      restaurantProfile: '/api/restaurant-profile',
+      contactMessages: '/api/contact-messages'
     }
   });
 });
@@ -45,6 +53,10 @@ app.use('/api/restaurants/menu', restaurantMenuRoutes); // Must be before /api/r
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/menus', menuRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/user-profile', userProfileRoutes);
+app.use('/api/restaurant-profile', restaurantProfileRoutes);
+app.use('/api/contact-messages', contactMessageRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserDashboard.css';
+import './PremiumFeedback.css';
 import Footer from './Footer';
 
 function UserDashboard(props) {
@@ -14,18 +15,17 @@ function UserDashboard(props) {
     // STEP 3: Set up state variables
     const [activeNavItem, setActiveNavItem] = useState('Restaurants');
     const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // STEP 3.1: Feedbacks state
-    const [feedbacks, setFeedbacks] = useState([
-        { id: 1, name: 'Aisha', message: 'Great experience finding allergy-safe meals!' },
-        { id: 2, name: 'Rahul', message: 'Could you add more details on ingredients?' },
-        { id: 3, name: 'Meera', message: 'Love the clean UI. Thanks!' }
-    ]);
+    // STEP 3.1: Feedbacks state (will be fetched from backend)
+    const [feedbacks, setFeedbacks] = useState([]);
+    const [loadingFeedbacks, setLoadingFeedbacks] = useState(true);
 
 
     // STEP 3.2: Feedback form state
     const [newFeedbackName, setNewFeedbackName] = useState('');
     const [newFeedbackMessage, setNewFeedbackMessage] = useState('');
+    const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
 
     // STEP 3.3: FAQs state
@@ -69,6 +69,11 @@ function UserDashboard(props) {
 
   ];
 
+    // Fetch feedbacks from backend on component mount
+    useEffect(() => {
+        fetchFeedbacks();
+    }, []);
+
     // Rotate quotes every 5s
     useEffect(() => {
         const interval = setInterval(() => {
@@ -76,6 +81,30 @@ function UserDashboard(props) {
         }, 5000);
         return () => clearInterval(interval);
     }, [quotes.length]);
+
+    // Function to fetch feedbacks from backend
+    async function fetchFeedbacks() {
+        try {
+            setLoadingFeedbacks(true);
+            const response = await fetch('http://localhost:5000/api/feedback');
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                // Transform backend data to match component structure
+                const transformedFeedbacks = data.data.map(feedback => ({
+                    id: feedback._id,
+                    name: feedback.name,
+                    message: feedback.message
+                }));
+                setFeedbacks(transformedFeedbacks);
+            }
+        } catch (error) {
+            console.error('Error fetching feedbacks:', error);
+            // Keep empty array on error
+        } finally {
+            setLoadingFeedbacks(false);
+        }
+    }
 
   // STEP 7: Function to handle navigation clicks
   function handleNavClick(itemId) {
@@ -94,19 +123,56 @@ function UserDashboard(props) {
   }
 
     // STEP 7.1: Handle feedback form submission
-    function handleFeedbackSubmit(e) {
+    async function handleFeedbackSubmit(e) {
         e.preventDefault();
+        
+        // Validate form fields
         if (!newFeedbackName.trim() || !newFeedbackMessage.trim()) {
+            alert('Please fill in both name and message fields');
             return;
         }
-        const newFeedback = {
-            id: Date.now(),
-            name: newFeedbackName.trim(),
-            message: newFeedbackMessage.trim()
-        };
-        setFeedbacks(prev => [newFeedback, ...prev]);
-        setNewFeedbackName('');
-        setNewFeedbackMessage('');
+
+        try {
+            // Send feedback to backend
+            const response = await fetch('http://localhost:5000/api/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: newFeedbackName.trim(),
+                    message: newFeedbackMessage.trim()
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Add new feedback to local state
+                const newFeedback = {
+                    id: data.data._id,
+                    name: data.data.name,
+                    message: data.data.message
+                };
+                setFeedbacks(prev => [newFeedback, ...prev]);
+                
+                // Clear form
+                setNewFeedbackName('');
+                setNewFeedbackMessage('');
+                
+                // Show success animation
+                setShowSuccessAnimation(true);
+                setTimeout(() => {
+                    setShowSuccessAnimation(false);
+                }, 4000);
+            } else {
+                // Show error message from backend
+                alert(data.message || 'Failed to submit feedback. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+            alert('Network error. Please check your connection and try again.');
+        }
     }
 
     // STEP 7.2: Toggle FAQ open/closed
@@ -129,13 +195,27 @@ function UserDashboard(props) {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    <div className="nav-links">
+                    {/* Hamburger Menu Button */}
+                    <button 
+                        className="hamburger-menu"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                    </button>
+
+                    <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
                         {navItems.map(function (item) {
                             return (
                                 <button
                                     key={item.id}
                                     className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                                    onClick={function () { handleNavClick(item.id); }}
+                                    onClick={function () { 
+                                        handleNavClick(item.id);
+                                        setIsMobileMenuOpen(false);
+                                    }}
                                 >
                                     <span className="nav-label">{item.label}</span>
                                     {activeNavItem === item.id && (
@@ -146,11 +226,12 @@ function UserDashboard(props) {
                         })}
                     </div>
 
-
-
                     <button
                         className="logout-button"
-                        onClick={onLogout}
+                        onClick={() => {
+                            onLogout();
+                            setIsMobileMenuOpen(false);
+                        }}
                     >
                         <span className="logout-text">Logout</span>
                     </button>
@@ -223,41 +304,93 @@ function UserDashboard(props) {
             <section className="feedback-section">
                 <h2 className="section-title">User Feedbacks & Questions</h2>
                 <div className="feedback-list">
-                    {feedbacks.map(function (item) {
-                        return (
-                            <div key={item.id} className="feedback-card">
-                                <div className="feedback-name">{item.name}</div>
-                                <div className="feedback-message">{item.message}</div>
-                            </div>
-                        );
-                    })}
+                    {loadingFeedbacks ? (
+                        <div className="feedback-card" style={{ textAlign: 'center', color: '#666' }}>
+                            <p>Loading feedbacks...</p>
+                        </div>
+                    ) : feedbacks.length === 0 ? (
+                        <div className="feedback-card" style={{ textAlign: 'center', color: '#666' }}>
+                            <p>No feedbacks yet. Be the first to share your thoughts!</p>
+                        </div>
+                    ) : (
+                        feedbacks.map(function (item) {
+                            return (
+                                <div key={item.id} className="feedback-card">
+                                    <div className="feedback-name">{item.name}</div>
+                                    <div className="feedback-message">{item.message}</div>
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
-                <form className="feedback-form" onSubmit={handleFeedbackSubmit}>
-                    <div className="form-row">
-                        <label className="form-label" htmlFor="fb-name">Your Name</label>
-                        <input
-                            id="fb-name"
-                            className="form-input"
-                            type="text"
-                            placeholder="Enter your name"
-                            value={newFeedbackName}
-                            onChange={function (e) { setNewFeedbackName(e.target.value); }}
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label className="form-label" htmlFor="fb-message">Your Feedback / Question</label>
-                        <textarea
-                            id="fb-message"
-                            className="form-textarea"
-                            placeholder="Type your feedback or question here"
-                            value={newFeedbackMessage}
-                            onChange={function (e) { setNewFeedbackMessage(e.target.value); }}
-                        />
-                    </div>
-                    <div className="form-actions">
-                        <button type="submit" className="form-button">Submit</button>
-                    </div>
-                </form>
+                {/* Premium Cinematic Feedback Form */}
+                <div className="premium-feedback-container">
+                    <h3 className="premium-feedback-title">
+                        <span className="sparkle">✨</span> Share Your Experience <span className="sparkle">✨</span>
+                    </h3>
+                    <p className="premium-feedback-subtitle">Your feedback helps us create a safer dining experience for everyone</p>
+                    
+                    {showSuccessAnimation && (
+                        <div className="success-animation-overlay">
+                            <div className="success-animation-content">
+                                <div className="success-checkmark">
+                                    <svg className="checkmark-svg" viewBox="0 0 52 52">
+                                        <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                                        <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                                    </svg>
+                                </div>
+                                <h3 className="success-title">Thank You!</h3>
+                                <p className="success-message">Your feedback has been received 🎉</p>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <form className="premium-feedback-form" onSubmit={handleFeedbackSubmit}>
+                        <div className="premium-form-group">
+                            <label className="premium-label" htmlFor="fb-name">
+                                <span className="label-icon">👤</span> Your Name
+                            </label>
+                            <div className="premium-input-wrapper">
+                                <input
+                                    id="fb-name"
+                                    className="premium-input"
+                                    type="text"
+                                    placeholder="Enter your name"
+                                    value={newFeedbackName}
+                                    onChange={function (e) { setNewFeedbackName(e.target.value); }}
+                                    required
+                                />
+                                <div className="input-glow"></div>
+                            </div>
+                        </div>
+                        
+                        <div className="premium-form-group">
+                            <label className="premium-label" htmlFor="fb-message">
+                                <span className="label-icon">💬</span> Your Feedback
+                            </label>
+                            <div className="premium-input-wrapper">
+                                <textarea
+                                    id="fb-message"
+                                    className="premium-textarea"
+                                    placeholder="Share your thoughts, suggestions, or questions..."
+                                    value={newFeedbackMessage}
+                                    onChange={function (e) { setNewFeedbackMessage(e.target.value); }}
+                                    rows="5"
+                                    required
+                                />
+                                <div className="input-glow"></div>
+                            </div>
+                        </div>
+                        
+                        <div className="premium-form-actions">
+                            <button type="submit" className="premium-submit-button">
+                                <span className="button-text">Submit Feedback</span>
+                                <span className="button-icon">🚀</span>
+                                <div className="button-ripple"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </section>
 
             {/* Mostly Asked Questions (FAQ) Section */}
