@@ -110,6 +110,64 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
+// Change user password
+export const changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    
+    // Validate input
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Please provide both old and new passwords' 
+      });
+    }
+    
+    if (newPassword.length < 6) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'New password must be at least 6 characters' 
+      });
+    }
+    
+    // Get user with password
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'User not found' 
+      });
+    }
+    
+    // Verify old password
+    const isMatch = await user.matchPassword(oldPassword);
+    
+    if (!isMatch) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Current password is incorrect' 
+      });
+    }
+    
+    // Update password (will be hashed by pre-save hook)
+    user.password = newPassword;
+    await user.save();
+    
+    res.status(200).json({ 
+      success: true,
+      message: 'Password changed successfully' 
+    });
+  } catch (err) {
+    console.error('Change password error:', err);
+    res.status(500).json({ 
+      success: false,
+      message: 'Server error',
+      error: err.message 
+    });
+  }
+};
+
 // Delete user account
 export const deleteUser = async (req, res) => {
   try {

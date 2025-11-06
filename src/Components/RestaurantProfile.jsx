@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import restaurantService from '../services/restaurantService';
 import './Profile.css'; // Reusing the same CSS
 import Footer from './Footer';
 
@@ -38,6 +39,16 @@ function RestaurantProfile() {
     const [isEditingBusiness, setIsEditingBusiness] = useState(false);
     const [profilePicture, setProfilePicture] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    // Change password state
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [passwordError, setPasswordError] = useState('');
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
 
     // ========================================
     // LOAD DATA FROM BACKEND
@@ -257,6 +268,66 @@ function RestaurantProfile() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         navigate('/login');
+    };
+
+    // ========================================
+    // ACCOUNT SETTINGS FUNCTIONS
+    // ========================================
+    const handleChangePassword = async () => {
+        setPasswordError('');
+        
+        // Validation
+        if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+            setPasswordError('Please fill in all password fields');
+            return;
+        }
+        
+        if (passwordData.newPassword.length < 6) {
+            setPasswordError('New password must be at least 6 characters');
+            return;
+        }
+        
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setPasswordError('New passwords do not match');
+            return;
+        }
+        
+        try {
+            setIsChangingPassword(true);
+            await restaurantService.changePassword(passwordData.oldPassword, passwordData.newPassword);
+            
+            // Success
+            showSuccessMessage('Password changed successfully!');
+            setShowPasswordModal(false);
+            setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+        } catch (error) {
+            setPasswordError(error.message || 'Failed to change password. Please check your current password.');
+        } finally {
+            setIsChangingPassword(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete your restaurant account? This action cannot be undone and will permanently delete all your data including menu items, orders, and profile information.'
+        );
+        
+        if (!confirmed) return;
+        
+        // Double confirmation
+        const doubleConfirm = window.confirm(
+            'This is your last chance. Are you absolutely sure you want to delete your restaurant account?'
+        );
+        
+        if (!doubleConfirm) return;
+        
+        try {
+            await restaurantService.deleteAccount();
+            alert('Your restaurant account has been successfully deleted.');
+            navigate('/login');
+        } catch (error) {
+            showErrorMessage(error.message || 'Failed to delete account. Please try again.');
+        }
     };
 
     // ========================================
@@ -592,47 +663,107 @@ function RestaurantProfile() {
                         {/* ACCOUNT SETTINGS SECTION */}
                         {activeSection === 'settings' && (
                             <div className="section-content fade-in">
-                                <h2 className="section-title">Account Settings</h2>
-                                
-                                <div className="personal-section-card">
-                                    <h3 className="subsection-title">Account Actions</h3>
-                                    <div className="info-grid">
-                                        <div className="info-card">
-                                            <label className="info-label">Change Password</label>
-                                            <button className="btn-edit-section" style={{ marginTop: '0.5rem' }}>
-                                                Update Password
-                                            </button>
-                                        </div>
+                                <div className="section-header-row">
+                                    <h2 className="section-title">Account Settings</h2>
+                                </div>
 
-                                        <div className="info-card">
-                                            <label className="info-label">Account Status</label>
-                                            <div className="info-value">
-                                                <span className="sensitivity-badge high" style={{ background: 'linear-gradient(135deg, #28a745, #20c997)' }}>
-                                                    Active
-                                                </span>
-                                            </div>
-                                        </div>
+                                <div className="settings-group">
+                                    <h3 className="settings-subtitle">Security</h3>
+                                    <button className="btn-account-action" onClick={() => setShowPasswordModal(true)}>
+                                        🔒 Change Password
+                                    </button>
+                                </div>
 
-                                        <div className="info-card">
-                                            <label className="info-label">Data Privacy</label>
-                                            <button className="btn-edit-section" style={{ marginTop: '0.5rem' }}>
-                                                Download My Data
-                                            </button>
-                                        </div>
+                                <div className="settings-group">
+                                    <h3 className="settings-subtitle">Account Management</h3>
+                                    <button className="btn-account-action danger" onClick={handleDeleteAccount}>
+                                        🗑️ Delete My Account
+                                    </button>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '1rem' }}>
+                                        ⚠️ Warning: Deleting your account will permanently remove all your data, including menu items, orders, and profile information. This action cannot be undone.
+                                    </p>
+                                </div>
 
-                                        <div className="info-card">
-                                            <label className="info-label">Danger Zone</label>
-                                            <button className="btn-edit-section" style={{ marginTop: '0.5rem', background: 'linear-gradient(135deg, #dc3545, #c82333)', color: 'white' }}>
-                                                Delete Account
-                                            </button>
-                                        </div>
-                                    </div>
+                                <div className="info-card member-since">
+                                    <label className="info-label">Member Since</label>
+                                    <div className="info-value">{restaurantData.memberSince}</div>
                                 </div>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* Change Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3 className="modal-title">Change Password</h3>
+                            <button className="modal-close" onClick={() => setShowPasswordModal(false)}>×</button>
+                        </div>
+                        
+                        <div className="modal-body">
+                            {passwordError && (
+                                <div className="error-alert">{passwordError}</div>
+                            )}
+                            
+                            <div className="form-group">
+                                <label className="form-label">Current Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Enter current password"
+                                    value={passwordData.oldPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Enter new password (min 6 characters)"
+                                    value={passwordData.newPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Confirm new password"
+                                    value={passwordData.confirmPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="modal-footer">
+                            <button 
+                                className="btn-modal-cancel" 
+                                onClick={() => {
+                                    setShowPasswordModal(false);
+                                    setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+                                    setPasswordError('');
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                className="btn-modal-submit" 
+                                onClick={handleChangePassword}
+                                disabled={isChangingPassword}
+                            >
+                                {isChangingPassword ? 'Changing...' : 'Change Password'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Footer */}
             <Footer />

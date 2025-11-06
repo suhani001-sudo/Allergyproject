@@ -1,3 +1,8 @@
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Allergy Information Page Styles */
 .allergy-info-container {
   min-height: 100vh;

@@ -596,6 +596,11 @@
   align-self: flex-start;
 }
 
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Menu Card Image Styles - Optimized for smooth scrolling */
 .menu-card-image {
   position: relative;

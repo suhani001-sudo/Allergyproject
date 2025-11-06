@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import userService from '../services/userService';
 import './Profile.css';
 
 function Profile() {
@@ -71,6 +72,16 @@ function Profile() {
     const [showFoodInput, setShowFoodInput] = useState(false);
     const [newFoodName, setNewFoodName] = useState('');
     const [newFoodAlternative, setNewFoodAlternative] = useState('');
+
+    // Change password state
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [passwordError, setPasswordError] = useState('');
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
 
     // ========================================
     // LOAD DATA FROM BACKEND
@@ -353,6 +364,66 @@ function Profile() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         navigate('/login');
+    };
+
+    // ========================================
+    // ACCOUNT SETTINGS FUNCTIONS
+    // ========================================
+    const handleChangePassword = async () => {
+        setPasswordError('');
+        
+        // Validation
+        if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+            setPasswordError('Please fill in all password fields');
+            return;
+        }
+        
+        if (passwordData.newPassword.length < 6) {
+            setPasswordError('New password must be at least 6 characters');
+            return;
+        }
+        
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            setPasswordError('New passwords do not match');
+            return;
+        }
+        
+        try {
+            setIsChangingPassword(true);
+            await userService.changePassword(passwordData.oldPassword, passwordData.newPassword);
+            
+            // Success
+            showSuccessMessage('Password changed successfully!');
+            setShowPasswordModal(false);
+            setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+        } catch (error) {
+            setPasswordError(error.message || 'Failed to change password. Please check your current password.');
+        } finally {
+            setIsChangingPassword(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including allergies and preferences.'
+        );
+        
+        if (!confirmed) return;
+        
+        // Double confirmation
+        const doubleConfirm = window.confirm(
+            'This is your last chance. Are you absolutely sure you want to delete your account?'
+        );
+        
+        if (!doubleConfirm) return;
+        
+        try {
+            await userService.deleteAccount();
+            alert('Your account has been successfully deleted.');
+            navigate('/login');
+        } catch (error) {
+            alert(error.message || 'Failed to delete account. Please try again.');
+        }
     };
 
     // ========================================
@@ -830,44 +901,19 @@ function Profile() {
 
                                 <div className="settings-group">
                                     <h3 className="settings-subtitle">Security</h3>
-                                    <button className="btn-account-action" onClick={() => alert('Change password feature - Frontend ready. Backend integration pending.')}>
-                                        Change Password
+                                    <button className="btn-account-action" onClick={() => setShowPasswordModal(true)}>
+                                        🔒 Change Password
                                     </button>
-                                </div>
-
-                                <div className="settings-group">
-                                    <h3 className="settings-subtitle">Privacy Preferences</h3>
-                                    <div className="privacy-item">
-                                        <div className="privacy-info">
-                                            <span className="privacy-label">Show Email Publicly</span>
-                                            <span className="privacy-desc">Allow other users to see your email</span>
-                                        </div>
-                                        <label className="toggle-switch">
-                                            <input
-                                                type="checkbox"
-                                                checked={userData.showEmailPublic}
-                                                onChange={(e) => {
-                                                    setUserData({ ...userData, showEmailPublic: e.target.checked });
-                                                    showSuccessMessage('Privacy settings updated!');
-                                                }}
-                                            />
-                                            <span className="toggle-slider"></span>
-                                        </label>
-                                    </div>
                                 </div>
 
                                 <div className="settings-group">
                                     <h3 className="settings-subtitle">Account Management</h3>
-                                    <button className="btn-account-action" onClick={() => alert('Download data feature - Frontend ready. Backend integration pending.')}>
-                                        Download My Data
+                                    <button className="btn-account-action danger" onClick={handleDeleteAccount}>
+                                        🗑️ Delete My Account
                                     </button>
-                                    <button className="btn-account-action danger" onClick={() => {
-                                        if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                            alert('Delete account feature - Frontend ready. Backend integration pending.');
-                                        }
-                                    }}>
-                                        Delete Account
-                                    </button>
+                                    <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '1rem' }}>
+                                        ⚠️ Warning: Deleting your account will permanently remove all your data, including allergies, preferences, and profile information. This action cannot be undone.
+                                    </p>
                                 </div>
 
                                 <div className="info-card member-since">
@@ -879,6 +925,77 @@ function Profile() {
                     </div>
                 </div>
             </div>
+
+            {/* Change Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3 className="modal-title">Change Password</h3>
+                            <button className="modal-close" onClick={() => setShowPasswordModal(false)}>×</button>
+                        </div>
+                        
+                        <div className="modal-body">
+                            {passwordError && (
+                                <div className="error-alert">{passwordError}</div>
+                            )}
+                            
+                            <div className="form-group">
+                                <label className="form-label">Current Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Enter current password"
+                                    value={passwordData.oldPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Enter new password (min 6 characters)"
+                                    value={passwordData.newPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-input-modal"
+                                    placeholder="Confirm new password"
+                                    value={passwordData.confirmPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="modal-footer">
+                            <button 
+                                className="btn-modal-cancel" 
+                                onClick={() => {
+                                    setShowPasswordModal(false);
+                                    setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+                                    setPasswordError('');
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                className="btn-modal-submit" 
+                                onClick={handleChangePassword}
+                                disabled={isChangingPassword}
+                            >
+                                {isChangingPassword ? 'Changing...' : 'Change Password'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

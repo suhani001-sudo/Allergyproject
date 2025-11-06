@@ -48,6 +48,19 @@ const userService = {
     }
   },
 
+  // Change user password
+  changePassword: async (oldPassword, newPassword) => {
+    try {
+      const response = await api.put('/users/change-password', {
+        oldPassword,
+        newPassword
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // Delete user account
   deleteAccount: async () => {
     try {
