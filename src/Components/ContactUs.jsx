@@ -579,41 +579,69 @@ function ContactUs() {
                     <p className="info-subtitle">Reach us through any of these channels</p>
                 </div>
 
-                <div className="info-cards-grid animate-on-scroll">
-                    <div className="info-card">
-                        <div className="card-icon-wrapper">
-                            <span className="card-icon">📧</span>
+                <div className="info-cards-container animate-on-scroll">
+                    {/* Email */}
+                    <div className="info-card-horizontal">
+                        <div className="card-left">
+                            <div className="card-icon-circle">
+                                <span className="card-icon">📧</span>
+                            </div>
+                            <div className="card-content">
+                                <h3 className="card-title-horizontal">Email</h3>
+                                <p className="card-text-horizontal">support@safebytes.com</p>
+                            </div>
                         </div>
-                        <h3 className="card-title">Email</h3>
-                        <p className="card-text">support@safebytes.com</p>
-                        <a href="mailto:support@safebytes.com" className="card-link">Send Email</a>
+                        <a href="mailto:support@safebytes.com" className="card-action-button">
+                            Send →
+                        </a>
                     </div>
 
-                    <div className="info-card">
-                        <div className="card-icon-wrapper">
-                            <span className="card-icon">📞</span>
+                    {/* Phone */}
+                    <div className="info-card-horizontal">
+                        <div className="card-left">
+                            <div className="card-icon-circle">
+                                <span className="card-icon">📞</span>
+                            </div>
+                            <div className="card-content">
+                                <h3 className="card-title-horizontal">Phone</h3>
+                                <p className="card-text-horizontal">+91 9876543210</p>
+                            </div>
                         </div>
-                        <h3 className="card-title">Phone</h3>
-                        <p className="card-text">+91 9876543210</p>
-                        <a href="tel:+919876543210" className="card-link">Call Now</a>
+                        <a href="tel:+919876543210" className="card-action-button">
+                            Call →
+                        </a>
                     </div>
 
-                    <div className="info-card">
-                        <div className="card-icon-wrapper">
-                            <span className="card-icon">📍</span>
+                    {/* Address */}
+                    <div className="info-card-horizontal">
+                        <div className="card-left">
+                            <div className="card-icon-circle">
+                                <span className="card-icon">📍</span>
+                            </div>
+                            <div className="card-content">
+                                <h3 className="card-title-horizontal">Address</h3>
+                                <p className="card-text-horizontal">Ludhiana, Punjab</p>
+                            </div>
                         </div>
-                        <h3 className="card-title">Address</h3>
-                        <p className="card-text">Ludhian,Punjab</p>
-                        <a href="#map" className="card-link">View Map</a>
+                        <a href="#map" className="card-action-button">
+                            Map →
+                        </a>
                     </div>
 
-                    <div className="info-card">
-                        <div className="card-icon-wrapper">
-                            <span className="card-icon">⏰</span>
+                    {/* Working Hours */}
+                    <div className="info-card-horizontal">
+                        <div className="card-left">
+                            <div className="card-icon-circle">
+                                <span className="card-icon">⏰</span>
+                            </div>
+                            <div className="card-content">
+                                <h3 className="card-title-horizontal">Working Hours</h3>
+                                <p className="card-text-horizontal">Mon–Fri, 9 AM – 6 PM</p>
+                            </div>
                         </div>
-                        <h3 className="card-title">Working Hours</h3>
-                        <p className="card-text">Mon–Fri, 9 AM – 6 PM</p>
-                        <span className="card-badge">Available Now</span>
+                        <span className="card-status-badge">
+                            ● Available
+                        </span>
                     </div>
                 </div>
             </section>

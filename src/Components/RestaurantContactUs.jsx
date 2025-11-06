@@ -705,39 +705,81 @@ function RestaurantContactUs() {
                     </div>
 
                     {/* Contact Information */}
-                    <div className="contact-info-section" style={{ 
+                    <div style={{ 
                         marginTop: '4rem',
                         paddingTop: '4rem',
                         borderTop: '2px solid #e8e8e8'
                     }}>
-                        <h2 className="section-title">Contact Information</h2>
-                        <p className="section-description">
-                            Reach out to us through any of these channels
-                        </p>
+                        <div className="info-header">
+                            <h2 className="info-title">Contact Information</h2>
+                            <p className="info-subtitle">
+                                Reach out to us through any of these channels
+                            </p>
+                        </div>
 
-                        <div className="contact-info-cards">
-                            <div className="info-card">
-                                <div className="info-icon">📍</div>
-                                <h3>Visit Us</h3>
-                                <p>123 SafeBytes Street<br />Food District, City 12345</p>
+                        <div className="info-cards-container">
+                            {/* Address */}
+                            <div className="info-card-horizontal">
+                                <div className="card-left">
+                                    <div className="card-icon-circle">
+                                        <span className="card-icon">📍</span>
+                                    </div>
+                                    <div className="card-content">
+                                        <h3 className="card-title-horizontal">Visit Us</h3>
+                                        <p className="card-text-horizontal">123 SafeBytes Street, Food District</p>
+                                    </div>
+                                </div>
+                                <a href="#map" className="card-action-button">
+                                    Map →
+                                </a>
                             </div>
 
-                            <div className="info-card">
-                                <div className="info-icon">📞</div>
-                                <h3>Call Us</h3>
-                                <p>Restaurant Support:<br />+1 (555) 123-4567</p>
+                            {/* Phone */}
+                            <div className="info-card-horizontal">
+                                <div className="card-left">
+                                    <div className="card-icon-circle">
+                                        <span className="card-icon">📞</span>
+                                    </div>
+                                    <div className="card-content">
+                                        <h3 className="card-title-horizontal">Call Us</h3>
+                                        <p className="card-text-horizontal">+1 (555) 123-4567</p>
+                                    </div>
+                                </div>
+                                <a href="tel:+15551234567" className="card-action-button">
+                                    Call →
+                                </a>
                             </div>
 
-                            <div className="info-card">
-                                <div className="info-icon">✉️</div>
-                                <h3>Email Us</h3>
-                                <p>Restaurant Partners:<br />partners@safebytes.com</p>
+                            {/* Email */}
+                            <div className="info-card-horizontal">
+                                <div className="card-left">
+                                    <div className="card-icon-circle">
+                                        <span className="card-icon">✉️</span>
+                                    </div>
+                                    <div className="card-content">
+                                        <h3 className="card-title-horizontal">Email Us</h3>
+                                        <p className="card-text-horizontal">partners@safebytes.com</p>
+                                    </div>
+                                </div>
+                                <a href="mailto:partners@safebytes.com" className="card-action-button">
+                                    Send →
+                                </a>
                             </div>
 
-                            <div className="info-card">
-                                <div className="info-icon">🕒</div>
-                                <h3>Business Hours</h3>
-                                <p>Monday - Friday<br />9:00 AM - 6:00 PM EST</p>
+                            {/* Business Hours */}
+                            <div className="info-card-horizontal">
+                                <div className="card-left">
+                                    <div className="card-icon-circle">
+                                        <span className="card-icon">🕒</span>
+                                    </div>
+                                    <div className="card-content">
+                                        <h3 className="card-title-horizontal">Business Hours</h3>
+                                        <p className="card-text-horizontal">Mon-Fri, 9:00 AM - 6:00 PM EST</p>
+                                    </div>
+                                </div>
+                                <span className="card-status-badge">
+                                    ● Open
+                                </span>
                             </div>
                         </div>
 
