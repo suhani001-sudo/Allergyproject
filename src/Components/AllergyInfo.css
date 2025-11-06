@@ -285,57 +285,52 @@ html {
 
 /* Search Section */
 .search-section {
-  padding: 2rem;
-  position: relative;
-  z-index: 2;
-  animation: fade-in-up 0.8s ease 0.4s both;
+  padding: 1.5rem 0;
+  text-align: center;
 }
 
 .search-container {
-  max-width: 600px;
+  max-width: 500px; /* smaller width */
   margin: 0 auto;
 }
 
 .search-box {
   position: relative;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 50px;
-  padding: 1rem 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(46, 139, 87, 0.2);
+  background: #fff;
+  border: 2px solid #f4f6f4; 
+  border-radius: 40px;
+  padding: 0.7rem 1.5rem; 
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
   transition: all 0.3s ease;
 }
 
-.search-box:focus-within {
+/* .search-box:focus-within {
   border-color: #6B8E23;
-  box-shadow: 0 15px 40px rgba(107, 142, 35, 0.2);
-  transform: translateY(-2px);
-}
+  box-shadow: 0 8px 20px rgba(107, 142, 35, 0.2);
+} */
 
 .search-icon {
-  position: absolute;
-  left: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #6B8E23;
+  margin-right: 0.6rem;
 }
 
 .search-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  padding-left: 2.5rem;
-  font-size: 1.1rem;
+  width: 100%;       
+  font-size: 1rem;
   color: #333;
+  box-shadow: none;
+  padding: 0.5rem 0.3;     
 }
 
 .search-input::placeholder {
   color: #999;
+  padding: 0.2rem;
 }
+
+
 
 /* Allergens Section */
 .allergens-section {
