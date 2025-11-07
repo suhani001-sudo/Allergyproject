@@ -16,6 +16,7 @@ import RestaurantAboutUs from "./Components/RestaurantAboutUs";
 import RestaurantProfile from "./Components/RestaurantProfile";
 import RestaurantContactUs from "./Components/RestaurantContactUs";
 import UserInbox from "./Components/UserInbox";
+import AdminDashboard from "./Components/AdminDashboard";
 import "./App.css";
 
 function App() {
@@ -113,7 +114,10 @@ function App() {
                     onSwitchToSignup={function() { setIsSignup(true); }} 
                   />
                 ) : (
-                  <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+                  <Navigate to={
+                    role === "user" ? "/dashboard" : 
+                    role === "restaurant" ? "/restaurant-dashboard" : "/admin-dashboard"
+                  } replace />
                 );
               })()
             } 
@@ -129,7 +133,10 @@ function App() {
                   onSwitchToLogin={handleSwitchToLogin}
                 />
               ) : (
-                <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+                <Navigate to={
+                  role === "user" ? "/dashboard" : 
+                  role === "restaurant" ? "/restaurant-dashboard" : "/admin-dashboard"
+                } replace />
               )
             } 
           />
@@ -242,12 +249,27 @@ function App() {
             } 
           />
 
+          {/* Admin Dashboard route */}
+          <Route 
+            path="/admin-dashboard" 
+            element={
+              isLoggedIn && role === "admin" ? (
+                <AdminDashboard onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+
           {/* STEP 13: Default route - redirect to appropriate page */}
           <Route 
             path="/" 
             element={
               isLoggedIn 
-                ? <Navigate to={role === "user" ? "/dashboard" : "/restaurant-dashboard"} replace />
+                ? <Navigate to={
+                    role === "user" ? "/dashboard" : 
+                    role === "restaurant" ? "/restaurant-dashboard" : "/admin-dashboard"
+                  } replace />
                 : <Navigate to="/login" replace />
             } 
           />

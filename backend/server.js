@@ -15,6 +15,7 @@ import userProfileRoutes from './routes/userProfileRoutes.js';
 import restaurantProfileRoutes from './routes/restaurantProfileRoutes.js';
 import contactMessageRoutes from './routes/contactMessageRoutes.js';
 import messageReplyRoutes from './routes/messageReplyRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -43,7 +44,8 @@ app.get('/', (req, res) => {
       userProfile: '/api/user-profile',
       restaurantProfile: '/api/restaurant-profile',
       contactMessages: '/api/contact-messages',
-      messageReplies: '/api/message-replies'
+      messageReplies: '/api/message-replies',
+      admin: '/api/admin'
     }
   });
 });
@@ -60,6 +62,7 @@ app.use('/api/user-profile', userProfileRoutes);
 app.use('/api/restaurant-profile', restaurantProfileRoutes);
 app.use('/api/contact-messages', contactMessageRoutes);
 app.use('/api/message-replies', messageReplyRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

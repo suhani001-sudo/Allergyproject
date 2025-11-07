@@ -9,6 +9,7 @@ function AllergyInfo() {
   const [selectedAllergen, setSelectedAllergen] = useState(null);
   const [currentTip, setCurrentTip] = useState(0);
   const [activeNavItem, setActiveNavItem] = useState('My Allergies');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const safetyTips = [
     "Always read labels before eating!",
@@ -171,12 +172,26 @@ function AllergyInfo() {
             <span className="logo-text">SafeBytes</span>
           </div>
 
-          <div className="nav-links">
+          {/* Hamburger Menu Button */}
+          <button 
+            className="hamburger-menu"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          </button>
+
+          <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
             {navItems.map((item) => (
               <button
                 key={item.id}
                 className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                onClick={() => handleNavClick(item.id)}
+                onClick={() => {
+                  handleNavClick(item.id);
+                  setIsMobileMenuOpen(false);
+                }}
               >
                 <span className="nav-label">{item.label}</span>
                 {activeNavItem === item.id && (
@@ -194,6 +209,7 @@ function AllergyInfo() {
               localStorage.removeItem('isLoggedIn');
               localStorage.removeItem('role');
               navigate('/login');
+              setIsMobileMenuOpen(false);
             }}
           >
             <span className="logout-text">Logout</span>

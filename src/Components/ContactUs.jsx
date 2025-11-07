@@ -8,6 +8,7 @@ import Footer from './Footer';
 function ContactUs() {
     const navigate = useNavigate();
     const [activeNavItem, setActiveNavItem] = useState('Contact');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -251,13 +252,27 @@ function ContactUs() {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    <div className="nav-links">
+                    {/* Hamburger Menu Button */}
+                    <button 
+                        className="hamburger-menu"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                    </button>
+
+                    <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
                         {navItems.map(function (item) {
                             return (
                                 <button
                                     key={item.id}
                                     className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                                    onClick={function () { handleNavClick(item.id); }}
+                                    onClick={function () { 
+                                        handleNavClick(item.id);
+                                        setIsMobileMenuOpen(false);
+                                    }}
                                 >
                                     <span className="nav-label">{item.label}</span>
                                     {activeNavItem === item.id && (
@@ -268,7 +283,10 @@ function ContactUs() {
                         })}
                     </div>
 
-                    <button className="logout-button" onClick={handleLogout}>
+                    <button className="logout-button" onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                    }}>
                         <span className="logout-text">Logout</span>
                     </button>
                 </div>

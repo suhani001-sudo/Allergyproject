@@ -9,7 +9,7 @@ const generateToken = (userId) => {
 // 🔹 Signup Controller
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Validate inputs
     if (!name || !email || !password) {
@@ -22,8 +22,13 @@ export const signup = async (req, res) => {
       return res.status(409).json({ message: "Email already registered" });
     }
 
-    // Create new user
-    const user = await User.create({ name, email, password });
+    // Create new user with role
+    const user = await User.create({ 
+      name, 
+      email, 
+      password, 
+      role: role || "user" 
+    });
 
     // Generate token
     const token = generateToken(user._id);
@@ -35,6 +40,7 @@ export const signup = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
       token,
     });
@@ -47,17 +53,24 @@ export const signup = async (req, res) => {
 // 🔹 Login Controller
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     // Validate inputs
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "Email, password, and role are required" });
     }
 
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Check if user's role matches the login role
+    if (user.role !== role) {
+      return res.status(403).json({ 
+        message: `This account is registered as a ${user.role}. Please login using the ${user.role} option.` 
+      });
     }
 
     // Match password
@@ -76,6 +89,7 @@ export const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
       token,
     });

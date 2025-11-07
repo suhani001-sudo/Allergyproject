@@ -13,6 +13,7 @@ function Profile() {
     // ========================================
     const [activeSection, setActiveSection] = useState('basic');
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Basic user data
     const [userData, setUserData] = useState({
@@ -503,18 +504,35 @@ function Profile() {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    <div className="nav-links">
+                    {/* Hamburger Menu Button */}
+                    <button 
+                        className="hamburger-menu"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+                    </button>
+
+                    <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
                         {navItems.map(function (item) {
                             const isActive = item.id === 'Profile';
                             return (
-                                <button key={item.id} className={`nav-link ${isActive ? 'active' : ''}`} onClick={() => handleNavClick(item)}>
+                                <button key={item.id} className={`nav-link ${isActive ? 'active' : ''}`} onClick={() => {
+                                    handleNavClick(item);
+                                    setIsMobileMenuOpen(false);
+                                }}>
                                     <span className="nav-label">{item.label}</span>
                                 </button>
                             );
                         })}
                     </div>
 
-                    <button className="logout-button" onClick={handleLogout}>
+                    <button className="logout-button" onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                    }}>
                         <span className="logout-text">Logout</span>
                     </button>
                 </div>

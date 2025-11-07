@@ -8,7 +8,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
     name: "",
     email: "",
     password: "",
-    role: "user", // 'user' or 'restaurant'
+    role: "user", // 'user', 'restaurant', or 'admin'
   });
 
   const [errors, setErrors] = useState({});
@@ -28,11 +28,11 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
   const handleRoleChange = (role) => {
     const previousRole = previousRoleRef.current;
     if (previousRole !== role) {
-      setSlideDirection(
-        previousRole === "user" && role === "restaurant"
-          ? "to-right"
-          : "to-left"
-      );
+      // Determine slide direction based on role order: user -> restaurant -> admin
+      const roles = ["user", "restaurant", "admin"];
+      const prevIndex = roles.indexOf(previousRole);
+      const newIndex = roles.indexOf(role);
+      setSlideDirection(newIndex > prevIndex ? "to-right" : "to-left");
       previousRoleRef.current = role;
     }
     setFormData((prev) => ({ ...prev, role }));
@@ -79,6 +79,7 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          role: formData.role,
         }),
       });
 
@@ -136,13 +137,22 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
           >
             🏪 Restaurant Owner
           </div>
+          <div
+            className={`role-option ${
+              formData.role === "admin" ? "active" : ""
+            }`}
+            onClick={() => handleRoleChange("admin")}
+          >
+            🔐 Admin
+          </div>
         </div>
 
         {/* Sliding Forms */}
         <div className={`form-slider`}>
           <div
             className={`form-track ${
-              formData.role === "user" ? "user-active" : "restaurant-active"
+              formData.role === "user" ? "user-active" : 
+              formData.role === "restaurant" ? "restaurant-active" : "admin-active"
             } ${slideDirection}`}
           >
             {/* User Signup */}
@@ -285,6 +295,109 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
                     <span className="error-message">{errors.password}</span>
                   )}
                 </div>
+
+                {/* General error message */}
+                {errors.general && formData.role === "restaurant" && (
+                  <div className="error-message general-error" style={{
+                    color: '#ff4444',
+                    backgroundColor: '#ffe6e6',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    marginBottom: '15px',
+                    textAlign: 'center'
+                  }}>
+                    {errors.general}
+                  </div>
+                )}
+
+                <div className="form-options">
+                  <button
+                    type="submit"
+                    className="signup-button"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Signing Up..." : "Sign Up"}
+                  </button>
+
+                  <div className="signup-section">
+                    <div className="signup-prompt">Already have an account?</div>
+                    <button
+                      type="button"
+                      className="login-switch"
+                      onClick={() => navigate('/login')}
+                    >
+                      Log In
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Admin Signup */}
+            <div className="slide">
+              <h2 className="form-title">Admin Sign Up</h2>
+              <form onSubmit={handleSubmit} className="login-form">
+                <div className="form-group">
+                  <label htmlFor="name-admin">Admin Name</label>
+                  <input
+                    type="text"
+                    id="name-admin"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Enter your name"
+                    required={formData.role === "admin"}
+                  />
+                  {errors.name && formData.role === "admin" && (
+                    <span className="error-message">{errors.name}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email-admin">Admin Email</label>
+                  <input
+                    type="email"
+                    id="email-admin"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Enter your admin email"
+                    required={formData.role === "admin"}
+                  />
+                  {errors.email && formData.role === "admin" && (
+                    <span className="error-message">{errors.email}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="password-admin">Password</label>
+                  <input
+                    type="password"
+                    id="password-admin"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter your password"
+                    required={formData.role === "admin"}
+                  />
+                  {errors.password && formData.role === "admin" && (
+                    <span className="error-message">{errors.password}</span>
+                  )}
+                </div>
+
+                {/* General error message */}
+                {errors.general && formData.role === "admin" && (
+                  <div className="error-message general-error" style={{
+                    color: '#ff4444',
+                    backgroundColor: '#ffe6e6',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    marginBottom: '15px',
+                    textAlign: 'center'
+                  }}>
+                    {errors.general}
+                  </div>
+                )}
 
                 <div className="form-options">
                   <button

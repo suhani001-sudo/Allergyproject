@@ -93,7 +93,7 @@
 
 .form-track {
   display: flex;
-  width: 200%;
+  width: 300%;
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -102,7 +102,11 @@
 }
 
 .form-track.restaurant-active {
-  transform: translateX(-50%);
+  transform: translateX(-33.333%);
+}
+
+.form-track.admin-active {
+  transform: translateX(-66.666%);
 }
 
 /* Direction-aware subtle motion for flair */
@@ -115,7 +119,7 @@
 }
 
 .slide {
-  width: 50%;
+  width: 33.333%;
   padding: 0 0.25rem;
 }
 

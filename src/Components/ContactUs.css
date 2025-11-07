@@ -1126,3 +1126,134 @@ html {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* ========================================
+   RESPONSIVE MOBILE NAVIGATION
+   ======================================== */
+
+/* Hamburger Menu Button */
+.contact-page .hamburger-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.contact-page .hamburger-line {
+  width: 100%;
+  height: 3px;
+  background-color: #6B8E23;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.contact-page .hamburger-line.open:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.contact-page .hamburger-line.open:nth-child(2) {
+  opacity: 0;
+}
+
+.contact-page .hamburger-line.open:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Tablet and below - Show hamburger menu */
+@media (max-width: 1024px) {
+  .contact-page .hamburger-menu {
+    display: flex !important;
+  }
+
+  .contact-page .nav-links {
+    position: fixed;
+    top: 70px;
+    right: -100%;
+    width: 280px;
+    height: calc(100vh - 70px);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    gap: 1rem;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+  }
+
+  .contact-page .nav-links.active {
+    right: 0;
+  }
+
+  .contact-page .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 1rem 1.5rem;
+  }
+
+  .contact-page .logout-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 1.5rem;
+    z-index: 1001;
+  }
+
+  .contact-page .nav-container {
+    padding: 0 1.5rem;
+  }
+
+  .hero-content-wrapper {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .contact-page .nav-links {
+    width: 100%;
+    right: -100%;
+  }
+
+  .contact-page .nav-links.active {
+    right: 0;
+  }
+
+  .contact-hero {
+    padding: 100px 1.5rem 60px;
+  }
+
+  .hero-main-title {
+    font-size: 2rem;
+  }
+
+  .contact-form-section,
+  .inbox-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .form-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .inbox-cards {
+    grid-template-columns: 1fr;
+  }
+}
