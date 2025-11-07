@@ -315,7 +315,7 @@ function RestaurantContactUs() {
                         animation: 'fadeInDown 0.6s ease-out'
                     }}>
                         <span style={{ fontSize: '2rem' }}>📬</span>
-                        <span style={{ color: '#6B8E23', fontWeight: '700', fontSize: '1.1rem' }}>Your Inbox</span>
+                        <span style={{ color: '#ffffffff', fontWeight: '700', fontSize: '1.1rem' }}>Your Inbox</span>
                     </div>
                     <h1 style={{
                         color: 'white',
