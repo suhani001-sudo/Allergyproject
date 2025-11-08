@@ -11,9 +11,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, "Please enter your email"],
-      unique: true,
       lowercase: true,
-      index: true,
     },
     password: {
       type: String,
@@ -28,6 +26,10 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// 🔹 Create compound unique index for email + role combination
+// This allows same email to have multiple roles (user, restaurant, admin)
+userSchema.index({ email: 1, role: 1 }, { unique: true });
 
 // 🔹 Hash password before saving
 userSchema.pre("save", async function (next) {

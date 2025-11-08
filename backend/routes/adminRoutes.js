@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { getAdminStats, getAllUsers, getAllRestaurants } from '../controllers/adminController.js';
+import { 
+  getAdminStats, 
+  getAllUsers, 
+  getAllRestaurants,
+  deleteUser,
+  deleteRestaurant 
+} from '../controllers/adminController.js';
 
 const router = Router();
 
@@ -11,5 +17,11 @@ router.get('/users', getAllUsers);
 
 // Get all restaurants
 router.get('/restaurants', getAllRestaurants);
+
+// Delete user
+router.delete('/users/:userId', deleteUser);
+
+// Delete restaurant
+router.delete('/restaurants/:restaurantId', deleteRestaurant);
 
 export default router;

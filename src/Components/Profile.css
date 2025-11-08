@@ -5,6 +5,21 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Override any potential purple/violet colors with green theme */
+*:focus-visible {
+  outline-color: #6B8E23 !important;
+}
+
+::selection {
+  background-color: rgba(107, 142, 35, 0.3);
+  color: #333;
+}
+
+::-moz-selection {
+  background-color: rgba(107, 142, 35, 0.3);
+  color: #333;
+}
+
 .profile-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f5f5f5 100%);
@@ -357,7 +372,7 @@ html {
 .section-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #333;
+  color: #6B8E23;
   margin: 0;
 }
 
@@ -558,9 +573,9 @@ html {
 
 .edit-input:focus,
 .edit-textarea:focus {
-  outline: none;
-  border-color: #6B8E23;
-  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.1);
+  outline: none !important;
+  border-color: #6B8E23 !important;
+  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.1) !important;
 }
 
 .settings-group {
@@ -789,9 +804,9 @@ html {
 }
 
 .form-input:focus {
-  outline: none;
-  border-color: #6B8E23;
-  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.1);
+  outline: none !important;
+  border-color: #6B8E23 !important;
+  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.1) !important;
 }
 
 .form-select {
@@ -807,9 +822,9 @@ html {
 }
 
 .form-select:focus {
-  outline: none;
-  border-color: #6B8E23;
-  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.1);
+  outline: none !important;
+  border-color: #6B8E23 !important;
+  box-shadow: 0 4px 15px rgba(107, 142, 35, 0.1) !important;
 }
 
 .btn-form-submit {
@@ -1054,9 +1069,9 @@ html {
 }
 
 .food-edit-input:focus {
-  outline: none;
-  border-color: #6B8E23;
-  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.1);
+  outline: none !important;
+  border-color: #6B8E23 !important;
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.1) !important;
 }
 
 /* Empty State */
@@ -1266,9 +1281,9 @@ html {
 }
 
 .form-input-modal:focus {
-  outline: none;
-  border-color: #6B8E23;
-  box-shadow: 0 0 0 3px rgba(107, 142, 35, 0.1);
+  outline: none !important;
+  border-color: #6B8E23 !important;
+  box-shadow: 0 0 0 3px rgba(107, 142, 35, 0.1) !important;
 }
 
 .error-alert {

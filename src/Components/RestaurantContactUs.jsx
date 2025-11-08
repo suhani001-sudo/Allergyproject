@@ -20,6 +20,13 @@ function RestaurantContactUs() {
     const [replyText, setReplyText] = useState('');
     const [sendingReply, setSendingReply] = useState(false);
     
+    // Contact Admin Form
+    const [contactForm, setContactForm] = useState({
+        subject: '',
+        message: ''
+    });
+    const [sendingMessage, setSendingMessage] = useState(false);
+    
     // Toast notification
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -172,6 +179,74 @@ function RestaurantContactUs() {
             setTimeout(() => setShowToast(false), 5000);
         } finally {
             setSendingReply(false);
+        }
+    };
+
+    // Handle contact form input changes
+    const handleContactFormChange = (e) => {
+        const { name, value } = e.target;
+        setContactForm(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Handle contact form submission
+    const handleContactSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!contactForm.subject.trim() || !contactForm.message.trim()) {
+            setToastMessage('❌ Please fill in all fields');
+            setToastType('error');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+            return;
+        }
+
+        try {
+            setSendingMessage(true);
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch('http://localhost:5000/api/restaurant-messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    subject: contactForm.subject,
+                    message: contactForm.message
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setToastMessage('✅ Message sent successfully to admin!');
+                setToastType('success');
+                setShowToast(true);
+                
+                // Reset form
+                setContactForm({
+                    subject: '',
+                    message: ''
+                });
+                
+                setTimeout(() => setShowToast(false), 5000);
+            } else {
+                setToastMessage('❌ ' + (data.message || 'Failed to send message'));
+                setToastType('error');
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 5000);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setToastMessage('❌ Error sending message. Please try again.');
+            setToastType('error');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 5000);
+        } finally {
+            setSendingMessage(false);
         }
     };
 
@@ -702,6 +777,211 @@ function RestaurantContactUs() {
                                 ))}
                             </div>
                         )}
+                    </div>
+
+                    {/* Contact Admin Form Section */}
+                    <div style={{ 
+                        marginTop: '4rem',
+                        paddingTop: '4rem',
+                        borderTop: '2px solid #e8e8e8'
+                    }}>
+                        <div style={{
+                            textAlign: 'center',
+                            marginBottom: '3rem'
+                        }}>
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                background: 'linear-gradient(135deg, rgba(107, 142, 35, 0.1), rgba(107, 142, 35, 0.05))',
+                                padding: '0.75rem 1.5rem',
+                                borderRadius: '50px',
+                                marginBottom: '1rem'
+                            }}>
+                                <span style={{ fontSize: '1.5rem' }}>📧</span>
+                                <span style={{ color: '#6B8E23', fontWeight: '700', fontSize: '1rem' }}>Contact Admin</span>
+                            </div>
+                            <h2 style={{
+                                fontSize: '2rem',
+                                fontWeight: '800',
+                                color: '#2c3e50',
+                                margin: '0 0 0.5rem 0'
+                            }}>
+                                Send Message to Admin
+                            </h2>
+                            <p style={{
+                                fontSize: '1.1rem',
+                                color: '#666',
+                                maxWidth: '600px',
+                                margin: '0 auto'
+                            }}>
+                                Have questions or need support? Send a message directly to the admin team
+                            </p>
+                        </div>
+
+                        <div style={{
+                            background: 'white',
+                            borderRadius: '20px',
+                            padding: '3rem',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                            border: '2px solid rgba(107, 142, 35, 0.1)',
+                            maxWidth: '800px',
+                            margin: '0 auto'
+                        }}>
+                            <form onSubmit={handleContactSubmit}>
+                                <div style={{ marginBottom: '2rem' }}>
+                                    <label style={{
+                                        display: 'block',
+                                        marginBottom: '0.75rem',
+                                        fontWeight: '600',
+                                        color: '#2c3e50',
+                                        fontSize: '1rem'
+                                    }}>
+                                        Subject *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="subject"
+                                        value={contactForm.subject}
+                                        onChange={handleContactFormChange}
+                                        placeholder="Enter the subject of your message"
+                                        required
+                                        style={{
+                                            width: '100%',
+                                            padding: '1rem 1.25rem',
+                                            border: '2px solid #e0e0e0',
+                                            borderRadius: '12px',
+                                            fontSize: '1rem',
+                                            transition: 'all 0.3s ease',
+                                            outline: 'none',
+                                            fontFamily: 'inherit'
+                                        }}
+                                        onFocus={(e) => e.target.style.borderColor = '#6B8E23'}
+                                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                                    />
+                                </div>
+
+                                <div style={{ marginBottom: '2rem' }}>
+                                    <label style={{
+                                        display: 'block',
+                                        marginBottom: '0.75rem',
+                                        fontWeight: '600',
+                                        color: '#2c3e50',
+                                        fontSize: '1rem'
+                                    }}>
+                                        Message *
+                                    </label>
+                                    <textarea
+                                        name="message"
+                                        value={contactForm.message}
+                                        onChange={handleContactFormChange}
+                                        placeholder="Type your message here..."
+                                        required
+                                        rows="8"
+                                        style={{
+                                            width: '100%',
+                                            padding: '1rem 1.25rem',
+                                            border: '2px solid #e0e0e0',
+                                            borderRadius: '12px',
+                                            fontSize: '1rem',
+                                            transition: 'all 0.3s ease',
+                                            outline: 'none',
+                                            resize: 'vertical',
+                                            fontFamily: 'inherit',
+                                            lineHeight: '1.6'
+                                        }}
+                                        onFocus={(e) => e.target.style.borderColor = '#6B8E23'}
+                                        onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={sendingMessage}
+                                    style={{
+                                        width: '100%',
+                                        padding: '1.25rem 2rem',
+                                        background: sendingMessage 
+                                            ? 'linear-gradient(135deg, #9e9e9e, #757575)' 
+                                            : 'linear-gradient(135deg, #6B8E23, #556B2F)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '12px',
+                                        fontSize: '1.1rem',
+                                        fontWeight: '700',
+                                        cursor: sendingMessage ? 'not-allowed' : 'pointer',
+                                        transition: 'all 0.3s ease',
+                                        boxShadow: '0 4px 15px rgba(107, 142, 35, 0.3)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.75rem'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        if (!sendingMessage) {
+                                            e.target.style.transform = 'translateY(-2px)';
+                                            e.target.style.boxShadow = '0 6px 20px rgba(107, 142, 35, 0.4)';
+                                        }
+                                    }}
+                                    onMouseOut={(e) => {
+                                        if (!sendingMessage) {
+                                            e.target.style.transform = 'translateY(0)';
+                                            e.target.style.boxShadow = '0 4px 15px rgba(107, 142, 35, 0.3)';
+                                        }
+                                    }}
+                                >
+                                    {sendingMessage ? (
+                                        <>
+                                            <span style={{
+                                                width: '20px',
+                                                height: '20px',
+                                                border: '3px solid rgba(255,255,255,0.3)',
+                                                borderTop: '3px solid white',
+                                                borderRadius: '50%',
+                                                animation: 'spin 1s linear infinite'
+                                            }}></span>
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span style={{ fontSize: '1.3rem' }}>📤</span>
+                                            Send Message to Admin
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+
+                            <div style={{
+                                marginTop: '2.5rem',
+                                padding: '1.5rem',
+                                background: 'linear-gradient(135deg, #f0f8f0 0%, #e8f5e9 100%)',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(107, 142, 35, 0.2)'
+                            }}>
+                                <h3 style={{
+                                    margin: '0 0 1rem 0',
+                                    color: '#2c3e50',
+                                    fontSize: '1.1rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    <span style={{ fontSize: '1.5rem' }}>💡</span>
+                                    Quick Tips
+                                </h3>
+                                <ul style={{
+                                    margin: 0,
+                                    paddingLeft: '1.5rem',
+                                    color: '#555',
+                                    lineHeight: '1.8'
+                                }}>
+                                    <li>Be clear and specific about your inquiry</li>
+                                    <li>Include relevant details to help us assist you better</li>
+                                    <li>The admin team will respond as soon as possible</li>
+                                    <li>Check your messages regularly for updates</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Contact Information */}

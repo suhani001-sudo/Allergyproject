@@ -16,10 +16,10 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    // Check if user already exists with the same email AND role
+    const existingUser = await User.findOne({ email, role: role || "user" });
     if (existingUser) {
-      return res.status(409).json({ message: "Email already registered" });
+      return res.status(409).json({ message: `This email is already registered as a ${role || "user"}` });
     }
 
     // Create new user with role
@@ -46,7 +46,19 @@ export const signup = async (req, res) => {
     });
   } catch (err) {
     console.error("Signup error:", err);
-    res.status(500).json({ message: "Server error" });
+    
+    // Handle duplicate key error (MongoDB E11000)
+    if (err.code === 11000) {
+      return res.status(409).json({ 
+        message: "This email is already registered. Please use a different email or login instead.",
+        error: "DUPLICATE_EMAIL"
+      });
+    }
+    
+    res.status(500).json({ 
+      message: "Server error during signup. Please try again.",
+      error: err.message 
+    });
   }
 };
 
@@ -60,17 +72,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Email, password, and role are required" });
     }
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user with specific email and role combination
+    const user = await User.findOne({ email, role });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    // Check if user's role matches the login role
-    if (user.role !== role) {
-      return res.status(403).json({ 
-        message: `This account is registered as a ${user.role}. Please login using the ${user.role} option.` 
-      });
+      return res.status(401).json({ message: `No ${role} account found with this email. Please check your credentials or register.` });
     }
 
     // Match password

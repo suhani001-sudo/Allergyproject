@@ -15,6 +15,7 @@ import Profile from "./Components/Profile";
 import RestaurantAboutUs from "./Components/RestaurantAboutUs";
 import RestaurantProfile from "./Components/RestaurantProfile";
 import RestaurantContactUs from "./Components/RestaurantContactUs";
+import RestaurantContactAdmin from "./Components/RestaurantContactAdmin";
 import UserInbox from "./Components/UserInbox";
 import AdminDashboard from "./Components/AdminDashboard";
 import "./App.css";

@@ -86,3 +86,83 @@ export const getAllRestaurants = async (req, res) => {
     });
   }
 };
+
+// 🔹 Delete User (Admin only)
+export const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Find and delete user
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+    
+    // Prevent deleting admin accounts
+    if (user.role === "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Cannot delete admin accounts"
+      });
+    }
+    
+    await User.findByIdAndDelete(userId);
+    
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully"
+    });
+  } catch (err) {
+    console.error("Delete user error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete user"
+    });
+  }
+};
+
+// 🔹 Delete Restaurant (Admin only)
+export const deleteRestaurant = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    
+    // Find and delete restaurant
+    const restaurant = await User.findById(restaurantId);
+    
+    if (!restaurant) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurant not found"
+      });
+    }
+    
+    // Verify it's a restaurant account
+    if (restaurant.role !== "restaurant") {
+      return res.status(400).json({
+        success: false,
+        message: "This is not a restaurant account"
+      });
+    }
+    
+    // Delete associated restaurant profile if exists
+    await RestaurantProfile.deleteMany({ userId: restaurantId });
+    
+    // Delete the restaurant user account
+    await User.findByIdAndDelete(restaurantId);
+    
+    res.status(200).json({
+      success: true,
+      message: "Restaurant and associated data deleted successfully"
+    });
+  } catch (err) {
+    console.error("Delete restaurant error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete restaurant"
+    });
+  }
+};
