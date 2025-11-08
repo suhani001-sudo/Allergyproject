@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserDashboard.css';
 import './PremiumFeedback.css';
+import '../styles/responsive.css';
 import Footer from './Footer';
 import { handleLogout as logout } from '../utils/authUtils';
 import LogoutConfirmModal from './LogoutConfirmModal';
@@ -276,18 +277,8 @@ function UserDashboard(props) {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    {/* Hamburger Menu Button */}
-                    <button 
-                        className="hamburger-menu"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        aria-label="Toggle menu"
-                    >
-                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-                    </button>
-
-                    <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+                    {/* Desktop Navigation */}
+                    <div className="nav-links desktop-nav">
                         {navItems.map(function (item) {
                             return (
                                 <button
@@ -295,7 +286,6 @@ function UserDashboard(props) {
                                     className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
                                     onClick={function () { 
                                         handleNavClick(item.id);
-                                        setIsMobileMenuOpen(false);
                                     }}
                                 >
                                     <span className="nav-label">{item.label}</span>
@@ -307,16 +297,63 @@ function UserDashboard(props) {
                         })}
                     </div>
 
-                    <button
-                        className="logout-button"
-                        onClick={() => {
-                            handleLogout();
-                            setIsMobileMenuOpen(false);
-                        }}
-                    >
+                    {/* Desktop Logout Button */}
+                    <button className="logout-button desktop-nav" onClick={handleLogout}>
                         <span className="logout-text">Logout</span>
                     </button>
+
+                    {/* Hamburger Menu */}
+                    <div 
+                        className={`hamburger-menu ${isMobileMenuOpen ? 'active' : ''}`}
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
+            </nav>
+
+            {/* Mobile Navigation Overlay */}
+            <div 
+                className={`mobile-nav-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            ></div>
+
+            {/* Mobile Navigation Menu */}
+            <nav className={`mobile-nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+                <button 
+                    className="mobile-nav-close"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                >
+                    ×
+                </button>
+                
+                <div className="mobile-nav-items">
+                    {navItems.map(function (item) {
+                        return (
+                            <a 
+                                key={item.id}
+                                href={`#${item.id.toLowerCase()}`}
+                                className={`mobile-nav-item ${activeNavItem === item.id ? 'active' : ''}`}
+                                onClick={function (e) {
+                                    e.preventDefault();
+                                    setIsMobileMenuOpen(false);
+                                    handleNavClick(item.id);
+                                }}
+                            >
+                                {item.label}
+                            </a>
+                        );
+                    })}
+                </div>
+
+                <button 
+                    className="mobile-nav-logout"
+                    onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }}
+                >
+                    🚪 Logout
+                </button>
             </nav>
 
             <section className="hero-section">

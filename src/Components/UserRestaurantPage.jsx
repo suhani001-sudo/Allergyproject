@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
-import LogoutConfirmModal from './LogoutConfirmModal';
+import SimpleLogoutModal from './SimpleLogoutModal';
 import './UserRestaurantPage.css';
 
 function UserRestaurantPage(props) {
@@ -12,7 +12,11 @@ function UserRestaurantPage(props) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   
   // Centralized logout handler
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setShowLogoutModal(true);
   };
   
@@ -99,9 +103,9 @@ function UserRestaurantPage(props) {
 
   return (
     <div className="restaurant-page">
-      {/* Logout Confirmation Modal */}
-      <LogoutConfirmModal 
-        isOpen={showLogoutModal}
+      {/* Simple Logout Modal */}
+      <SimpleLogoutModal 
+        show={showLogoutModal}
         onConfirm={confirmLogout}
         onCancel={cancelLogout}
       />

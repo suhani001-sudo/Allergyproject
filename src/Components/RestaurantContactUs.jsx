@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import './ContactUs.css'; // Reusing the same CSS
+import '../styles/responsive.css';
 import Footer from './Footer';
 
 function RestaurantContactUs() {
@@ -27,10 +28,18 @@ function RestaurantContactUs() {
     });
     const [sendingMessage, setSendingMessage] = useState(false);
     
+    // Admin Replies (Inbox)
+    const [adminReplies, setAdminReplies] = useState([]);
+    const [loadingReplies, setLoadingReplies] = useState(true);
+    const [activeTab, setActiveTab] = useState('contact'); // 'contact' or 'inbox'
+    
     // Toast notification
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState('success'); // 'success' or 'error'
+
+    // Mobile menu state
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     // Navigation items for Restaurant Dashboard
     const navItems = [
@@ -65,9 +74,10 @@ function RestaurantContactUs() {
     };
 
 
-    // Fetch messages from backend
+    // Fetch messages and admin replies from backend
     useEffect(() => {
         fetchMessages();
+        fetchAdminReplies();
     }, []);
 
     const fetchMessages = async () => {
@@ -83,6 +93,54 @@ function RestaurantContactUs() {
             console.error('Error fetching messages:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchAdminReplies = async () => {
+        try {
+            setLoadingReplies(true);
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                console.error('No auth token found');
+                setLoadingReplies(false);
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/api/admin/my-replies', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log('Response status:', response.status);
+            const data = await response.json();
+            console.log('Admin replies data:', data);
+            
+            if (data.debug) {
+                console.log('=== ID MATCHING DEBUG ===');
+                console.log('Searched restaurant ID:', data.debug.searchedId);
+                console.log('Searched ID type:', data.debug.searchedIdType);
+                console.log('Total replies in DB:', data.debug.totalRepliesInDb);
+                console.log('All restaurant IDs in database:', data.debug.allIds);
+                console.log('Match found:', data.debug.allIds?.includes(data.debug.searchedId));
+                
+                if (!data.debug.allIds?.includes(data.debug.searchedId)) {
+                    console.error('❌ NO MATCH! Your ID:', data.debug.searchedId);
+                    console.error('Available IDs:', data.debug.allIds);
+                }
+            }
+            
+            if (data.success) {
+                setAdminReplies(data.replies || []);
+            } else {
+                console.error('Failed to fetch replies:', data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching admin replies:', error);
+        } finally {
+            setLoadingReplies(false);
         }
     };
 
@@ -332,7 +390,8 @@ function RestaurantContactUs() {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    <div className="nav-links">
+                    {/* Desktop Navigation */}
+                    <div className="nav-links desktop-nav">
                         {navItems.map(function (item) {
                             return (
                                 <button
@@ -349,10 +408,63 @@ function RestaurantContactUs() {
                         })}
                     </div>
 
-                    <button className="logout-button" onClick={handleLogout}>
+                    {/* Desktop Logout Button */}
+                    <button className="logout-button desktop-nav" onClick={handleLogout}>
                         <span className="logout-text">Logout</span>
                     </button>
+
+                    {/* Hamburger Menu */}
+                    <div 
+                        className={`hamburger-menu ${mobileMenuOpen ? 'active' : ''}`}
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
+            </nav>
+
+            {/* Mobile Navigation Overlay */}
+            <div 
+                className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}
+                onClick={() => setMobileMenuOpen(false)}
+            ></div>
+
+            {/* Mobile Navigation Menu */}
+            <nav className={`mobile-nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+                <button 
+                    className="mobile-nav-close"
+                    onClick={() => setMobileMenuOpen(false)}
+                >
+                    ×
+                </button>
+                
+                <div className="mobile-nav-items">
+                    {navItems.map(function (item) {
+                        return (
+                            <a 
+                                key={item.id}
+                                href={item.path || '#'}
+                                className={`mobile-nav-item ${activeNavItem === item.id ? 'active' : ''}`}
+                                onClick={function (e) {
+                                    e.preventDefault();
+                                    setMobileMenuOpen(false);
+                                    handleNavClick(item);
+                                }}
+                            >
+                                {item.label}
+                            </a>
+                        );
+                    })}
+                </div>
+
+                <button 
+                    className="mobile-nav-logout"
+                    onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+                >
+                    🚪 Logout
+                </button>
             </nav>
 
             {/* Modern Hero Section */}
@@ -779,11 +891,87 @@ function RestaurantContactUs() {
                         )}
                     </div>
 
-                    {/* Contact Admin Form Section */}
-                    <div style={{ 
+                    {/* Tab Navigation */}
+                    <div style={{
                         marginTop: '4rem',
                         paddingTop: '4rem',
                         borderTop: '2px solid #e8e8e8'
+                    }}>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: '1rem',
+                            marginBottom: '3rem'
+                        }}>
+                            <button
+                                onClick={() => setActiveTab('contact')}
+                                style={{
+                                    padding: '1rem 2rem',
+                                    background: activeTab === 'contact' 
+                                        ? 'linear-gradient(135deg, #6B8E23, #556B2F)' 
+                                        : 'white',
+                                    color: activeTab === 'contact' ? 'white' : '#666',
+                                    border: activeTab === 'contact' ? 'none' : '2px solid #e0e0e0',
+                                    borderRadius: '12px',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: activeTab === 'contact' 
+                                        ? '0 4px 15px rgba(107, 142, 35, 0.3)' 
+                                        : 'none'
+                                }}
+                            >
+                                📧 Contact Admin
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('inbox')}
+                                style={{
+                                    padding: '1rem 2rem',
+                                    background: activeTab === 'inbox' 
+                                        ? 'linear-gradient(135deg, #6B8E23, #556B2F)' 
+                                        : 'white',
+                                    color: activeTab === 'inbox' ? 'white' : '#666',
+                                    border: activeTab === 'inbox' ? 'none' : '2px solid #e0e0e0',
+                                    borderRadius: '12px',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: activeTab === 'inbox' 
+                                        ? '0 4px 15px rgba(107, 142, 35, 0.3)' 
+                                        : 'none',
+                                    position: 'relative'
+                                }}
+                            >
+                                📬 Inbox
+                                {adminReplies.length > 0 && (
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '-8px',
+                                        right: '-8px',
+                                        background: '#dc3545',
+                                        color: 'white',
+                                        borderRadius: '50%',
+                                        width: '24px',
+                                        height: '24px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '0.75rem',
+                                        fontWeight: '700'
+                                    }}>
+                                        {adminReplies.length}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Contact Admin Form Section */}
+                    {activeTab === 'contact' && (
+                    <div style={{ 
+                        marginTop: '2rem'
                     }}>
                         <div style={{
                             textAlign: 'center',
@@ -983,6 +1171,177 @@ function RestaurantContactUs() {
                             </div>
                         </div>
                     </div>
+                    )}
+
+                    {/* Inbox Section */}
+                    {activeTab === 'inbox' && (
+                    <div style={{ marginTop: '2rem' }}>
+                        <div style={{
+                            textAlign: 'center',
+                            marginBottom: '3rem'
+                        }}>
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                background: 'linear-gradient(135deg, rgba(107, 142, 35, 0.1), rgba(107, 142, 35, 0.05))',
+                                padding: '0.75rem 1.5rem',
+                                borderRadius: '50px',
+                                marginBottom: '1rem'
+                            }}>
+                                <span style={{ fontSize: '1.5rem' }}>📬</span>
+                                <span style={{ color: '#6B8E23', fontWeight: '700', fontSize: '1rem' }}>Admin Replies</span>
+                            </div>
+                            <h2 style={{
+                                fontSize: '2rem',
+                                fontWeight: '800',
+                                color: '#2c3e50',
+                                margin: '0 0 0.5rem 0'
+                            }}>
+                                Your Inbox
+                            </h2>
+                            <p style={{
+                                fontSize: '1.1rem',
+                                color: '#666',
+                                maxWidth: '600px',
+                                margin: '0 auto'
+                            }}>
+                                View messages and replies from the admin team
+                            </p>
+                        </div>
+
+                        {loadingReplies ? (
+                            <div style={{
+                                textAlign: 'center',
+                                padding: '3rem',
+                                color: '#666'
+                            }}>
+                                Loading inbox...
+                            </div>
+                        ) : adminReplies.length === 0 ? (
+                            <div style={{
+                                textAlign: 'center',
+                                padding: '4rem 2rem',
+                                background: 'white',
+                                borderRadius: '20px',
+                                boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                                border: '2px solid rgba(107, 142, 35, 0.1)'
+                            }}>
+                                <span style={{ fontSize: '4rem', display: 'block', marginBottom: '1rem' }}>📭</span>
+                                <h3 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>No Messages Yet</h3>
+                                <p style={{ color: '#666' }}>You haven't received any replies from the admin yet</p>
+                            </div>
+                        ) : (
+                            <div style={{
+                                display: 'grid',
+                                gap: '1.5rem',
+                                maxWidth: '900px',
+                                margin: '0 auto'
+                            }}>
+                                {adminReplies.map((reply) => (
+                                    <div key={reply._id} style={{
+                                        background: 'white',
+                                        borderRadius: '20px',
+                                        padding: '2rem',
+                                        boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+                                        border: '2px solid rgba(107, 142, 35, 0.1)',
+                                        transition: 'all 0.3s ease'
+                                    }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'flex-start',
+                                            marginBottom: '1.5rem',
+                                            paddingBottom: '1rem',
+                                            borderBottom: '2px solid rgba(107, 142, 35, 0.1)'
+                                        }}>
+                                            <div>
+                                                <div style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.75rem',
+                                                    marginBottom: '0.5rem'
+                                                }}>
+                                                    <span style={{
+                                                        fontSize: '1.5rem',
+                                                        background: 'linear-gradient(135deg, #6B8E23, #556B2F)',
+                                                        borderRadius: '50%',
+                                                        width: '40px',
+                                                        height: '40px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center'
+                                                    }}>👨‍💼</span>
+                                                    <div>
+                                                        <h4 style={{
+                                                            margin: 0,
+                                                            color: '#2c3e50',
+                                                            fontSize: '1.1rem',
+                                                            fontWeight: '700'
+                                                        }}>
+                                                            {reply.adminName}
+                                                        </h4>
+                                                        <p style={{
+                                                            margin: 0,
+                                                            color: '#666',
+                                                            fontSize: '0.85rem'
+                                                        }}>
+                                                            Admin Team
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span style={{
+                                                fontSize: '0.85rem',
+                                                color: '#999',
+                                                whiteSpace: 'nowrap'
+                                            }}>
+                                                {new Date(reply.createdAt).toLocaleDateString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </span>
+                                        </div>
+
+                                        <div style={{ marginBottom: '1rem' }}>
+                                            <strong style={{
+                                                color: '#2c3e50',
+                                                fontSize: '0.95rem'
+                                            }}>
+                                                Subject:
+                                            </strong>
+                                            <span style={{
+                                                marginLeft: '0.5rem',
+                                                color: '#666'
+                                            }}>
+                                                {reply.subject}
+                                            </span>
+                                        </div>
+
+                                        <div style={{
+                                            background: 'rgba(107, 142, 35, 0.05)',
+                                            padding: '1.5rem',
+                                            borderRadius: '12px',
+                                            borderLeft: '4px solid #6B8E23'
+                                        }}>
+                                            <p style={{
+                                                margin: 0,
+                                                color: '#2c3e50',
+                                                lineHeight: '1.8',
+                                                fontSize: '1rem'
+                                            }}>
+                                                {reply.message}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    )}
 
                     {/* Contact Information */}
                     <div style={{ 

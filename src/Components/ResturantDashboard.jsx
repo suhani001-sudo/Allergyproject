@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RestaurantDashboard.css';
+import '../styles/responsive.css';
 import Footer from './Footer';
 import { handleLogout as logout } from '../utils/authUtils';
 import LogoutConfirmModal from './LogoutConfirmModal';
@@ -15,6 +16,9 @@ function RestaurantDashboard(props) {
   
   // Logout modal state
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
+  // Mobile menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Centralized logout handler
   const handleLogout = () => {
@@ -100,7 +104,10 @@ function RestaurantDashboard(props) {
     description: '',
     allergens: [],
     ingredients: [],
-    category: 'Main Course'
+    category: 'Main Course',
+    customAllergen: '',
+    imageFile: null,
+    imagePreview: null
   });
 
   // STEP 4: Track if we are editing an existing item
@@ -160,9 +167,117 @@ function RestaurantDashboard(props) {
     });
   }
 
+  // STEP 6.2: Handle custom allergen input
+  function handleAddCustomAllergen() {
+    const customValue = formData.customAllergen.trim();
+    if (customValue && !formData.allergens.includes(customValue)) {
+      setFormData(function(prev) {
+        return { 
+          ...prev, 
+          allergens: [...prev.allergens, customValue],
+          customAllergen: ''
+        };
+      });
+    }
+  }
+
+  // STEP 6.3: Handle image file selection with compression
+  function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file');
+        return;
+      }
+      
+      // Validate file size (max 15MB)
+      if (file.size > 15 * 1024 * 1024) {
+        alert('Image size should be less than 15MB');
+        return;
+      }
+
+      // Compress and create preview URL
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        const img = new Image();
+        img.onload = function() {
+          // Create canvas for compression
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Calculate new dimensions (max 1200px width/height)
+          let width = img.width;
+          let height = img.height;
+          const maxSize = 1200;
+          
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = (height / width) * maxSize;
+              width = maxSize;
+            } else {
+              width = (width / height) * maxSize;
+              height = maxSize;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          // Draw and compress image
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with quality compression (0.8 = 80% quality)
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          
+          setFormData(function(prev) {
+            return {
+              ...prev,
+              imageFile: file,
+              imagePreview: compressedDataUrl
+            };
+          });
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // STEP 6.4: Remove uploaded image
+  function handleRemoveImage() {
+    setFormData(function(prev) {
+      return {
+        ...prev,
+        imageFile: null,
+        imagePreview: null
+      };
+    });
+  }
+
+  // STEP 6.5: Remove custom allergen
+  function handleRemoveAllergen(allergen) {
+    setFormData(function(prev) {
+      return {
+        ...prev,
+        allergens: prev.allergens.filter(function(a) { return a !== allergen; })
+      };
+    });
+  }
+
   // STEP 7: Reset the form to its default values
   function resetForm() {
-    setFormData({ name: '', price: '', description: '', allergens: [], ingredients: [], category: 'Main Course' });
+    setFormData({ 
+      name: '', 
+      price: '', 
+      description: '', 
+      allergens: [], 
+      ingredients: [], 
+      category: 'Main Course',
+      customAllergen: '',
+      imageFile: null,
+      imagePreview: null
+    });
     setEditingId(null);
   }
 
@@ -180,14 +295,21 @@ function RestaurantDashboard(props) {
       return;
     }
 
+    // Convert image to base64 if uploaded
+    let imageUrl = 'https://via.placeholder.com/300x200?text=Menu+Item';
+    if (formData.imagePreview) {
+      imageUrl = formData.imagePreview;
+    }
+
     const menuItemData = {
       itemName: formData.name.trim(),
       price: parseFloat(priceNumber.toFixed(2)),
       description: formData.description.trim(),
       allergenInfo: formData.allergens,
+      ingredients: formData.ingredients,
       category: formData.category.toLowerCase(),
       restaurantName: 'SafeBytes Restaurant', // You can make this dynamic
-      imageUrl: 'https://via.placeholder.com/300x200?text=Menu+Item'
+      imageUrl: imageUrl
     };
 
     try {
@@ -224,8 +346,9 @@ function RestaurantDashboard(props) {
             setItems(transformedItems);
           }
           alert('Menu item updated successfully!');
+          resetForm();
         } else {
-          alert('Failed to update menu item.');
+          alert('Failed to update menu item: ' + (data.message || 'Unknown error'));
         }
       } else {
         // Add new item
@@ -268,7 +391,7 @@ function RestaurantDashboard(props) {
       resetForm();
     } catch (error) {
       console.error('Error saving menu item:', error);
-      alert('An error occurred while saving the menu item.');
+      alert('An error occurred while saving the menu item. Please check: \n1. Image size (max 5MB)\n2. All required fields are filled\n3. Backend server is running');
     }
   }
 
@@ -281,7 +404,10 @@ function RestaurantDashboard(props) {
       description: item.description,
       allergens: item.allergens || [],
       ingredients: item.ingredients || [],
-      category: item.category || 'Main Course'
+      category: item.category || 'Main Course',
+      customAllergen: '',
+      imageFile: null,
+      imagePreview: item.imageUrl || null
     });
   }
 
@@ -369,7 +495,8 @@ function RestaurantDashboard(props) {
             <span className="logo-text">SafeBytes</span>
           </div>
 
-          <div className="nav-links">
+          {/* Desktop Navigation */}
+          <div className="nav-links desktop-nav">
             {topNavItems.map(function(item) {
               return (
                 <button
@@ -389,10 +516,66 @@ function RestaurantDashboard(props) {
             })}
           </div>
 
-          <button className="logout-button" onClick={handleLogout}>
+          {/* Desktop Logout Button */}
+          <button className="logout-button desktop-nav" onClick={handleLogout}>
             <span className="logout-text">Logout</span>
           </button>
+
+          {/* Hamburger Menu */}
+          <div 
+            className={`hamburger-menu ${mobileMenuOpen ? 'active' : ''}`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
+      </nav>
+
+      {/* Mobile Navigation Overlay */}
+      <div 
+        className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      ></div>
+
+      {/* Mobile Navigation Menu */}
+      <nav className={`mobile-nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+        <button 
+          className="mobile-nav-close"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          ×
+        </button>
+        
+        <div className="mobile-nav-items">
+          {topNavItems.map(function(item) {
+            return (
+              <a 
+                key={item.id}
+                href={item.path || '#'}
+                className={`mobile-nav-item ${activeTopNav === item.id ? 'active' : ''}`}
+                onClick={function(e) {
+                  e.preventDefault();
+                  setActiveTopNav(item.id);
+                  setMobileMenuOpen(false);
+                  if (item.path) {
+                    navigate(item.path);
+                  }
+                }}
+              >
+                {item.label}
+              </a>
+            );
+          })}
+        </div>
+
+        <button 
+          className="mobile-nav-logout"
+          onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+        >
+          🚪 Logout
+        </button>
       </nav>
 
       {/* MAIN CONTENT */}
@@ -498,6 +681,97 @@ function RestaurantDashboard(props) {
                   })}
                 </div>
               </div>
+
+              {/* Custom Allergen Input - Full Width */}
+              <div className="rd-form-group rd-form-group-full">
+                <label className="rd-label" htmlFor="customAllergen">Add Custom Allergen</label>
+                <div className="rd-custom-allergen-input">
+                  <input
+                    className="rd-input"
+                    id="customAllergen"
+                    name="customAllergen"
+                    value={formData.customAllergen}
+                    onChange={handleInputChange}
+                    placeholder="Enter custom allergen name (e.g., Sesame, Mustard)"
+                    onKeyPress={function(e) {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddCustomAllergen();
+                      }
+                    }}
+                  />
+                  <button 
+                    type="button" 
+                    className="rd-btn rd-btn-add-allergen"
+                    onClick={handleAddCustomAllergen}
+                  >
+                    + Add
+                  </button>
+                </div>
+                {formData.allergens.length > 0 && (
+                  <div className="rd-selected-allergens">
+                    <span className="rd-selected-label">Selected Allergens:</span>
+                    <div className="rd-allergen-tags">
+                      {formData.allergens.map(function(allergen) {
+                        return (
+                          <span key={allergen} className="rd-allergen-tag">
+                            {allergen}
+                            <button 
+                              type="button"
+                              className="rd-allergen-remove"
+                              onClick={function() { handleRemoveAllergen(allergen); }}
+                              title="Remove allergen"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Image Upload - Full Width */}
+              <div className="rd-form-group rd-form-group-full">
+                <label className="rd-label" htmlFor="imageUpload">Food Image</label>
+                <div className="rd-image-upload-container">
+                  {!formData.imagePreview ? (
+                    <div className="rd-image-upload-area">
+                      <input
+                        type="file"
+                        id="imageUpload"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="rd-image-input"
+                      />
+                      <label htmlFor="imageUpload" className="rd-image-upload-label">
+                        <div className="rd-upload-icon">📷</div>
+                        <div className="rd-upload-text">
+                          <span className="rd-upload-title">Click to upload food image</span>
+                          <span className="rd-upload-subtitle">PNG, JPG, JPEG up to 15MB (auto-compressed)</span>
+                        </div>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="rd-image-preview-container">
+                      <img 
+                        src={formData.imagePreview} 
+                        alt="Food preview" 
+                        className="rd-image-preview"
+                      />
+                      <button 
+                        type="button"
+                        className="rd-image-remove"
+                        onClick={handleRemoveImage}
+                        title="Remove image"
+                      >
+                        ✕ Remove Image
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Form buttons */}
@@ -525,24 +799,39 @@ function RestaurantDashboard(props) {
             {items.map(function(item) {
               return (
                 <div key={item.id} className="rd-card">
-                  <div className="rd-card-top">
-                    <div className="rd-card-title">
-                      <strong>{item.name}</strong>
-                      <span className="rd-price" >₹{item.price.toFixed(2)}</span>
+                  {/* Food Image */}
+                  {item.imageUrl && (
+                    <div className="rd-card-image-container">
+                      <img 
+                        src={item.imageUrl} 
+                        alt={item.name}
+                        className="rd-card-image"
+                        onError={function(e) {
+                          e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                        }}
+                      />
                     </div>
-                    <div className={`rd-badge ${item.available ? 'rd-badge-on' : 'rd-badge-off'}`}>
-                      {item.available ? 'Available' : 'Unavailable'}
+                  )}
+
+                  <div className="rd-card-content">
+                    <div className="rd-card-top">
+                      <div className="rd-card-title">
+                        <strong>{item.name}</strong>
+                        <span className="rd-price" >₹{item.price.toFixed(2)}</span>
+                      </div>
+                      <div className={`rd-badge ${item.available ? 'rd-badge-on' : 'rd-badge-off'}`}>
+                        {item.available ? 'Available' : 'Unavailable'}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="rd-card-category">
-                    <span className="rd-category-badge">{item.category || 'Main Course'}</span>
-                    {item.restaurantName && (
-                      <span className="rd-restaurant-badge">🏪 {item.restaurantName}</span>
-                    )}
-                  </div>
+                    <div className="rd-card-category">
+                      <span className="rd-category-badge">{item.category || 'Main Course'}</span>
+                      {item.restaurantName && (
+                        <span className="rd-restaurant-badge">🏪 {item.restaurantName}</span>
+                      )}
+                    </div>
 
-                  <p className="rd-desc">{item.description}</p>
+                    <p className="rd-desc">{item.description}</p>
 
                   {/* Ingredients Section */}
                   {item.ingredients && item.ingredients.length > 0 && (
@@ -577,19 +866,20 @@ function RestaurantDashboard(props) {
                     )}
                   </div>
 
-                  <div className="rd-card-actions">
-                    <button className="rd-btn rd-btn-toggle" onClick={function() { toggleAvailability(item.id); }}>
-                      {item.available ? '✓ Available' : '✕ Unavailable'}
-                    </button>
-                    <button className="rd-btn rd-btn-secondary" onClick={function() { 
-                      startEdit(item);
-                      document.getElementById('rd-form').scrollIntoView({ behavior: 'smooth' });
-                    }}>
-                      ✎ Edit
-                    </button>
-                    <button className="rd-btn rd-btn-danger" onClick={function() { deleteItem(item.id); }}>
-                      🗑 Delete
-                    </button>
+                    <div className="rd-card-actions">
+                      <button className="rd-btn rd-btn-toggle" onClick={function() { toggleAvailability(item.id); }}>
+                        {item.available ? '✓ Available' : '✕ Unavailable'}
+                      </button>
+                      <button className="rd-btn rd-btn-secondary" onClick={function() { 
+                        startEdit(item);
+                        document.getElementById('rd-form').scrollIntoView({ behavior: 'smooth' });
+                      }}>
+                        ✎ Edit
+                      </button>
+                      <button className="rd-btn rd-btn-danger" onClick={function() { deleteItem(item.id); }}>
+                        🗑 Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               );

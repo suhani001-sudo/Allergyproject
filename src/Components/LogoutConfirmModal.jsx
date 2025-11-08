@@ -2,11 +2,39 @@ import React from 'react';
 import './LogoutConfirmModal.css';
 
 function LogoutConfirmModal({ isOpen, onConfirm, onCancel }) {
+    console.log('LogoutConfirmModal - isOpen:', isOpen);
+    
     if (!isOpen) return null;
 
+    // Inline styles as fallback to ensure visibility
+    const overlayStyle = {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 99999
+    };
+
+    const contentStyle = {
+        backgroundColor: 'white',
+        borderRadius: '24px',
+        padding: '2.5rem',
+        maxWidth: '450px',
+        width: '90%',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+        position: 'relative',
+        zIndex: 100000
+    };
+
     return (
-        <div className="logout-modal-overlay" onClick={onCancel}>
-            <div className="logout-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="logout-modal-overlay" style={overlayStyle} onClick={onCancel}>
+            <div className="logout-modal-content" style={contentStyle} onClick={(e) => e.stopPropagation()}>
                 <div className="logout-modal-header">
                     <div className="logout-icon-wrapper">
                         <span className="logout-icon">⚠️</span>

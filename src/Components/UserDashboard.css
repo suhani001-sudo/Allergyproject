@@ -1494,3 +1494,288 @@ html {
     padding: 3rem 1.5rem;
   }
 }
+
+/* ========================================
+   ENHANCED RESPONSIVE STYLES - USER DASHBOARD
+   ======================================== */
+
+/* Fix Logo Alignment */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.logo-image {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* Tablet Responsive */
+@media (max-width: 768px) {
+  /* Logo Scaling */
+  .logo-image {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  /* Hero Section */
+  .hero-content {
+    padding: 2rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  /* Stats Grid - 2 Columns */
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+  }
+
+  /* Restaurant Cards - 2 Columns */
+  .restaurant-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Feedback Cards */
+  .feedback-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* FAQ Section */
+  .faq-item {
+    padding: 1.25rem;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+  }
+
+  .faq-answer {
+    font-size: 0.9rem;
+  }
+
+  /* Form Inputs */
+  input,
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.875rem 1rem;
+  }
+
+  /* Buttons */
+  button,
+  .btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  /* Container */
+  .home-container {
+    padding-top: 60px;
+  }
+
+  /* Logo Scaling */
+  .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 60px 1rem 40px;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* CTA Buttons */
+  .cta-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cta-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  /* Stats Grid - Single Column */
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+  }
+
+  /* Restaurant Cards - Single Column */
+  .restaurant-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .restaurant-card {
+    padding: 1.25rem;
+  }
+
+  .restaurant-name {
+    font-size: 1.1rem;
+  }
+
+  .restaurant-description {
+    font-size: 0.85rem;
+  }
+
+  /* Feedback Section */
+  .feedback-form {
+    padding: 1.5rem;
+  }
+
+  .feedback-input,
+  .feedback-textarea {
+    padding: 0.75rem;
+    font-size: 16px;
+  }
+
+  .feedback-submit {
+    width: 100%;
+    padding: 0.875rem;
+  }
+
+  /* Feedback Cards */
+  .feedback-card {
+    padding: 1.25rem;
+  }
+
+  .feedback-name {
+    font-size: 1rem;
+  }
+
+  .feedback-message {
+    font-size: 0.85rem;
+  }
+
+  /* FAQ Section */
+  .faq-item {
+    padding: 1rem;
+  }
+
+  .faq-question {
+    font-size: 0.95rem;
+  }
+
+  .faq-answer {
+    font-size: 0.85rem;
+  }
+
+  /* Section Titles */
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  /* Quote Section */
+  .quote-text {
+    font-size: 1.1rem;
+  }
+}
+
+/* Very Small Screens */
+@media (max-width: 360px) {
+  .logo-image {
+    width: 28px;
+    height: 28px;
+  }
+
+  .logo-text {
+    font-size: 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .cta-button {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero-section {
+    padding: 40px 1rem 30px;
+  }
+
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .restaurant-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mobile-nav-menu {
+    width: 50%;
+  }
+}

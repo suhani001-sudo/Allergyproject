@@ -1518,3 +1518,299 @@ html {
     padding: 1.25rem;
   }
 }
+
+/* ========================================
+   ENHANCED RESPONSIVE STYLES - PROFILE PAGE
+   ======================================== */
+
+/* Tablet Responsive */
+@media (max-width: 768px) {
+  /* Profile Picture Section */
+  .profile-picture-section {
+    padding: 2rem 1.5rem;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Form Fields - Single Column */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Section Tabs */
+  .section-tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .section-tab {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Allergy Cards - 2 Columns */
+  .allergy-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Form Inputs */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.875rem 1rem;
+  }
+
+  /* Buttons */
+  button,
+  .btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* Save Button */
+  .save-button {
+    width: 100%;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  /* Container */
+  .profile-page {
+    padding-top: 60px;
+  }
+
+  .profile-container {
+    padding: 1rem;
+  }
+
+  /* Profile Header */
+  .profile-header-bar {
+    padding: 1.25rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-avatar-small {
+    width: 50px;
+    height: 50px;
+  }
+
+  .profile-header-name {
+    font-size: 1.25rem;
+  }
+
+  .profile-header-email {
+    font-size: 0.85rem;
+  }
+
+  /* Profile Picture Section */
+  .profile-picture-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .upload-button,
+  .remove-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Section Tabs - Stack Vertically */
+  .section-tabs {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .section-tab {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Content Area */
+  .profile-content-area {
+    padding: 1.25rem;
+  }
+
+  /* Section Header */
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  /* Form Fields */
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 0.75rem;
+    font-size: 16px;
+  }
+
+  /* Info Grid - Single Column */
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item {
+    padding: 1rem;
+  }
+
+  .info-label {
+    font-size: 0.85rem;
+  }
+
+  .info-value {
+    font-size: 1rem;
+  }
+
+  /* Allergy Cards - Single Column */
+  .allergy-cards-grid,
+  .food-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .allergy-card,
+  .food-card {
+    padding: 1rem;
+  }
+
+  .allergy-name,
+  .food-name {
+    font-size: 1rem;
+  }
+
+  /* Quick Select Grid */
+  .quick-select-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .quick-select-item {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Buttons */
+  .save-button,
+  .cancel-button,
+  .add-button {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  /* Button Group */
+  .button-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+  /* Modal */
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+    max-height: 100vh;
+  }
+
+  .modal-header {
+    padding: 1.25rem;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+  }
+
+  .modal-footer {
+    padding: 1.25rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+}
+
+/* Very Small Screens */
+@media (max-width: 360px) {
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .section-tab {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.85rem;
+  }
+
+  .allergy-card,
+  .food-card {
+    padding: 0.875rem;
+  }
+
+  .quick-select-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .profile-header-bar {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .section-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .allergy-cards-grid,
+  .food-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mobile-nav-menu {
+    width: 50%;
+  }
+}

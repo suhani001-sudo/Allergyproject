@@ -36,6 +36,10 @@ const menuSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    ingredients: {
+      type: [String],
+      default: [],
+    },
     isVegetarian: {
       type: Boolean,
       default: false,

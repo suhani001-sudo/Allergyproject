@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminDeleteModal from './AdminDeleteModal';
+import SimpleLogoutModal from './SimpleLogoutModal';
+import { handleLogout as logout } from '../utils/authUtils';
 import './AdminDashboard.css';
+import '../styles/responsive.css';
 
 const AdminDashboard = ({ onLogout }) => {
   const navigate = useNavigate();
+  
+  // Logout modal state
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalRestaurants: 0,
@@ -29,12 +35,19 @@ const AdminDashboard = ({ onLogout }) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   
-  // New admin form state
-  const [newAdmin, setNewAdmin] = useState({
-    name: '',
-    email: '',
-    password: ''
+  // Reply modal state
+  const [replyModal, setReplyModal] = useState({
+    isOpen: false,
+    messageId: '',
+    restaurantEmail: '',
+    restaurantName: '',
+    originalSubject: ''
   });
+  const [replyText, setReplyText] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+  
+  // Mobile menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Settings state
   const [settings, setSettings] = useState({
@@ -79,11 +92,24 @@ const AdminDashboard = ({ onLogout }) => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
     if (onLogout) {
       onLogout();
     }
-    navigate('/login');
+    logout(navigate);
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   const fetchAllUsers = async () => {
@@ -241,33 +267,69 @@ const AdminDashboard = ({ onLogout }) => {
     setDeleteModal({ isOpen: false, itemType: '', itemId: '', itemName: '' });
   };
 
-  const handleCreateAdmin = async (e) => {
-    e.preventDefault();
+  // Reply handlers
+  const handleOpenReply = (message) => {
+    setReplyModal({
+      isOpen: true,
+      messageId: message._id,
+      restaurantEmail: message.email,
+      restaurantName: message.restaurantName,
+      originalSubject: message.subject
+    });
+    setReplyText('');
+  };
+
+  const handleCloseReply = () => {
+    setReplyModal({
+      isOpen: false,
+      messageId: '',
+      restaurantEmail: '',
+      restaurantName: '',
+      originalSubject: ''
+    });
+    setReplyText('');
+  };
+
+  const handleSendReply = async () => {
+    if (!replyText.trim()) {
+      alert('Please enter a reply message');
+      return;
+    }
+
     try {
+      setSendingReply(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/admin/admins', {
+      
+      const response = await fetch('http://localhost:5000/api/admin/reply-to-restaurant', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(newAdmin)
+        body: JSON.stringify({
+          messageId: replyModal.messageId,
+          restaurantEmail: replyModal.restaurantEmail,
+          restaurantName: replyModal.restaurantName,
+          subject: `Re: ${replyModal.originalSubject}`,
+          message: replyText
+        })
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setSuccessMessage('Admin created successfully!');
+        setSuccessMessage('Reply sent successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
-        setNewAdmin({ name: '', email: '', password: '' });
-        fetchAllAdmins();
-        fetchAdminStats();
+        handleCloseReply();
+        fetchMessages();
       } else {
-        setError(data.message || 'Failed to create admin');
+        alert(data.message || 'Failed to send reply');
       }
     } catch (err) {
-      console.error('Error creating admin:', err);
-      setError('Network error. Please try again.');
+      console.error('Error sending reply:', err);
+      alert('Network error. Please try again.');
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -282,6 +344,53 @@ const AdminDashboard = ({ onLogout }) => {
 
   return (
     <div className="admin-dashboard">
+      {/* Logout Confirmation Modal */}
+      <SimpleLogoutModal 
+        show={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
+
+      {/* Reply Modal */}
+      {replyModal.isOpen && (
+        <div className="modal-overlay" onClick={handleCloseReply}>
+          <div className="modal-content reply-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Reply to {replyModal.restaurantName}</h3>
+              <button className="modal-close" onClick={handleCloseReply}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="reply-info">
+                <p><strong>To:</strong> {replyModal.restaurantEmail}</p>
+                <p><strong>Subject:</strong> Re: {replyModal.originalSubject}</p>
+              </div>
+              <div className="form-group">
+                <label>Your Reply</label>
+                <textarea
+                  className="reply-textarea"
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Type your reply here..."
+                  rows="8"
+                />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-secondary" onClick={handleCloseReply}>
+                Cancel
+              </button>
+              <button 
+                className="btn-primary" 
+                onClick={handleSendReply}
+                disabled={sendingReply}
+              >
+                {sendingReply ? 'Sending...' : '📤 Send Reply'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Delete Confirmation Modal */}
       <AdminDeleteModal
         isOpen={deleteModal.isOpen}
@@ -305,12 +414,85 @@ const AdminDashboard = ({ onLogout }) => {
             <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="admin-logo-image" />
             <h1>SafeBytes Admin</h1>
           </div>
-          <button onClick={handleLogout} className="admin-logout-btn">
+          
+          {/* Desktop Logout Button */}
+          <button onClick={handleLogout} className="admin-logout-btn desktop-nav">
             <span>🚪</span>
             <span>Logout</span>
           </button>
+
+          {/* Hamburger Menu */}
+          <div 
+            className={`hamburger-menu ${mobileMenuOpen ? 'active' : ''}`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </header>
+
+      {/* Mobile Navigation Overlay */}
+      <div 
+        className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      ></div>
+
+      {/* Mobile Navigation Menu */}
+      <nav className={`mobile-nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+        <button 
+          className="mobile-nav-close"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          ×
+        </button>
+        
+        <div className="mobile-nav-items">
+          <a 
+            href="#overview" 
+            className={`mobile-nav-item ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('overview'); setMobileMenuOpen(false); }}
+          >
+            📊 Overview
+          </a>
+          <a 
+            href="#users" 
+            className={`mobile-nav-item ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('users'); setMobileMenuOpen(false); }}
+          >
+            👥 Users
+          </a>
+          <a 
+            href="#restaurants" 
+            className={`mobile-nav-item ${activeTab === 'restaurants' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('restaurants'); setMobileMenuOpen(false); }}
+          >
+            🏪 Restaurants
+          </a>
+          <a 
+            href="#messages" 
+            className={`mobile-nav-item ${activeTab === 'messages' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('messages'); setMobileMenuOpen(false); }}
+          >
+            💬 Messages
+          </a>
+          <a 
+            href="#settings" 
+            className={`mobile-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
+          >
+            ⚙️ Settings
+          </a>
+        </div>
+
+        <button 
+          className="mobile-nav-logout"
+          onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+        >
+          🚪 Logout
+        </button>
+      </nav>
 
       {/* Main Content */}
       <main className="admin-main">
@@ -331,9 +513,9 @@ const AdminDashboard = ({ onLogout }) => {
             </div>
           ) : (
             <>
-              {/* Statistics Cards */}
-              <div className="stats-grid">
-                <div className="stat-card stat-users">
+              {/* Statistics Cards - Compact */}
+              <div className="stats-grid stats-grid-compact">
+                <div className="stat-card stat-card-compact stat-users">
                   <div className="stat-icon">👥</div>
                   <div className="stat-content">
                     <h3>Total Users</h3>
@@ -341,7 +523,7 @@ const AdminDashboard = ({ onLogout }) => {
                   </div>
                 </div>
 
-                <div className="stat-card stat-restaurants">
+                <div className="stat-card stat-card-compact stat-restaurants">
                   <div className="stat-icon">🏪</div>
                   <div className="stat-content">
                     <h3>Total Restaurants</h3>
@@ -349,19 +531,11 @@ const AdminDashboard = ({ onLogout }) => {
                   </div>
                 </div>
 
-                <div className="stat-card stat-admins">
-                  <div className="stat-icon">👨‍💼</div>
-                  <div className="stat-content">
-                    <h3>Total Admins</h3>
-                    <p className="stat-number">{allAdmins.length}</p>
-                  </div>
-                </div>
-
-                <div className="stat-card stat-messages">
+                <div className="stat-card stat-card-compact stat-messages">
                   <div className="stat-icon">💬</div>
                   <div className="stat-content">
                     <h3>Total Messages</h3>
-                    <p className="stat-number">{userMessages.length + restaurantMessages.length}</p>
+                    <p className="stat-number">{restaurantMessages.length}</p>
                   </div>
                 </div>
               </div>
@@ -385,12 +559,6 @@ const AdminDashboard = ({ onLogout }) => {
                   onClick={() => setActiveTab('restaurants')}
                 >
                   🏪 All Restaurants ({allRestaurants.length})
-                </button>
-                <button 
-                  className={`admin-tab ${activeTab === 'admins' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('admins')}
-                >
-                  👨‍💼 Admins ({allAdmins.length})
                 </button>
                 <button 
                   className={`admin-tab ${activeTab === 'messages' ? 'active' : ''}`}
@@ -555,126 +723,11 @@ const AdminDashboard = ({ onLogout }) => {
                 </div>
               )}
 
-              {/* Admins Tab */}
-              {activeTab === 'admins' && (
-                <div className="admin-section">
-                  <h3 className="section-title">Admin Management</h3>
-                  
-                  {/* Create New Admin Form */}
-                  <div className="create-admin-form">
-                    <h4 className="form-title">Create New Admin</h4>
-                    <form onSubmit={handleCreateAdmin} className="admin-form">
-                      <div className="form-row">
-                        <div className="form-group">
-                          <label>Name</label>
-                          <input
-                            type="text"
-                            value={newAdmin.name}
-                            onChange={(e) => setNewAdmin({...newAdmin, name: e.target.value})}
-                            placeholder="Enter admin name"
-                            required
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label>Email</label>
-                          <input
-                            type="email"
-                            value={newAdmin.email}
-                            onChange={(e) => setNewAdmin({...newAdmin, email: e.target.value})}
-                            placeholder="Enter admin email"
-                            required
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label>Password</label>
-                          <input
-                            type="password"
-                            value={newAdmin.password}
-                            onChange={(e) => setNewAdmin({...newAdmin, password: e.target.value})}
-                            placeholder="Enter password"
-                            required
-                          />
-                        </div>
-                        <button type="submit" className="create-btn">➕ Create Admin</button>
-                      </div>
-                    </form>
-                  </div>
-
-                  {/* All Admins List */}
-                  <h4 className="subsection-title">All Admins ({allAdmins.length})</h4>
-                  {allAdmins.length > 0 ? (
-                    <div className="cards-container">
-                      {allAdmins.map((admin) => (
-                        <div key={admin._id} className="info-card info-card-with-action">
-                          <div className="card-field">
-                            <span className="field-label">ID</span>
-                            <span className="field-value id-value">{admin._id.substring(0, 10)}...</span>
-                          </div>
-                          <div className="card-field">
-                            <span className="field-label">Name</span>
-                            <span className="field-value">{admin.name}</span>
-                          </div>
-                          <div className="card-field">
-                            <span className="field-label">Email</span>
-                            <span className="field-value">{admin.email}</span>
-                          </div>
-                          <div className="card-field">
-                            <span className="field-label">Joined Date</span>
-                            <span className="field-value">{formatDate(admin.createdAt)}</span>
-                          </div>
-                          <div className="card-actions">
-                            <button 
-                              className="delete-btn"
-                              onClick={() => handleDeleteClick('Admin', admin._id, admin.name)}
-                            >
-                              🗑️ Delete
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="no-data">No admins found.</p>
-                  )}
-                </div>
-              )}
-
               {/* Messages Tab */}
               {activeTab === 'messages' && (
                 <div className="admin-section">
-                  <h3 className="section-title">Messages & Feedback</h3>
+                  <h3 className="section-title">Restaurant Messages</h3>
                   
-                  {/* User Messages */}
-                  <div className="messages-subsection">
-                    <h4 className="subsection-title">Messages from Users ({userMessages.length})</h4>
-                    {userMessages.length > 0 ? (
-                      <div className="messages-container">
-                        {userMessages.map((msg) => (
-                          <div key={msg._id} className="message-card">
-                            <div className="message-header">
-                              <div className="message-sender">
-                                <span className="sender-icon">👤</span>
-                                <div>
-                                  <strong>{msg.name}</strong>
-                                  <span className="sender-email">{msg.email}</span>
-                                </div>
-                              </div>
-                              <span className="message-date">{formatDate(msg.createdAt)}</span>
-                            </div>
-                            <div className="message-subject">
-                              <strong>Subject:</strong> {msg.subject}
-                            </div>
-                            <div className="message-body">
-                              {msg.message}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="no-data">No messages from users.</p>
-                    )}
-                  </div>
-
                   {/* Restaurant Messages */}
                   <div className="messages-subsection">
                     <h4 className="subsection-title">Messages from Restaurants ({restaurantMessages.length})</h4>
@@ -694,9 +747,35 @@ const AdminDashboard = ({ onLogout }) => {
                             </div>
                             <div className="message-subject">
                               <strong>Subject:</strong> {msg.subject}
+                              {msg.status === 'replied' && (
+                                <span style={{
+                                  marginLeft: '1rem',
+                                  padding: '0.25rem 0.75rem',
+                                  background: 'linear-gradient(135deg, #6B8E23, #556B2F)',
+                                  color: 'white',
+                                  borderRadius: '12px',
+                                  fontSize: '0.75rem',
+                                  fontWeight: '600'
+                                }}>
+                                  ✓ Replied
+                                </span>
+                              )}
                             </div>
                             <div className="message-body">
                               {msg.message}
+                            </div>
+                            <div className="message-actions">
+                              <button 
+                                className="reply-btn"
+                                onClick={() => handleOpenReply(msg)}
+                                disabled={msg.status === 'replied'}
+                                style={{
+                                  opacity: msg.status === 'replied' ? 0.6 : 1,
+                                  cursor: msg.status === 'replied' ? 'not-allowed' : 'pointer'
+                                }}
+                              >
+                                {msg.status === 'replied' ? '✓ Replied' : '↩️ Reply'}
+                              </button>
                             </div>
                           </div>
                         ))}

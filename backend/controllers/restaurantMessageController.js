@@ -25,6 +25,10 @@ export const createRestaurantMessage = async (req, res) => {
       });
     }
 
+    console.log('=== CREATING RESTAURANT MESSAGE ===');
+    console.log('Restaurant user email:', user.email);
+    console.log('Restaurant user name:', user.name);
+
     // Verify user is a restaurant
     if (user.role !== 'restaurant') {
       return res.status(403).json({
@@ -44,6 +48,7 @@ export const createRestaurantMessage = async (req, res) => {
     });
 
     await newMessage.save();
+    console.log('Message saved with email:', newMessage.email);
 
     res.status(201).json({
       success: true,
