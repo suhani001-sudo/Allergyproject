@@ -15,7 +15,7 @@ function SimpleLogoutModal({ show, onConfirm, onCancel }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 999999,
+                zIndex: 9999999,
                 fontFamily: 'Arial, sans-serif'
             }}
             onClick={onCancel}

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout as logout } from '../utils/authUtils';
+import SimpleLogoutModal from './SimpleLogoutModal';
 import './AllergyInfo.css';
+import '../styles/responsive.css';
 import Footer from './Footer';
 
 function AllergyInfo() {
@@ -10,6 +13,7 @@ function AllergyInfo() {
   const [currentTip, setCurrentTip] = useState(0);
   const [activeNavItem, setActiveNavItem] = useState('My Allergies');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const safetyTips = [
     "Always read labels before eating!",
@@ -158,12 +162,37 @@ function AllergyInfo() {
     }
   };
 
+  const handleLogout = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setIsMobileMenuOpen(false);
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    logout(navigate);
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
+  };
+
   return (
     <div className="allergy-info-container">
+      {/* Logout Modal */}
+      <SimpleLogoutModal 
+        show={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
+
       {/* Navigation Bar */}
       <nav className="navbar">
         <div className="nav-container">
-          <div className="nav-logo">
+          <div className="nav-logo" onClick={() => navigate('/dashboard')}>
             <img 
               src="/images/green_logo.jpg" 
               alt="SafeBytes Logo" 
@@ -172,26 +201,13 @@ function AllergyInfo() {
             <span className="logo-text">SafeBytes</span>
           </div>
 
-          {/* Hamburger Menu Button */}
-          <button 
-            className="hamburger-menu"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-          </button>
-
-          <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+          {/* Desktop Navigation */}
+          <div className="nav-links desktop-nav">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                onClick={() => {
-                  handleNavClick(item.id);
-                  setIsMobileMenuOpen(false);
-                }}
+                onClick={() => handleNavClick(item.id)}
               >
                 <span className="nav-label">{item.label}</span>
                 {activeNavItem === item.id && (
@@ -201,20 +217,61 @@ function AllergyInfo() {
             ))}
           </div>
 
-          <button
-            className="logout-button"
-            onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              localStorage.removeItem('isLoggedIn');
-              localStorage.removeItem('role');
-              navigate('/login');
-              setIsMobileMenuOpen(false);
-            }}
-          >
+          {/* Desktop Logout Button */}
+          <button className="logout-button desktop-nav" onClick={handleLogout}>
             <span className="logout-text">Logout</span>
           </button>
+
+          {/* Hamburger Menu */}
+          <div 
+            className={`hamburger-menu ${isMobileMenuOpen ? 'active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
+      </nav>
+
+      {/* Mobile Navigation Overlay */}
+      <div 
+        className={`mobile-nav-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+
+      {/* Mobile Navigation Menu */}
+      <nav className={`mobile-nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+        <button 
+          className="mobile-nav-close"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          ×
+        </button>
+        
+        <div className="mobile-nav-items">
+          {navItems.map((item) => (
+            <a 
+              key={item.id}
+              href="#"
+              className={`mobile-nav-item ${activeNavItem === item.id ? 'active' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                handleNavClick(item.id);
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+
+        <button 
+          className="mobile-nav-logout"
+          onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }}
+        >
+          🚪 Logout
+        </button>
       </nav>
 
       {/* Header Section */}

@@ -295,10 +295,16 @@ function RestaurantDashboard(props) {
       return;
     }
 
-    // Convert image to base64 if uploaded
+    // Convert image to base64 if uploaded, or preserve existing image when editing
     let imageUrl = 'https://via.placeholder.com/300x200?text=Menu+Item';
-    if (formData.imagePreview) {
-      imageUrl = formData.imagePreview;
+    
+    if (editingId) {
+      // When editing, preserve the existing image if no new image is uploaded
+      const existingItem = items.find(item => item.id === editingId);
+      imageUrl = formData.imagePreview || existingItem?.imageUrl || imageUrl;
+    } else {
+      // When adding new item, use uploaded image or placeholder
+      imageUrl = formData.imagePreview || imageUrl;
     }
 
     const menuItemData = {
@@ -788,6 +794,28 @@ function RestaurantDashboard(props) {
           </form>
         </section>
 
+        {/* ANALYTICS SECTION - Quick Stats */}
+        <section id="rd-analytics" className="rd-section rd-analytics">
+          <h2 className="rd-section-title">📊 Quick Stats</h2>
+          <div className="rd-analytics-grid">
+            <div className="rd-analytics-card">
+              <div className="rd-analytics-icon">📋</div>
+              <div className="rd-analytics-value">{totalItems}</div>
+              <div className="rd-analytics-label">Total Items</div>
+            </div>
+            <div className="rd-analytics-card">
+              <div className="rd-analytics-icon">✓</div>
+              <div className="rd-analytics-value">{availableItems}</div>
+              <div className="rd-analytics-label">Available</div>
+            </div>
+            <div className="rd-analytics-card">
+              <div className="rd-analytics-icon">⚠️</div>
+              <div className="rd-analytics-value">{itemsWithAnyAllergens}</div>
+              <div className="rd-analytics-label">With Allergens</div>
+            </div>
+          </div>
+        </section>
+
         {/* MENU LIST SECTION */}
         <section id="rd-menu" className="rd-section">
           <h2 className="rd-section-title">Menu Items ({items.length})</h2>
@@ -884,28 +912,6 @@ function RestaurantDashboard(props) {
                 </div>
               );
             })}
-          </div>
-        </section>
-
-        {/* ANALYTICS SECTION */}
-        <section id="rd-analytics" className="rd-section rd-analytics">
-          <h2 className="rd-section-title">📊 Quick Stats</h2>
-          <div className="rd-analytics-grid">
-            <div className="rd-analytics-card">
-              <div className="rd-analytics-icon">📋</div>
-              <div className="rd-analytics-value">{totalItems}</div>
-              <div className="rd-analytics-label">Total Items</div>
-            </div>
-            <div className="rd-analytics-card">
-              <div className="rd-analytics-icon">✓</div>
-              <div className="rd-analytics-value">{availableItems}</div>
-              <div className="rd-analytics-label">Available</div>
-            </div>
-            <div className="rd-analytics-card">
-              <div className="rd-analytics-icon">⚠️</div>
-              <div className="rd-analytics-value">{itemsWithAnyAllergens}</div>
-              <div className="rd-analytics-label">With Allergens</div>
-            </div>
           </div>
         </section>
       </main>

@@ -463,7 +463,7 @@ html {
 
 .hero-food-image {
   width: 100%;
-  height: 400px;
+  height: 500px;
   object-fit: cover;
   display: block;
   transition: transform 0.3s ease;
@@ -1097,8 +1097,12 @@ html {
   }
 
   .hero-image {
-    max-width: 300px;
+    max-width: 100%;
     margin-top: 2rem;
+  }
+
+  .hero-food-image {
+    height: 350px;
   }
 
   .quote-container {
@@ -1234,7 +1238,11 @@ html {
   }
 
   .hero-image {
-    max-width: 250px;
+    max-width: 100%;
+  }
+
+  .hero-food-image {
+    height: 300px;
   }
 
   .quote-container {

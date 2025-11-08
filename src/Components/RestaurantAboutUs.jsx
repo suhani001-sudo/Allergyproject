@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import './AboutUs.css'; // Reusing the same CSS
+import '../styles/responsive.css';
 import Footer from './Footer';
 
 function RestaurantAboutUs() {
     const navigate = useNavigate();
     const [activeNavItem, setActiveNavItem] = useState('About');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Navigation items for Restaurant Dashboard
     const navItems = [
@@ -89,7 +91,8 @@ function RestaurantAboutUs() {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    <div className="nav-links">
+                    {/* Desktop Navigation */}
+                    <div className="nav-links desktop-nav">
                         {navItems.map(function (item) {
                             return (
                                 <button
@@ -106,10 +109,63 @@ function RestaurantAboutUs() {
                         })}
                     </div>
 
-                    <button className="logout-button" onClick={handleLogout}>
+                    {/* Desktop Logout Button */}
+                    <button className="logout-button desktop-nav" onClick={handleLogout}>
                         <span className="logout-text">Logout</span>
                     </button>
+
+                    {/* Hamburger Menu */}
+                    <div 
+                        className={`hamburger-menu ${isMobileMenuOpen ? 'active' : ''}`}
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
+            </nav>
+
+            {/* Mobile Navigation Overlay */}
+            <div 
+                className={`mobile-nav-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            ></div>
+
+            {/* Mobile Navigation Menu */}
+            <nav className={`mobile-nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+                <button 
+                    className="mobile-nav-close"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                >
+                    ×
+                </button>
+                
+                <div className="mobile-nav-items">
+                    {navItems.map(function (item) {
+                        return (
+                            <a 
+                                key={item.id}
+                                href="#"
+                                className={`mobile-nav-item ${activeNavItem === item.id ? 'active' : ''}`}
+                                onClick={function (e) {
+                                    e.preventDefault();
+                                    setIsMobileMenuOpen(false);
+                                    handleNavClick(item.id);
+                                }}
+                            >
+                                {item.label}
+                            </a>
+                        );
+                    })}
+                </div>
+
+                <button 
+                    className="mobile-nav-logout"
+                    onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }}
+                >
+                    🚪 Logout
+                </button>
             </nav>
 
             {/* Hero Section - Premium Design */}

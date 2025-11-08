@@ -53,25 +53,22 @@ html {
 .profile-page .nav-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .profile-page .logo-image {
-  height: 70px;
-  width: auto;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
-  margin-right: 0.5rem;
 }
 
 .profile-page .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #5b8a3c;
-  letter-spacing: 0.5px;
+  color: #2c3e50;
+  letter-spacing: 0.3px;
 }
 
 .profile-page .nav-links {
@@ -1525,6 +1522,16 @@ html {
 
 /* Tablet Responsive */
 @media (max-width: 768px) {
+  /* Logo Scaling */
+  .profile-page .logo-image {
+    width: 38px;
+    height: 38px;
+  }
+
+  .profile-page .logo-text {
+    font-size: 1.25rem;
+  }
+
   /* Profile Picture Section */
   .profile-picture-section {
     padding: 2rem 1.5rem;
@@ -1590,10 +1597,108 @@ html {
   /* Container */
   .profile-page {
     padding-top: 60px;
+    overflow-x: hidden !important;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .profile-page * {
+    box-sizing: border-box;
   }
 
   .profile-container {
+    padding: 0.5rem;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .profile-main-content {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .profile-content-wrapper {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Logo Scaling */
+  .profile-page .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .profile-page .logo-text {
+    font-size: 1.1rem;
+  }
+
+  /* Profile Layout */
+  .profile-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Profile Navigation Panel - Visible on Mobile */
+  .profile-nav-panel {
+    position: static;
+    width: 100%;
     padding: 1rem;
+    margin-bottom: 1rem;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .nav-panel-title {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .profile-nav-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 142, 35, 0.3) transparent;
+  }
+
+  .profile-nav-list::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .profile-nav-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .profile-nav-list::-webkit-scrollbar-thumb {
+    background: rgba(107, 142, 35, 0.3);
+    border-radius: 4px;
+  }
+
+  .profile-nav-item {
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    min-width: auto;
+    border: 1px solid rgba(107, 142, 35, 0.15);
+  }
+
+  .profile-nav-item.active {
+    background: rgba(107, 142, 35, 0.15);
+    border-color: #6B8E23;
+  }
+
+  .nav-item-icon {
+    font-size: 1.1rem;
+  }
+
+  .nav-item-arrow {
+    display: none;
   }
 
   /* Profile Header */
@@ -1620,11 +1725,23 @@ html {
   /* Profile Picture Section */
   .profile-picture-section {
     padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
   }
 
-  .profile-avatar {
+  .profile-picture-wrapper {
+    margin-bottom: 1rem;
+  }
+
+  .profile-picture,
+  .profile-picture-placeholder {
     width: 100px;
     height: 100px;
+  }
+
+  .btn-upload-picture {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
 
   .upload-button,
@@ -1647,17 +1764,22 @@ html {
 
   /* Content Area */
   .profile-content-area {
-    padding: 1.25rem;
+    padding: 1rem;
+    overflow-x: hidden;
   }
 
   /* Section Header */
-  .section-header {
+  .section-header,
+  .section-header-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
   }
 
   .section-title {
     font-size: 1.25rem;
+    width: 100%;
   }
 
   /* Form Fields */
@@ -1667,13 +1789,21 @@ html {
 
   .form-label {
     font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 
   .form-input,
   .form-select,
   .form-textarea {
+    width: 100%;
+    max-width: 100%;
     padding: 0.75rem;
     font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .form-textarea {
+    min-height: 100px;
   }
 
   /* Info Grid - Single Column */
@@ -1697,16 +1827,20 @@ html {
   .allergy-cards-grid,
   .food-cards-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .allergy-card,
   .food-card {
     padding: 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .allergy-name,
   .food-name {
     font-size: 1rem;
+    word-wrap: break-word;
   }
 
   /* Quick Select Grid */
@@ -1716,27 +1850,45 @@ html {
   }
 
   .quick-select-item {
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
     font-size: 0.85rem;
+    text-align: center;
   }
 
-  /* Buttons */
+  /* All Buttons - Force Full Width and Prevent Overflow */
   .save-button,
   .cancel-button,
-  .add-button {
-    width: 100%;
-    padding: 0.875rem;
-    font-size: 0.95rem;
+  .add-button,
+  .btn-primary,
+  .btn-secondary,
+  .btn-edit-section,
+  .btn-save-section,
+  .btn-cancel-section,
+  .btn-upload-picture,
+  button[type="submit"],
+  button[type="button"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 0.95rem !important;
+    box-sizing: border-box !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Button Group */
-  .button-group {
+  .button-group,
+  .edit-actions-header {
     flex-direction: column;
     gap: 0.75rem;
+    width: 100%;
   }
 
-  .button-group button {
-    width: 100%;
+  .button-group button,
+  .edit-actions-header button {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   /* Modal */

@@ -1,33 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleLogout as logout } from '../utils/authUtils';
-import SimpleLogoutModal from './SimpleLogoutModal';
 import './UserRestaurantPage.css';
+import '../styles/responsive.css';
 
 function UserRestaurantPage(props) {
   // STEP 2: Initialize navigation and cart hooks
   const navigate = useNavigate();
   
-  // Logout modal state
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  
-  // Centralized logout handler
-  const handleLogout = (e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setShowLogoutModal(true);
-  };
-  
-  const confirmLogout = () => {
-    setShowLogoutModal(false);
-    logout(navigate);
-  };
-  
-  const cancelLogout = () => {
-    setShowLogoutModal(false);
-  };
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   
   // STEP 3: Define state variables for managing data
@@ -87,7 +68,7 @@ function UserRestaurantPage(props) {
   }, []);
 
   // STEP 5: Filter items based on search term and category
-  const filteredItems = items.filter(function(item) {
+  const filteredItems = (items || []).filter(function(item) {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = (item.name && item.name.toLowerCase().includes(searchLower)) ||
                          (item.description && item.description.toLowerCase().includes(searchLower)) ||
@@ -99,17 +80,10 @@ function UserRestaurantPage(props) {
   });
 
   // Get unique categories for filter dropdown
-  const categories = ['All', ...new Set(items.map(item => item.category || 'other').filter(Boolean))];
+  const categories = ['All', ...new Set((items || []).map(item => item.category || 'other').filter(Boolean))];
 
   return (
     <div className="restaurant-page">
-      {/* Simple Logout Modal */}
-      <SimpleLogoutModal 
-        show={showLogoutModal}
-        onConfirm={confirmLogout}
-        onCancel={cancelLogout}
-      />
-
       {/* STEP 6: Render header with original nav bar style */}
       <nav className="navbar">
         <div className="nav-container">
@@ -122,7 +96,8 @@ function UserRestaurantPage(props) {
             <span className="logo-text">SafeBytes</span>
           </div>
 
-          <div className="nav-links">
+          {/* Desktop Navigation */}
+          <div className="nav-links desktop-nav">
             <button
               className="nav-link"
               onClick={function() { navigate('/dashboard'); }}
@@ -149,9 +124,101 @@ function UserRestaurantPage(props) {
             </button>
           </div>
 
-          <button className="logout-button" onClick={handleLogout}>
-            <span className="logout-text">Logout</span>
-          </button>
+
+          {/* Hamburger Menu */}
+          <div 
+            className={`hamburger-menu ${isMobileMenuOpen ? 'active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation Overlay */}
+      <div 
+        className={`mobile-nav-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+
+      {/* Mobile Navigation Menu */}
+      <nav className={`mobile-nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+        <button 
+          className="mobile-nav-close"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          ×
+        </button>
+        
+        <div className="mobile-nav-items">
+          <a 
+            href="#"
+            className="mobile-nav-item"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigate('/dashboard');
+            }}
+          >
+            Dashboard
+          </a>
+          <a 
+            href="#"
+            className="mobile-nav-item active"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigate('/restaurants');
+            }}
+          >
+            Restaurants
+          </a>
+          <a 
+            href="#"
+            className="mobile-nav-item"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigate('/allergy-info');
+            }}
+          >
+            Allergies
+          </a>
+          <a 
+            href="#"
+            className="mobile-nav-item"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigate('/contact');
+            }}
+          >
+            Contact
+          </a>
+          <a 
+            href="#"
+            className="mobile-nav-item"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigate('/about-us');
+            }}
+          >
+            About us
+          </a>
+          <a 
+            href="#"
+            className="mobile-nav-item"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              navigate('/profile');
+            }}
+          >
+            Profile
+          </a>
         </div>
       </nav>
 
@@ -281,7 +348,7 @@ function UserRestaurantPage(props) {
                       {/* Price - Always Present */}
                       <div className="item-footer">
                         <span className="item-price">
-                          ₹{typeof item.price === 'number' ? item.price.toFixed(2) : (item.price || '0.00')}
+                          ₹{typeof item.price === 'number' ? Math.round(item.price) : (item.price || '0')}
                         </span>
                       </div>
                     </div>

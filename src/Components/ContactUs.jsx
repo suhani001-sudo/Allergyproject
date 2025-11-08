@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { handleLogout as logout } from '../utils/authUtils';
 import LogoutConfirmModal from './LogoutConfirmModal';
 import './ContactUs.css';
+import '../styles/responsive.css';
 import Footer from './Footer';
 
 function ContactUs() {
@@ -252,27 +253,14 @@ function ContactUs() {
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
-                    {/* Hamburger Menu Button */}
-                    <button 
-                        className="hamburger-menu"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        aria-label="Toggle menu"
-                    >
-                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-                        <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-                    </button>
-
-                    <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+                    {/* Desktop Navigation */}
+                    <div className="nav-links desktop-nav">
                         {navItems.map(function (item) {
                             return (
                                 <button
                                     key={item.id}
                                     className={`nav-link ${activeNavItem === item.id ? 'active' : ''}`}
-                                    onClick={function () { 
-                                        handleNavClick(item.id);
-                                        setIsMobileMenuOpen(false);
-                                    }}
+                                    onClick={function () { handleNavClick(item.id); }}
                                 >
                                     <span className="nav-label">{item.label}</span>
                                     {activeNavItem === item.id && (
@@ -283,13 +271,63 @@ function ContactUs() {
                         })}
                     </div>
 
-                    <button className="logout-button" onClick={() => {
-                        handleLogout();
-                        setIsMobileMenuOpen(false);
-                    }}>
+                    {/* Desktop Logout Button */}
+                    <button className="logout-button desktop-nav" onClick={handleLogout}>
                         <span className="logout-text">Logout</span>
                     </button>
+
+                    {/* Hamburger Menu */}
+                    <div 
+                        className={`hamburger-menu ${isMobileMenuOpen ? 'active' : ''}`}
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
+            </nav>
+
+            {/* Mobile Navigation Overlay */}
+            <div 
+                className={`mobile-nav-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+            ></div>
+
+            {/* Mobile Navigation Menu */}
+            <nav className={`mobile-nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+                <button 
+                    className="mobile-nav-close"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                >
+                    ×
+                </button>
+                
+                <div className="mobile-nav-items">
+                    {navItems.map(function (item) {
+                        return (
+                            <a 
+                                key={item.id}
+                                href="#"
+                                className={`mobile-nav-item ${activeNavItem === item.id ? 'active' : ''}`}
+                                onClick={function (e) {
+                                    e.preventDefault();
+                                    setIsMobileMenuOpen(false);
+                                    handleNavClick(item.id);
+                                }}
+                            >
+                                {item.label}
+                            </a>
+                        );
+                    })}
+                </div>
+
+                <button 
+                    className="mobile-nav-logout"
+                    onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }}
+                >
+                    🚪 Logout
+                </button>
             </nav>
 
             {/* Hero Section */}

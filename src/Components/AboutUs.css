@@ -12,13 +12,13 @@ html {
 .about-page {
   min-height: 100vh;
   width: 100vw;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f5f5f5 100%);
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
   padding-top: 70px;
   margin: 0;
-  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  font-family: 'Poppins', 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* ========================================
@@ -51,25 +51,22 @@ html {
 .about-page .nav-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .about-page .logo-image {
-  height: 70px;
-  width: auto;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
-  margin-right: 0.5rem;
 }
 
 .about-page .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #5b8a3c;
-  letter-spacing: 0.5px;
+  color: #2c3e50;
+  letter-spacing: 0.3px;
 }
 
 .about-page .nav-links {
@@ -624,10 +621,10 @@ html {
 .team-cards-container {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  justify-items: center;
 }
 
 .team-card {
@@ -636,7 +633,8 @@ html {
 }
 
 .team-card-inner {
-  width: 220px;
+  width: 100%;
+  max-width: 220px;
   padding: 3rem 2rem;
   background: white;
   border-radius: 24px;
@@ -645,6 +643,7 @@ html {
   text-align: center;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .team-card-inner::before {
@@ -1171,5 +1170,444 @@ html {
 
   .about-page .nav-links.active {
     right: 0;
+  }
+}
+
+/* ========================================
+   ENHANCED RESPONSIVE STYLES - ABOUT US PAGE
+   ======================================== */
+
+/* Tablet Responsive */
+@media (max-width: 768px) {
+  /* Logo Scaling */
+  .about-page .logo-image {
+    width: 38px;
+    height: 38px;
+  }
+
+  .about-page .logo-text {
+    font-size: 1.25rem;
+  }
+
+  /* Hero Section */
+  .hero-main-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+  }
+
+  /* Team Section */
+  .team-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .team-title {
+    font-size: 2.25rem;
+  }
+
+  .team-subtitle {
+    font-size: 1.1rem;
+  }
+
+  /* Team Cards - 2 Columns on Tablet */
+  .team-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .team-card-inner {
+    width: 100%;
+    max-width: 280px;
+    padding: 2rem 1.5rem;
+  }
+
+  .team-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .team-name {
+    font-size: 1.1rem;
+  }
+
+  .team-role {
+    font-size: 0.85rem;
+  }
+
+  .team-bio {
+    font-size: 0.85rem;
+  }
+
+  /* Feature Cards - 2 Columns */
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+  }
+
+  .feature-title {
+    font-size: 1.1rem;
+  }
+
+  .feature-description {
+    font-size: 0.85rem;
+  }
+
+  /* Stats Section */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+  }
+
+  /* Values Section */
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .value-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  /* Container */
+  .about-page {
+    padding-top: 60px;
+    overflow-x: hidden !important;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .about-page * {
+    box-sizing: border-box;
+  }
+
+  /* Logo Scaling */
+  .about-page .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .about-page .logo-text {
+    font-size: 1.1rem;
+  }
+
+  /* Hero Section */
+  .premium-hero {
+    padding: 60px 1rem 40px;
+  }
+
+  .hero-main-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .hero-tagline {
+    font-size: 0.9rem;
+  }
+
+  /* Hero Illustration */
+  .hero-illustration {
+    display: none; /* Hide on mobile for cleaner look */
+  }
+
+  /* Team Section - Ensure Visibility on Mobile */
+  .team-section {
+    padding: 3rem 0.75rem;
+    overflow-x: hidden;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .team-header {
+    display: block !important;
+    visibility: visible !important;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .team-title {
+    font-size: 1.75rem;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .team-subtitle {
+    font-size: 1rem;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Team Cards - Horizontal Scroll on Mobile */
+  .team-cards-container {
+    display: flex !important;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1rem;
+    padding: 1rem 0.75rem;
+    max-width: 100%;
+    visibility: visible !important;
+    opacity: 1 !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 142, 35, 0.3) transparent;
+  }
+
+  .team-cards-container::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .team-cards-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  .team-cards-container::-webkit-scrollbar-thumb {
+    background: rgba(107, 142, 35, 0.4);
+    border-radius: 10px;
+  }
+
+  .team-cards-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(107, 142, 35, 0.6);
+  }
+
+  .team-card {
+    flex: 0 0 280px;
+    width: 280px;
+    max-width: 280px;
+    padding: 0;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    scroll-snap-align: start;
+  }
+
+  .team-card-inner {
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem 1.25rem;
+    margin: 0;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: 100%;
+  }
+
+  .team-avatar {
+    width: 70px;
+    height: 70px;
+    display: block !important;
+    visibility: visible !important;
+    margin: 0 auto 1rem;
+  }
+
+  .avatar-circle {
+    display: flex !important;
+    visibility: visible !important;
+  }
+
+  .avatar-initial {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .team-member-name {
+    font-size: 1rem;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .team-name {
+    font-size: 1rem;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .team-role {
+    font-size: 0.8rem;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .team-bio {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .team-decorative-dots {
+    display: flex !important;
+    visibility: visible !important;
+  }
+
+  /* Feature Cards - Single Column */
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    padding: 1.25rem;
+  }
+
+  .feature-icon {
+    font-size: 2rem;
+  }
+
+  .feature-title {
+    font-size: 1rem;
+  }
+
+  .feature-description {
+    font-size: 0.8rem;
+  }
+
+  /* Stats Grid - Single Column */
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+  }
+
+  /* Values Section */
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .value-card {
+    padding: 1.25rem;
+  }
+
+  .value-icon {
+    font-size: 2rem;
+  }
+
+  .value-title {
+    font-size: 1rem;
+  }
+
+  .value-description {
+    font-size: 0.85rem;
+  }
+
+  /* Mission/Vision Section */
+  .mission-section,
+  .vision-section {
+    padding: 2rem 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .section-content {
+    font-size: 0.9rem;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    padding: 2rem 1rem;
+  }
+
+  .cta-title {
+    font-size: 1.5rem;
+  }
+
+  .cta-description {
+    font-size: 0.9rem;
+  }
+
+  .cta-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Very Small Screens */
+@media (max-width: 360px) {
+  .hero-main-title {
+    font-size: 1.5rem;
+  }
+
+  .team-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .team-card {
+    padding: 1rem;
+  }
+
+  .feature-card,
+  .stat-card,
+  .value-card {
+    padding: 1rem;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .premium-hero {
+    padding: 40px 1rem 30px;
+  }
+
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mobile-nav-menu {
+    width: 50%;
   }
 }
