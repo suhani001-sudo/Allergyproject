@@ -47,6 +47,7 @@ function UserRestaurantPage(props) {
             };
           });
           
+          console.log(`✅ Loaded ${transformedItems.length} menu items from database`);
           setItems(transformedItems);
           setError(null);
         } else {
