@@ -39,17 +39,26 @@ function RestaurantDashboard(props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // STEP 2.1: Fetch menu items from database and remove duplicates
+  // STEP 2.1: Fetch menu items from database (both regular and custom) and remove duplicates
   useEffect(function() {
     async function fetchMenuItems() {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/menus');
-        const data = await response.json();
         
-        if (data.success && data.data) {
-          // Transform backend data to match component structure
-          const transformedItems = data.data.map(function(item) {
+        // Fetch both regular menus and custom menus
+        const [menusResponse, customMenusResponse] = await Promise.all([
+          fetch('http://localhost:5000/api/menus'),
+          fetch('http://localhost:5000/api/custom-menus')
+        ]);
+        
+        const menusData = await menusResponse.json();
+        const customMenusData = await customMenusResponse.json();
+        
+        let allItems = [];
+        
+        // Process regular menus
+        if (menusData.success && menusData.data) {
+          const regularItems = menusData.data.map(function(item) {
             return {
               id: item._id,
               name: item.itemName,
@@ -63,29 +72,48 @@ function RestaurantDashboard(props) {
               imageUrl: item.imageUrl,
               isVegetarian: item.isVegetarian,
               isVegan: item.isVegan,
-              isGlutenFree: item.isGlutenFree
+              isGlutenFree: item.isGlutenFree,
+              isCustom: false
             };
           });
-          
-          // Remove duplicates using _id, or name+price as fallback
-          const uniqueItems = [];
-          const seenIds = new Set();
-          const seenNamePrice = new Set();
-          
-          transformedItems.forEach(function(item) {
-            const namePrice = `${item.name.toLowerCase()}-${item.price}`;
-            
-            if (item.id && !seenIds.has(item.id)) {
-              seenIds.add(item.id);
-              uniqueItems.push(item);
-            } else if (!item.id && !seenNamePrice.has(namePrice)) {
-              seenNamePrice.add(namePrice);
-              uniqueItems.push(item);
-            }
-          });
-          
-          setItems(uniqueItems);
+          allItems = [...allItems, ...regularItems];
         }
+        
+        // Process custom menus
+        if (customMenusData.success && customMenusData.data) {
+          const customItems = customMenusData.data.map(function(item) {
+            return {
+              id: item._id,
+              name: item.itemName,
+              price: item.price,
+              description: item.description,
+              allergens: item.allergenInfo || [],
+              ingredients: item.ingredients || [],
+              category: item.category,
+              restaurantName: item.restaurantName,
+              available: true,
+              imageUrl: item.imageUrl,
+              isVegetarian: item.isVegetarian,
+              isVegan: item.isVegan,
+              isGlutenFree: item.isGlutenFree,
+              isCustom: true
+            };
+          });
+          allItems = [...allItems, ...customItems];
+        }
+        
+        // Remove duplicates using _id
+        const uniqueItems = [];
+        const seenIds = new Set();
+        
+        allItems.forEach(function(item) {
+          if (item.id && !seenIds.has(item.id)) {
+            seenIds.add(item.id);
+            uniqueItems.push(item);
+          }
+        });
+        
+        setItems(uniqueItems);
       } catch (err) {
         console.error('Error fetching menu items:', err);
         setError('Failed to load menu items');
@@ -320,8 +348,17 @@ function RestaurantDashboard(props) {
 
     try {
       if (editingId) {
+        // Find the item to determine if it's custom or regular
+        const itemToUpdate = items.find(item => item.id === editingId);
+        const isCustomItem = itemToUpdate?.isCustom || false;
+        
+        // Use appropriate endpoint based on item type
+        const endpoint = isCustomItem 
+          ? `http://localhost:5000/api/custom-menus/${editingId}`
+          : `http://localhost:5000/api/menus/${editingId}`;
+        
         // Update existing item
-        const response = await fetch(`http://localhost:5000/api/menus/${editingId}`, {
+        const response = await fetch(endpoint, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(menuItemData)
@@ -330,12 +367,19 @@ function RestaurantDashboard(props) {
         const data = await response.json();
         
         if (data.success) {
-          // Refresh menu items
-          const fetchResponse = await fetch('http://localhost:5000/api/menus');
-          const fetchData = await fetchResponse.json();
+          // Refresh menu items from both APIs
+          const [menusResponse, customMenusResponse] = await Promise.all([
+            fetch('http://localhost:5000/api/menus'),
+            fetch('http://localhost:5000/api/custom-menus')
+          ]);
           
-          if (fetchData.success && fetchData.data) {
-            const transformedItems = fetchData.data.map(function(item) {
+          const menusData = await menusResponse.json();
+          const customMenusData = await customMenusResponse.json();
+          
+          let allItems = [];
+          
+          if (menusData.success && menusData.data) {
+            const regularItems = menusData.data.map(function(item) {
               return {
                 id: item._id,
                 name: item.itemName,
@@ -346,19 +390,41 @@ function RestaurantDashboard(props) {
                 category: item.category,
                 restaurantName: item.restaurantName,
                 available: true,
-                imageUrl: item.imageUrl
+                imageUrl: item.imageUrl,
+                isCustom: false
               };
             });
-            setItems(transformedItems);
+            allItems = [...allItems, ...regularItems];
           }
+          
+          if (customMenusData.success && customMenusData.data) {
+            const customItems = customMenusData.data.map(function(item) {
+              return {
+                id: item._id,
+                name: item.itemName,
+                price: item.price,
+                description: item.description,
+                allergens: item.allergenInfo || [],
+                ingredients: item.ingredients || [],
+                category: item.category,
+                restaurantName: item.restaurantName,
+                available: true,
+                imageUrl: item.imageUrl,
+                isCustom: true
+              };
+            });
+            allItems = [...allItems, ...customItems];
+          }
+          
+          setItems(allItems);
           alert('Menu item updated successfully!');
           resetForm();
         } else {
           alert('Failed to update menu item: ' + (data.message || 'Unknown error'));
         }
       } else {
-        // Add new item
-        const response = await fetch('http://localhost:5000/api/menus', {
+        // Add new item to custom menus collection
+        const response = await fetch('http://localhost:5000/api/custom-menus', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(menuItemData)
@@ -367,12 +433,19 @@ function RestaurantDashboard(props) {
         const data = await response.json();
         
         if (data.success) {
-          // Refresh menu items
-          const fetchResponse = await fetch('http://localhost:5000/api/menus');
-          const fetchData = await fetchResponse.json();
+          // Refresh menu items from both APIs
+          const [menusResponse, customMenusResponse] = await Promise.all([
+            fetch('http://localhost:5000/api/menus'),
+            fetch('http://localhost:5000/api/custom-menus')
+          ]);
           
-          if (fetchData.success && fetchData.data) {
-            const transformedItems = fetchData.data.map(function(item) {
+          const menusData = await menusResponse.json();
+          const customMenusData = await customMenusResponse.json();
+          
+          let allItems = [];
+          
+          if (menusData.success && menusData.data) {
+            const regularItems = menusData.data.map(function(item) {
               return {
                 id: item._id,
                 name: item.itemName,
@@ -383,14 +456,36 @@ function RestaurantDashboard(props) {
                 category: item.category,
                 restaurantName: item.restaurantName,
                 available: true,
-                imageUrl: item.imageUrl
+                imageUrl: item.imageUrl,
+                isCustom: false
               };
             });
-            setItems(transformedItems);
+            allItems = [...allItems, ...regularItems];
           }
+          
+          if (customMenusData.success && customMenusData.data) {
+            const customItems = customMenusData.data.map(function(item) {
+              return {
+                id: item._id,
+                name: item.itemName,
+                price: item.price,
+                description: item.description,
+                allergens: item.allergenInfo || [],
+                ingredients: item.ingredients || [],
+                category: item.category,
+                restaurantName: item.restaurantName,
+                available: true,
+                imageUrl: item.imageUrl,
+                isCustom: true
+              };
+            });
+            allItems = [...allItems, ...customItems];
+          }
+          
+          setItems(allItems);
           alert('Menu item added successfully!');
         } else {
-          alert('Failed to add menu item.');
+          alert('Failed to add menu item: ' + (data.message || 'Unknown error'));
         }
       }
       
@@ -423,19 +518,35 @@ function RestaurantDashboard(props) {
     if (!ok) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/menus/${id}`, {
+      // Find the item to determine if it's custom or regular
+      const itemToDelete = items.find(item => item.id === id);
+      const isCustomItem = itemToDelete?.isCustom || false;
+      
+      // Use appropriate endpoint based on item type
+      const endpoint = isCustomItem 
+        ? `http://localhost:5000/api/custom-menus/${id}`
+        : `http://localhost:5000/api/menus/${id}`;
+      
+      const response = await fetch(endpoint, {
         method: 'DELETE'
       });
       
       const data = await response.json();
       
       if (data.success) {
-        // Refresh menu items
-        const fetchResponse = await fetch('http://localhost:5000/api/menus');
-        const fetchData = await fetchResponse.json();
+        // Refresh menu items from both APIs
+        const [menusResponse, customMenusResponse] = await Promise.all([
+          fetch('http://localhost:5000/api/menus'),
+          fetch('http://localhost:5000/api/custom-menus')
+        ]);
         
-        if (fetchData.success && fetchData.data) {
-          const transformedItems = fetchData.data.map(function(item) {
+        const menusData = await menusResponse.json();
+        const customMenusData = await customMenusResponse.json();
+        
+        let allItems = [];
+        
+        if (menusData.success && menusData.data) {
+          const regularItems = menusData.data.map(function(item) {
             return {
               id: item._id,
               name: item.itemName,
@@ -446,11 +557,33 @@ function RestaurantDashboard(props) {
               category: item.category,
               restaurantName: item.restaurantName,
               available: true,
-              imageUrl: item.imageUrl
+              imageUrl: item.imageUrl,
+              isCustom: false
             };
           });
-          setItems(transformedItems);
+          allItems = [...allItems, ...regularItems];
         }
+        
+        if (customMenusData.success && customMenusData.data) {
+          const customItems = customMenusData.data.map(function(item) {
+            return {
+              id: item._id,
+              name: item.itemName,
+              price: item.price,
+              description: item.description,
+              allergens: item.allergenInfo || [],
+              ingredients: item.ingredients || [],
+              category: item.category,
+              restaurantName: item.restaurantName,
+              available: true,
+              imageUrl: item.imageUrl,
+              isCustom: true
+            };
+          });
+          allItems = [...allItems, ...customItems];
+        }
+        
+        setItems(allItems);
         alert('Menu item deleted successfully!');
       } else {
         alert('Failed to delete menu item.');

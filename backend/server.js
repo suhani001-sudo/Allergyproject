@@ -9,6 +9,7 @@ import allergyRoutes from './routes/allergyRoutes.js';
 import restaurantRoutes from './routes/restaurantRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
+import customMenuRoutes from './routes/customMenuRoutes.js';
 import restaurantMenuRoutes from './routes/restaurantMenuRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import userProfileRoutes from './routes/userProfileRoutes.js';
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
       restaurants: '/api/restaurants',
       users: '/api/users',
       menus: '/api/menus',
+      customMenus: '/api/custom-menus',
       restaurantMenu: '/api/restaurants/menu',
       feedback: '/api/feedback',
       userProfile: '/api/user-profile',
@@ -60,6 +62,7 @@ app.use('/api/restaurants/menu', restaurantMenuRoutes); // Must be before /api/r
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/menus', menuRoutes);
+app.use('/api/custom-menus', customMenuRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/user-profile', userProfileRoutes);
 app.use('/api/restaurant-profile', restaurantProfileRoutes);
