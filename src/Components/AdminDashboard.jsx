@@ -69,7 +69,7 @@ const AdminDashboard = ({ onLogout }) => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/admin/stats', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/admin/stats', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const AdminDashboard = ({ onLogout }) => {
   const fetchAllUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/admin/users', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/admin/users', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const AdminDashboard = ({ onLogout }) => {
   const fetchAllRestaurants = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/admin/restaurants', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/admin/restaurants', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ const AdminDashboard = ({ onLogout }) => {
   const fetchAllAdmins = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/admin/admins', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/admin/admins', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ const AdminDashboard = ({ onLogout }) => {
       const token = localStorage.getItem('token');
       
       // Fetch user messages
-      const userMsgResponse = await fetch('http://localhost:5000/api/admin/user-messages', {
+      const userMsgResponse = await fetch('https://safebytes-backend.onrender.com/api/admin/user-messages', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const AdminDashboard = ({ onLogout }) => {
       }
       
       // Fetch restaurant messages
-      const restMsgResponse = await fetch('http://localhost:5000/api/restaurant-messages', {
+      const restMsgResponse = await fetch('https://safebytes-backend.onrender.com/api/restaurant-messages', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -221,11 +221,11 @@ const AdminDashboard = ({ onLogout }) => {
       let endpoint;
       
       if (deleteModal.itemType === 'User') {
-        endpoint = `http://localhost:5000/api/admin/users/${deleteModal.itemId}`;
+        endpoint = `https://safebytes-backend.onrender.com/api/admin/users/${deleteModal.itemId}`;
       } else if (deleteModal.itemType === 'Restaurant') {
-        endpoint = `http://localhost:5000/api/admin/restaurants/${deleteModal.itemId}`;
+        endpoint = `https://safebytes-backend.onrender.com/api/admin/restaurants/${deleteModal.itemId}`;
       } else if (deleteModal.itemType === 'Admin') {
-        endpoint = `http://localhost:5000/api/admin/admins/${deleteModal.itemId}`;
+        endpoint = `https://safebytes-backend.onrender.com/api/admin/admins/${deleteModal.itemId}`;
       }
 
       const response = await fetch(endpoint, {
@@ -300,7 +300,7 @@ const AdminDashboard = ({ onLogout }) => {
       setSendingReply(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/admin/reply-to-restaurant', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/admin/reply-to-restaurant', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

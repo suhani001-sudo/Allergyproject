@@ -79,7 +79,7 @@ function RestaurantContactAdmin() {
             setSending(true);
             const token = localStorage.getItem('token');
             
-            const response = await fetch('http://localhost:5000/api/restaurant-messages', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-messages', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

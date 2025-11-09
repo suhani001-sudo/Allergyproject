@@ -101,7 +101,7 @@ function Profile() {
                     
                     // Try to fetch from backend
                     try {
-                        const response = await fetch('http://localhost:5000/api/user-profile', {
+                        const response = await fetch('https://safebytes-backend.onrender.com/api/user-profile', {
                             headers: {
                                 'Authorization': `Bearer ${token}`,
                                 'Content-Type': 'application/json'
@@ -193,7 +193,7 @@ function Profile() {
                 return;
             }
             
-            const response = await fetch('http://localhost:5000/api/user-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/user-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -400,9 +400,6 @@ function Profile() {
         setShowLogoutModal(false);
     };
 
-    // ========================================
-    // ACCOUNT SETTINGS FUNCTIONS
-    // ========================================
     const handleChangePassword = async () => {
         setPasswordError('');
         
@@ -460,9 +457,6 @@ function Profile() {
         }
     };
 
-    // ========================================
-    // NAVIGATION DATA
-    // ========================================
     const navItems = [
         { id: 'Dashboard', label: 'Dashboard', path: '/dashboard' },
 
@@ -485,9 +479,7 @@ function Profile() {
         }
     }
 
-    // ========================================
-    // RENDER
-    // ========================================
+    
     return (
         <div className="profile-page">
             {/* Logout Confirmation Modal */}

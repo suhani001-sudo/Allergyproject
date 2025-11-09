@@ -57,7 +57,7 @@ function UserInbox() {
             setLoading(true);
             const token = localStorage.getItem('token');
             
-            const response = await fetch('http://localhost:5000/api/message-replies/user', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/message-replies/user', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -80,7 +80,7 @@ function UserInbox() {
         try {
             const token = localStorage.getItem('token');
             
-            const response = await fetch(`http://localhost:5000/api/message-replies/${replyId}/read`, {
+            const response = await fetch(`https://safebytes-backend.onrender.com/api/message-replies/${replyId}/read`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -26,7 +26,7 @@ function UserRestaurantPage(props) {
         setLoading(true);
         
         // Fetch menu items from your backend API
-        const response = await fetch('http://localhost:5000/api/menus');
+        const response = await fetch('https://safebytes-backend.onrender.com/api/menus');
         const data = await response.json();
         
         if (data.success && data.data && data.data.length > 0) {

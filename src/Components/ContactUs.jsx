@@ -124,7 +124,7 @@ function ContactUs() {
                 const user = JSON.parse(localStorage.getItem('user') || '{}');
                 
                 // Send message to backend
-                const response = await fetch('http://localhost:5000/api/contact-messages', {
+                const response = await fetch('https://safebytes-backend.onrender.com/api/contact-messages', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ function ContactUs() {
                 return;
             }
             
-            const response = await fetch('http://localhost:5000/api/message-replies/user', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/message-replies/user', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -163,7 +163,7 @@ function UserDashboard(props) {
     async function fetchFeedbacks() {
         try {
             setLoadingFeedbacks(true);
-            const response = await fetch('http://localhost:5000/api/feedback');
+            const response = await fetch('https://safebytes-backend.onrender.com/api/feedback');
             const data = await response.json();
             
             if (data.success && data.data) {
@@ -211,7 +211,7 @@ function UserDashboard(props) {
 
         try {
             // Send feedback to backend
-            const response = await fetch('http://localhost:5000/api/feedback', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/feedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

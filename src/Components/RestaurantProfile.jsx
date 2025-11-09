@@ -68,7 +68,7 @@ function RestaurantProfile() {
                     const parsedUser = JSON.parse(storedUser);
                     
                     // Fetch full restaurant profile from backend
-                    const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+                    const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ function RestaurantProfile() {
                 return;
             }
             
-            const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -220,7 +220,7 @@ function RestaurantProfile() {
                 return;
             }
             
-            const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -252,7 +252,7 @@ function RestaurantProfile() {
     const handleSaveBusinessInfo = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -274,9 +274,6 @@ function RestaurantProfile() {
         }
     };
 
-    // ========================================
-    // UTILITY FUNCTIONS
-    // ========================================
     const showSuccessMessage = (message) => {
         setAlertMessage(message);
         setShowSuccessAlert(true);

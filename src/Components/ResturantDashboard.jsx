@@ -44,7 +44,7 @@ function RestaurantDashboard(props) {
     async function fetchMenuItems() {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/menus');
+        const response = await fetch('https://safebytes-backend.onrender.com/api/menus');
         const data = await response.json();
         
         if (data.success && data.data) {
@@ -321,7 +321,7 @@ function RestaurantDashboard(props) {
     try {
       if (editingId) {
         // Update existing item
-        const response = await fetch(`http://localhost:5000/api/menus/${editingId}`, {
+        const response = await fetch(`https://safebytes-backend.onrender.com/api/menus/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(menuItemData)
@@ -331,7 +331,7 @@ function RestaurantDashboard(props) {
         
         if (data.success) {
           // Refresh menu items
-          const fetchResponse = await fetch('http://localhost:5000/api/menus');
+          const fetchResponse = await fetch('https://safebytes-backend.onrender.com/api/menus');
           const fetchData = await fetchResponse.json();
           
           if (fetchData.success && fetchData.data) {
@@ -358,7 +358,7 @@ function RestaurantDashboard(props) {
         }
       } else {
         // Add new item
-        const response = await fetch('http://localhost:5000/api/menus', {
+        const response = await fetch('https://safebytes-backend.onrender.com/api/menus', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(menuItemData)
@@ -368,7 +368,7 @@ function RestaurantDashboard(props) {
         
         if (data.success) {
           // Refresh menu items
-          const fetchResponse = await fetch('http://localhost:5000/api/menus');
+          const fetchResponse = await fetch('https://safebytes-backend.onrender.com/api/menus');
           const fetchData = await fetchResponse.json();
           
           if (fetchData.success && fetchData.data) {
@@ -423,7 +423,7 @@ function RestaurantDashboard(props) {
     if (!ok) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/menus/${id}`, {
+      const response = await fetch(`https://safebytes-backend.onrender.com/api/menus/${id}`, {
         method: 'DELETE'
       });
       
@@ -431,7 +431,7 @@ function RestaurantDashboard(props) {
       
       if (data.success) {
         // Refresh menu items
-        const fetchResponse = await fetch('http://localhost:5000/api/menus');
+        const fetchResponse = await fetch('https://safebytes-backend.onrender.com/api/menus');
         const fetchData = await fetchResponse.json();
         
         if (fetchData.success && fetchData.data) {

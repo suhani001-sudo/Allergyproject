@@ -83,7 +83,7 @@ function RestaurantContactUs() {
     const fetchMessages = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/contact-messages');
+            const response = await fetch('https://safebytes-backend.onrender.com/api/contact-messages');
             const data = await response.json();
             
             if (data.success) {
@@ -107,7 +107,7 @@ function RestaurantContactUs() {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/api/admin/my-replies', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/admin/my-replies', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -147,7 +147,7 @@ function RestaurantContactUs() {
     // Update message status
     const updateMessageStatus = async (messageId, status) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/contact-messages/${messageId}/status`, {
+            const response = await fetch(`https://safebytes-backend.onrender.com/api/contact-messages/${messageId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -194,7 +194,7 @@ function RestaurantContactUs() {
             setSendingReply(true);
             const token = localStorage.getItem('token');
             
-            const response = await fetch('http://localhost:5000/api/message-replies', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/message-replies', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -265,7 +265,7 @@ function RestaurantContactUs() {
             setSendingMessage(true);
             const token = localStorage.getItem('token');
             
-            const response = await fetch('http://localhost:5000/api/restaurant-messages', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-messages', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

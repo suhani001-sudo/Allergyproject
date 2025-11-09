@@ -1,6 +1,6 @@
 ### Food Allergy Management System - API Testing
 ### Base URL
-@baseUrl = http://localhost:5000
+@baseUrl = https://safebytes-backend.onrender.com
 @token = YOUR_TOKEN_HERE
 
 ### ============================================

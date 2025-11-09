@@ -5,14 +5,14 @@ const testAPI = async () => {
         
         // Test 1: Check if server is running
         console.log('1. Testing server root...');
-        const rootResponse = await fetch('http://localhost:5000/');
+        const rootResponse = await fetch('https://safebytes-backend.onrender.com/');
         const rootData = await rootResponse.json();
         console.log('✅ Server is running:', rootData.message);
         console.log('Available endpoints:', rootData.endpoints);
         
         // Test 2: Try to access restaurant-profile endpoint (will fail without auth, but should not be "not found")
         console.log('\n2. Testing restaurant-profile endpoint (without auth)...');
-        const profileResponse = await fetch('http://localhost:5000/api/restaurant-profile');
+        const profileResponse = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile');
         console.log('Status:', profileResponse.status);
         const profileData = await profileResponse.json();
         console.log('Response:', profileData);
