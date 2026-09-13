@@ -263,7 +263,7 @@ function EnhancedAdminDashboard() {
             {/* Sidebar */}
             <aside className={`enhanced-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
                 <div className="sidebar-header">
-                    <img src="/images/green_logo.jpg" alt="Logo" className="sidebar-logo" />
+                    <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="Logo" className="sidebar-logo" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
                     {sidebarOpen && <h2 className="sidebar-title">SafeBytes Admin</h2>}
                 </div>
 

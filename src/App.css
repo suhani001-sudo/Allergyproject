@@ -341,3 +341,12 @@ input:focus {
   color: #444;
   margin-bottom: 0.5rem;
 }
+
+/* Global brand styling: ensure SafeBytes text has the green gradient on all navbars */
+.navbar .logo-text {
+  font-weight: 800;
+  background: linear-gradient(135deg, #6B8E23, #556B2F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

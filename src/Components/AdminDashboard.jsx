@@ -411,7 +411,7 @@ const AdminDashboard = ({ onLogout }) => {
       <header className="admin-header">
         <div className="admin-header-content">
           <div className="admin-logo">
-            <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="admin-logo-image" />
+            <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="admin-logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
             <h1>SafeBytes Admin</h1>
           </div>
           

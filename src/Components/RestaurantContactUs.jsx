@@ -6,7 +6,7 @@ import './ContactUs.css'; // Reusing the same CSS
 import '../styles/responsive.css';
 import Footer from './Footer';
 
-function RestaurantContactUs() {
+function RestaurantContactUs({ onLogout }) {
     const navigate = useNavigate();
     const [activeNavItem, setActiveNavItem] = useState('Contact');
 
@@ -61,7 +61,11 @@ function RestaurantContactUs() {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     
     function handleLogout() {
-        setShowLogoutModal(true);
+        if (typeof onLogout === 'function') {
+            onLogout();
+        } else {
+            setShowLogoutModal(true);
+        }
     }
     
     const confirmLogout = () => {
@@ -383,9 +387,10 @@ function RestaurantContactUs() {
                 <div className="nav-container">
                     <div className="nav-logo" onClick={() => navigate('/restaurant-dashboard')}>
                         <img
-                            src="/images/green_logo.jpg"
+                            src={`${import.meta.env.BASE_URL}images/green_logo.jpg`}
                             alt="SafeBytes Logo"
                             className="logo-image"
+                            onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }}
                         />
                         <span className="logo-text">SafeBytes</span>
                     </div>

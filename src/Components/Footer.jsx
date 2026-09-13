@@ -16,9 +16,10 @@ function Footer() {
         <div className="footer-section">
           <div className="footer-logo">
             <img 
-              src="/images/green_logo.jpg" 
+              src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} 
               alt="SafeBytes Logo" 
               className="footer-logo-image"
+              onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }}
             />
             <span className="footer-logo-text">SafeBytes</span>
           </div>

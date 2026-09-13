@@ -86,11 +86,7 @@ function AboutUs() {
             <nav className="navbar">
                 <div className="nav-container">
                     <div className="nav-logo" onClick={() => navigate('/dashboard')}>
-                        <img
-                            src="/images/green_logo.jpg"
-                            alt="SafeBytes Logo"
-                            className="logo-image"
-                        />
+                        <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greenlogo.png`; }} />
                         <span className="logo-text">SafeBytes</span>
                     </div>
 
@@ -317,79 +313,88 @@ function AboutUs() {
             {/* Diagonal Divider */}
             <div className="diagonal-divider"></div>
 
-            {/* Team Section - Premium Cards */}
+            {/* Team Section - Premium Duo Showcase */}
             <section className="team-section">
                 <div className="team-header animate-on-scroll">
+                    <span className="team-badge">OUR CREATORS</span>
                     <h2 className="team-title">Meet Our Team</h2>
-                    <p className="team-subtitle">Dedicated to building a safer dining future</p>
+                    <p className="team-subtitle">The dedicated minds building a safer and smarter dining future</p>
                     <div className="title-underline"></div>
                 </div>
 
-                <div className="team-cards-container animate-on-scroll">
+                <div className="team-cards-container team-duo-container animate-on-scroll">
+                    {/* Suhani */}
                     <div className="team-card">
                         <div className="team-card-inner">
-                            <div className="team-avatar">
-                                <div className="avatar-circle">
-                                    <span className="avatar-initial">S</span>
+                            <div className="team-card-banner">
+                                <span className="team-role-pill">Designer & Developer</span>
+                            </div>
+                            <div className="team-avatar-wrapper">
+                                <div className="team-avatar avatar-suhani">
+                                    <div className="avatar-circle">
+                                        <span className="avatar-initial">S</span>
+                                    </div>
                                 </div>
                                 <div className="avatar-glow"></div>
+                                <div className="avatar-status-badge" title="Designer & Developer">✨</div>
                             </div>
-                            <h3 className="team-member-name">Suhani </h3>
-                            <div className="team-decorative-dots">
-                                <span className="dot"></span>
-                                <span className="dot"></span>
-                                <span className="dot"></span>
+                            <div className="team-info">
+                                <h3 className="team-member-name">Suhani</h3>
+                                <p className="team-member-role">Designer & Developer</p>
+                                <p className="team-member-bio">
+                                    Dedicated to crafting intuitive user interfaces, engaging digital experiences, and promoting food allergen awareness.
+                                </p>
+                                <div className="team-skills">
+                                    <span className="skill-tag">UI/UX Design</span>
+                                    <span className="skill-tag">React</span>
+                                    <span className="skill-tag">Frontend</span>
+                                    <span className="skill-tag">QA & Safety</span>
+                                </div>
+                            </div>
+                            <div className="team-card-footer">
+                                <div className="team-decorative-dots">
+                                    <span className="dot"></span>
+                                    <span className="dot"></span>
+                                    <span className="dot"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    {/* Prince */}
                     <div className="team-card">
                         <div className="team-card-inner">
-                            <div className="team-avatar">
-                                <div className="avatar-circle">
-                                    <span className="avatar-initial">P</span>
+                            <div className="team-card-banner">
+                                <span className="team-role-pill">Designer & Developer</span>
+                            </div>
+                            <div className="team-avatar-wrapper">
+                                <div className="team-avatar avatar-prince">
+                                    <div className="avatar-circle">
+                                        <span className="avatar-initial">P</span>
+                                    </div>
                                 </div>
                                 <div className="avatar-glow"></div>
+                                <div className="avatar-status-badge" title="Designer & Developer">⚡</div>
                             </div>
-                            <h3 className="team-member-name">Prince</h3>
-                            <div className="team-decorative-dots">
-                                <span className="dot"></span>
-                                <span className="dot"></span>
-                                <span className="dot"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="team-card">
-                        <div className="team-card-inner">
-                            <div className="team-avatar">
-                                <div className="avatar-circle">
-                                    <span className="avatar-initial">R</span>
+                            <div className="team-info">
+                                <h3 className="team-member-name">Prince</h3>
+                                <p className="team-member-role">Designer & Developer</p>
+                                <p className="team-member-bio">
+                                    Dedicated to building responsive interfaces, robust web architectures, and reliable food safety management platforms.
+                                </p>
+                                <div className="team-skills">
+                                    <span className="skill-tag">UI/UX Design</span>
+                                    <span className="skill-tag">React</span>
+                                    <span className="skill-tag">Node.js</span>
+                                    <span className="skill-tag">MongoDB</span>
                                 </div>
-                                <div className="avatar-glow"></div>
                             </div>
-                            <h3 className="team-member-name">Radhika</h3>
-                            <div className="team-decorative-dots">
-                                <span className="dot"></span>
-                                <span className="dot"></span>
-                                <span className="dot"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="team-card">
-                        <div className="team-card-inner">
-                            <div className="team-avatar">
-                                <div className="avatar-circle">
-                                    <span className="avatar-initial">S</span>
+                            <div className="team-card-footer">
+                                <div className="team-decorative-dots">
+                                    <span className="dot"></span>
+                                    <span className="dot"></span>
+                                    <span className="dot"></span>
                                 </div>
-                                <div className="avatar-glow"></div>
-                            </div>
-                            <h3 className="team-member-name">Sabia</h3>
-                            <div className="team-decorative-dots">
-                                <span className="dot"></span>
-                                <span className="dot"></span>
-                                <span className="dot"></span>
                             </div>
                         </div>
                     </div>

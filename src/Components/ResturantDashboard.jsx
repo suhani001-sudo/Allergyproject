@@ -22,7 +22,12 @@ function RestaurantDashboard(props) {
   
   // Centralized logout handler
   const handleLogout = () => {
-    setShowLogoutModal(true);
+    if (typeof props?.onLogout === 'function') {
+      // Use App's centralized logout (handles redirect correctly)
+      props.onLogout();
+    } else {
+      setShowLogoutModal(true);
+    }
   };
   
   const confirmLogout = () => {
@@ -497,7 +502,7 @@ function RestaurantDashboard(props) {
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-logo">
-            <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="logo-image" />
+            <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
             <span className="logo-text">SafeBytes</span>
           </div>
 

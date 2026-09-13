@@ -36,7 +36,8 @@ api.interceptors.response.use(
         localStorage.removeItem('user');
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('role');
-        window.location.href = '/login';
+        const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+        window.location.href = `${base}login`;
       }
       
       // Return error message from backend

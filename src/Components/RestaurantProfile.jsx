@@ -7,7 +7,7 @@ import './Profile.css'; // Reusing the same CSS
 import '../styles/responsive.css';
 import Footer from './Footer';
 
-function RestaurantProfile() {
+function RestaurantProfile({ onLogout }) {
     const navigate = useNavigate();
 
     // ========================================
@@ -301,7 +301,11 @@ function RestaurantProfile() {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     
     const handleLogout = () => {
-        setShowLogoutModal(true);
+        if (typeof onLogout === 'function') {
+            onLogout();
+        } else {
+            setShowLogoutModal(true);
+        }
     };
     
     const confirmLogout = () => {
@@ -405,7 +409,7 @@ function RestaurantProfile() {
                 <nav className="navbar">
                     <div className="nav-container">
                         <div className="nav-logo">
-                            <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="logo-image" />
+                            <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
                             <span className="logo-text">SafeBytes</span>
                         </div>
                     </div>
@@ -430,7 +434,7 @@ function RestaurantProfile() {
             <nav className="navbar">
                 <div className="nav-container">
                     <div className="nav-logo" onClick={() => navigate('/restaurant-dashboard')}>
-                        <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="logo-image" />
+                        <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
                         <span className="logo-text">SafeBytes</span>
                     </div>
 

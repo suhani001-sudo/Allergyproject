@@ -194,9 +194,10 @@ function AllergyInfo() {
         <div className="nav-container">
           <div className="nav-logo" onClick={() => navigate('/dashboard')}>
             <img 
-              src="/images/green_logo.jpg" 
+              src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} 
               alt="SafeBytes Logo" 
               className="logo-image"
+              onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }}
             />
             <span className="logo-text">SafeBytes</span>
           </div>
