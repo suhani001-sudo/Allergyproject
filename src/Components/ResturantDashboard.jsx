@@ -22,7 +22,12 @@ function RestaurantDashboard(props) {
   
   // Centralized logout handler
   const handleLogout = () => {
-    setShowLogoutModal(true);
+    if (typeof props?.onLogout === 'function') {
+      // Use App's centralized logout (handles redirect correctly)
+      props.onLogout();
+    } else {
+      setShowLogoutModal(true);
+    }
   };
   
   const confirmLogout = () => {
@@ -44,6 +49,11 @@ function RestaurantDashboard(props) {
     async function fetchMenuItems() {
       try {
         setLoading(true);
+<<<<<<< HEAD
+=======
+        const response = await fetch('https://safebytes-backend.onrender.com/api/menus');
+        const data = await response.json();
+>>>>>>> gh-pages
         
         // Fetch both regular menus and custom menus
         const [menusResponse, customMenusResponse] = await Promise.all([
@@ -358,7 +368,11 @@ function RestaurantDashboard(props) {
           : `http://localhost:5000/api/menus/${editingId}`;
         
         // Update existing item
+<<<<<<< HEAD
         const response = await fetch(endpoint, {
+=======
+        const response = await fetch(`https://safebytes-backend.onrender.com/api/menus/${editingId}`, {
+>>>>>>> gh-pages
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(menuItemData)
@@ -367,11 +381,17 @@ function RestaurantDashboard(props) {
         const data = await response.json();
         
         if (data.success) {
+<<<<<<< HEAD
           // Refresh menu items from both APIs
           const [menusResponse, customMenusResponse] = await Promise.all([
             fetch('http://localhost:5000/api/menus'),
             fetch('http://localhost:5000/api/custom-menus')
           ]);
+=======
+          // Refresh menu items
+          const fetchResponse = await fetch('https://safebytes-backend.onrender.com/api/menus');
+          const fetchData = await fetchResponse.json();
+>>>>>>> gh-pages
           
           const menusData = await menusResponse.json();
           const customMenusData = await customMenusResponse.json();
@@ -423,8 +443,13 @@ function RestaurantDashboard(props) {
           alert('Failed to update menu item: ' + (data.message || 'Unknown error'));
         }
       } else {
+<<<<<<< HEAD
         // Add new item to custom menus collection
         const response = await fetch('http://localhost:5000/api/custom-menus', {
+=======
+        // Add new item
+        const response = await fetch('https://safebytes-backend.onrender.com/api/menus', {
+>>>>>>> gh-pages
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(menuItemData)
@@ -433,11 +458,17 @@ function RestaurantDashboard(props) {
         const data = await response.json();
         
         if (data.success) {
+<<<<<<< HEAD
           // Refresh menu items from both APIs
           const [menusResponse, customMenusResponse] = await Promise.all([
             fetch('http://localhost:5000/api/menus'),
             fetch('http://localhost:5000/api/custom-menus')
           ]);
+=======
+          // Refresh menu items
+          const fetchResponse = await fetch('https://safebytes-backend.onrender.com/api/menus');
+          const fetchData = await fetchResponse.json();
+>>>>>>> gh-pages
           
           const menusData = await menusResponse.json();
           const customMenusData = await customMenusResponse.json();
@@ -518,6 +549,7 @@ function RestaurantDashboard(props) {
     if (!ok) return;
     
     try {
+<<<<<<< HEAD
       // Find the item to determine if it's custom or regular
       const itemToDelete = items.find(item => item.id === id);
       const isCustomItem = itemToDelete?.isCustom || false;
@@ -528,17 +560,26 @@ function RestaurantDashboard(props) {
         : `http://localhost:5000/api/menus/${id}`;
       
       const response = await fetch(endpoint, {
+=======
+      const response = await fetch(`https://safebytes-backend.onrender.com/api/menus/${id}`, {
+>>>>>>> gh-pages
         method: 'DELETE'
       });
       
       const data = await response.json();
       
       if (data.success) {
+<<<<<<< HEAD
         // Refresh menu items from both APIs
         const [menusResponse, customMenusResponse] = await Promise.all([
           fetch('http://localhost:5000/api/menus'),
           fetch('http://localhost:5000/api/custom-menus')
         ]);
+=======
+        // Refresh menu items
+        const fetchResponse = await fetch('https://safebytes-backend.onrender.com/api/menus');
+        const fetchData = await fetchResponse.json();
+>>>>>>> gh-pages
         
         const menusData = await menusResponse.json();
         const customMenusData = await customMenusResponse.json();
@@ -630,7 +671,7 @@ function RestaurantDashboard(props) {
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-logo">
-            <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="logo-image" />
+            <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
             <span className="logo-text">SafeBytes</span>
           </div>
 

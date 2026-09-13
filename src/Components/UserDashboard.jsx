@@ -163,7 +163,7 @@ function UserDashboard(props) {
     async function fetchFeedbacks() {
         try {
             setLoadingFeedbacks(true);
-            const response = await fetch('http://localhost:5000/api/feedback');
+            const response = await fetch('https://safebytes-backend.onrender.com/api/feedback');
             const data = await response.json();
             
             if (data.success && data.data) {
@@ -211,7 +211,7 @@ function UserDashboard(props) {
 
         try {
             // Send feedback to backend
-            const response = await fetch('http://localhost:5000/api/feedback', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/feedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -270,9 +270,10 @@ function UserDashboard(props) {
                 <div className="nav-container">
                     <div className="nav-logo">
                         <img
-                            src="/images/green_logo.jpg"
+                            src={`${import.meta.env.BASE_URL}images/green_logo.jpg`}
                             alt="SafeBytes Logo"
                             className="logo-image"
+                            onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }}
                         />
                         <span className="logo-text">SafeBytes</span>
                     </div>
@@ -386,9 +387,10 @@ function UserDashboard(props) {
                     <div className="hero-image">
                         <div className="hero-image-container">
                             <img
-                                src="/images/homepic2.jpg"
+                                src={`${import.meta.env.BASE_URL}images/homepic2.jpg`}
                                 alt="Healthy Food"
                                 className="hero-food-image"
+                                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop'; }}
                             />
                             <div className="image-overlay">
                                 <span className="overlay-icon"></span>

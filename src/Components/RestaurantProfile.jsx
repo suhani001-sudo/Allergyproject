@@ -7,7 +7,7 @@ import './Profile.css'; // Reusing the same CSS
 import '../styles/responsive.css';
 import Footer from './Footer';
 
-function RestaurantProfile() {
+function RestaurantProfile({ onLogout }) {
     const navigate = useNavigate();
 
     // ========================================
@@ -68,7 +68,7 @@ function RestaurantProfile() {
                     const parsedUser = JSON.parse(storedUser);
                     
                     // Fetch full restaurant profile from backend
-                    const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+                    const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ function RestaurantProfile() {
                 return;
             }
             
-            const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -220,7 +220,7 @@ function RestaurantProfile() {
                 return;
             }
             
-            const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -252,7 +252,7 @@ function RestaurantProfile() {
     const handleSaveBusinessInfo = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/restaurant-profile', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/restaurant-profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -274,9 +274,6 @@ function RestaurantProfile() {
         }
     };
 
-    // ========================================
-    // UTILITY FUNCTIONS
-    // ========================================
     const showSuccessMessage = (message) => {
         setAlertMessage(message);
         setShowSuccessAlert(true);
@@ -304,7 +301,11 @@ function RestaurantProfile() {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     
     const handleLogout = () => {
-        setShowLogoutModal(true);
+        if (typeof onLogout === 'function') {
+            onLogout();
+        } else {
+            setShowLogoutModal(true);
+        }
     };
     
     const confirmLogout = () => {
@@ -408,7 +409,7 @@ function RestaurantProfile() {
                 <nav className="navbar">
                     <div className="nav-container">
                         <div className="nav-logo">
-                            <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="logo-image" />
+                            <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
                             <span className="logo-text">SafeBytes</span>
                         </div>
                     </div>
@@ -433,7 +434,7 @@ function RestaurantProfile() {
             <nav className="navbar">
                 <div className="nav-container">
                     <div className="nav-logo" onClick={() => navigate('/restaurant-dashboard')}>
-                        <img src="/images/green_logo.jpg" alt="SafeBytes Logo" className="logo-image" />
+                        <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="SafeBytes Logo" className="logo-image" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
                         <span className="logo-text">SafeBytes</span>
                     </div>
 

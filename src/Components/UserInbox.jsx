@@ -57,7 +57,7 @@ function UserInbox() {
             setLoading(true);
             const token = localStorage.getItem('token');
             
-            const response = await fetch('http://localhost:5000/api/message-replies/user', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/message-replies/user', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -80,7 +80,7 @@ function UserInbox() {
         try {
             const token = localStorage.getItem('token');
             
-            const response = await fetch(`http://localhost:5000/api/message-replies/${replyId}/read`, {
+            const response = await fetch(`https://safebytes-backend.onrender.com/api/message-replies/${replyId}/read`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -129,9 +129,10 @@ function UserInbox() {
                 <div className="nav-container">
                     <div className="nav-logo" onClick={() => navigate('/dashboard')}>
                         <img
-                            src="/images/green_logo.jpg"
+                            src={`${import.meta.env.BASE_URL}images/green_logo.jpg`}
                             alt="SafeBytes Logo"
                             className="logo-image"
+                            onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }}
                         />
                         <span className="logo-text">SafeBytes</span>
                     </div>

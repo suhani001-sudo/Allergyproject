@@ -26,7 +26,7 @@ function UserRestaurantPage(props) {
         setLoading(true);
         
         // Fetch menu items from your backend API
-        const response = await fetch('http://localhost:5000/api/menus');
+        const response = await fetch('https://safebytes-backend.onrender.com/api/menus');
         const data = await response.json();
         
         if (data.success && data.data && data.data.length > 0) {
@@ -90,9 +90,10 @@ function UserRestaurantPage(props) {
         <div className="nav-container">
           <div className="nav-logo">
             <img 
-              src="/images/green_logo.jpg" 
+              src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} 
               alt="SafeBytes Logo" 
               className="logo-image"
+              onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }}
             />
             <span className="logo-text">SafeBytes</span>
           </div>

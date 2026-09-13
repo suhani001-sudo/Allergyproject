@@ -9,27 +9,23 @@
  */
 export const handleLogout = (navigate) => {
     try {
-        // Clear all authentication-related data from localStorage
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('role');
-        
-        // Clear any other session data
-        localStorage.removeItem('restaurantData');
-        localStorage.removeItem('userData');
-        
-        // Clear sessionStorage as well (if used)
+        // Clear all authentication-related data from storage
+        localStorage.clear();
         sessionStorage.clear();
-        
+
         console.log('✅ User logged out successfully');
-        
-        // Use window.location for a full page reload to reset App state
-        window.location.href = '/login';
+
+        // Dispatch auth events so any active listeners update
+        window.dispatchEvent(new Event('authChange'));
+        window.dispatchEvent(new Event('storage'));
+
+        // Always redirect cleanly to login screen with base URL safety
+        const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+        window.location.href = `${base}login`;
     } catch (error) {
         console.error('❌ Error during logout:', error);
-        // Force redirect even if there's an error
-        window.location.href = '/login';
+        const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+        window.location.href = `${base}login`;
     }
 };
 

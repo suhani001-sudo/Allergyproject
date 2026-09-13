@@ -25,7 +25,7 @@ const AIAssistant = () => {
 
   const checkAIStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/ai/status', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/ai/status', {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`
         }
@@ -47,7 +47,7 @@ const AIAssistant = () => {
     try {
       const symptomsList = symptoms.split(',').map(s => s.trim());
       
-      const response = await fetch('http://localhost:5000/api/ai/analyze-symptoms', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/ai/analyze-symptoms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const AIAssistant = () => {
     }]);
 
     try {
-      const response = await fetch('http://localhost:5000/api/ai/chat', {
+      const response = await fetch('https://safebytes-backend.onrender.com/api/ai/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

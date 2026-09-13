@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for the backend API
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://safebytes-backend.onrender.com/api';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -36,7 +36,8 @@ api.interceptors.response.use(
         localStorage.removeItem('user');
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('role');
-        window.location.href = '/login';
+        const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+        window.location.href = `${base}login`;
       }
       
       // Return error message from backend

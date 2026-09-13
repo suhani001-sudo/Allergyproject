@@ -1,8 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import ErrorBoundary from './ErrorBoundary.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom'; // ✅ Import BrowserRouter
+import './index.css';
+import App from './App.jsx';
+import ErrorBoundary from './ErrorBoundary.jsx';
 
 // Global error handler
 window.addEventListener('error', (event) => {
@@ -23,9 +24,11 @@ try {
   createRoot(rootElement).render(
     <StrictMode>
       <ErrorBoundary>
-        <App />
+        <BrowserRouter basename="/Allergyproject"> 
+          <App />
+        </BrowserRouter>
       </ErrorBoundary>
-    </StrictMode>,
+    </StrictMode>
   );
   
   console.log('React app rendered successfully');

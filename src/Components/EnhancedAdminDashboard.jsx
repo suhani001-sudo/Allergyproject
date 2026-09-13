@@ -76,7 +76,7 @@ function EnhancedAdminDashboard() {
             const token = localStorage.getItem('token');
             
             // Fetch stats
-            const statsRes = await fetch('http://localhost:5000/api/admin/stats', {
+            const statsRes = await fetch('https://safebytes-backend.onrender.com/api/admin/stats', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const statsData = await statsRes.json();
@@ -91,35 +91,35 @@ function EnhancedAdminDashboard() {
             }
             
             // Fetch users
-            const usersRes = await fetch('http://localhost:5000/api/admin/users', {
+            const usersRes = await fetch('https://safebytes-backend.onrender.com/api/admin/users', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const usersData = await usersRes.json();
             if (usersData.success) setUsers(usersData.data || []);
             
             // Fetch restaurants
-            const restaurantsRes = await fetch('http://localhost:5000/api/admin/restaurants', {
+            const restaurantsRes = await fetch('https://safebytes-backend.onrender.com/api/admin/restaurants', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const restaurantsData = await restaurantsRes.json();
             if (restaurantsData.success) setRestaurants(restaurantsData.data || []);
             
             // Fetch admins
-            const adminsRes = await fetch('http://localhost:5000/api/admin/admins', {
+            const adminsRes = await fetch('https://safebytes-backend.onrender.com/api/admin/admins', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const adminsData = await adminsRes.json();
             if (adminsData.success) setAdmins(adminsData.data || []);
             
             // Fetch user messages
-            const userMsgRes = await fetch('http://localhost:5000/api/admin/user-messages', {
+            const userMsgRes = await fetch('https://safebytes-backend.onrender.com/api/admin/user-messages', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const userMsgData = await userMsgRes.json();
             if (userMsgData.success) setUserMessages(userMsgData.data || []);
             
             // Fetch restaurant messages
-            const restMsgRes = await fetch('http://localhost:5000/api/admin/restaurant-messages', {
+            const restMsgRes = await fetch('https://safebytes-backend.onrender.com/api/admin/restaurant-messages', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const restMsgData = await restMsgRes.json();
@@ -156,7 +156,7 @@ function EnhancedAdminDashboard() {
         
         try {
             const endpoint = type === 'User' ? 'users' : type === 'Restaurant' ? 'restaurants' : 'admins';
-            const response = await fetch(`http://localhost:5000/api/admin/${endpoint}/${id}`, {
+            const response = await fetch(`https://safebytes-backend.onrender.com/api/admin/${endpoint}/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -183,7 +183,7 @@ function EnhancedAdminDashboard() {
         const token = localStorage.getItem('token');
         
         try {
-            const response = await fetch('http://localhost:5000/api/admin/admins', {
+            const response = await fetch('https://safebytes-backend.onrender.com/api/admin/admins', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ function EnhancedAdminDashboard() {
             {/* Sidebar */}
             <aside className={`enhanced-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
                 <div className="sidebar-header">
-                    <img src="/images/green_logo.jpg" alt="Logo" className="sidebar-logo" />
+                    <img src={`${import.meta.env.BASE_URL}images/green_logo.jpg`} alt="Logo" className="sidebar-logo" onError={(e) => { e.currentTarget.src = `${import.meta.env.BASE_URL}images/greelogo.png`; }} />
                     {sidebarOpen && <h2 className="sidebar-title">SafeBytes Admin</h2>}
                 </div>
 
